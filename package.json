@@ -5,10 +5,12 @@
   "description": "A modern, lightweight set of JavaScript utility functions for everyday development, crafted to enhance code readability and maintainability.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "exports": {
-    "require": "./dist/index.cjs",
-    "import": "./dist/index.js"
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "format": "prettier --check .",
@@ -17,7 +19,8 @@
     "bump:minor": "npm version minor",
     "bump:major": "npm version major",
     "barrel": "npx barrelsby --directory src --single --delete",
-    "build": "npm run barrel && tsup ",
+    "build": "npm run barrel && tsup && npm run build:types",
+    "build:types": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
     "prepare": "npm run build",
     "check-publish": "npm pack --dry-run"

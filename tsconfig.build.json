@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist/types",
+    "baseUrl": ".",
+    "moduleResolution": "Node",
+    "target": "ES2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@root-app/*": [
+        "./*"
+      ],
+    },
+  },
+  "include": [
+    "src"
+  ]
+}

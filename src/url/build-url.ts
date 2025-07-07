@@ -101,9 +101,9 @@ export const constructURL = (
 
     return urlInstance;
   } catch (error) {
-    throw new Error("Failed to construct a valid URL in `constructURL()`", {
-      cause: error,
-    });
+    throw new Error(
+      "Failed to construct a valid URL in `constructURL()`, Error:" + error
+    );
   }
 };
 
@@ -131,10 +131,8 @@ export const getBaseUrl = (): string => {
     return new URL(baseUrl.replace(/\/+$/, "/")).origin;
   } catch (error) {
     throw new Error(
-      "Invalid `NEXT_PUBLIC_BASE_URL`, failed to generate from `getBaseUrl()`",
-      {
-        cause: error,
-      }
+      "Invalid `NEXT_PUBLIC_BASE_URL`, failed to generate from `getBaseUrl()`, Error:" +
+        error
     );
   }
 };
@@ -186,10 +184,8 @@ export const getBackendApiUrl = ({
     )}`;
   } catch (error) {
     throw new Error(
-      "Invalid `NEXT_PUBLIC_BACKEND_API_URL`, failed to generate from `getBackendApiUrl()`",
-      {
-        cause: error,
-      }
+      "Invalid `NEXT_PUBLIC_BACKEND_API_URL`, failed to generate from `getBackendApiUrl()`, Error:" +
+        error
     );
   }
 };
@@ -258,10 +254,8 @@ export const getBackendApiEndpoint = (
     return removeAllTrailingSlashes(fullPath);
   } catch (error) {
     throw new Error(
-      "Failed to generate backend API URL in `getBackendApiEndpoint()`",
-      {
-        cause: error,
-      }
+      "Failed to generate backend API URL in `getBackendApiEndpoint()`, Error:" +
+        error
     );
   }
 };
