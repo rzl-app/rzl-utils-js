@@ -10,6 +10,9 @@
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/types/index.d.ts"
     }
   },
   "scripts": {
