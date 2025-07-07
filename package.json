@@ -10,6 +10,9 @@
     "import": "./dist/index.js"
   },
   "scripts": {
+    "bump:patch": "npm version patch",
+    "bump:minor": "npm version minor",
+    "bump:major": "npm version major",
     "barrel": "npx barrelsby --directory src --single --delete",
     "build": "npm run barrel && tsup ",
     "dev": "tsc --watch",
@@ -41,9 +44,11 @@
   "devDependencies": {
     "@types/lodash": "^4.17.20",
     "@types/node": "^20.19.4",
-    "date-fns": "^4.1.0",
     "lodash": "^4.17.21",
     "tsup": "^8.5.0",
     "typescript": "^5.2.0"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   }
 }

@@ -7,6 +7,8 @@
  * extracting each parameter and constructing an object where each key represents
  * a dynamic segment and its value is of type `string`.
  *
+ * * ***Notes: This Type only support when using `NextJS`***
+ *
  * @template T - The route string containing potential dynamic segments.
  *
  * @example
@@ -32,6 +34,8 @@ export type ExtractRouteParams<T extends string> =
  * This type checks if the route includes at least one `[param]` pattern.
  * If it does, the result is `true`, otherwise `false`.
  *
+ * * ***Notes: This Type only support when using `NextJS`***
+ *
  * @template T - The route string to be evaluated.
  *
  * @example
@@ -51,6 +55,9 @@ export type HasDynamicSegments<T extends string> =
 
 /**
  * Generates a URL by replacing dynamic route parameters with provided values.
+ *
+ * * ***Notes: This Function only support when using `NextJS`***
+ *
  *
  * @template T - The route string containing dynamic segments in the format `[param]`.
  *
@@ -147,15 +154,21 @@ export function generateRoute<T extends string>(
         ";",
         "%",
         "@",
-        ":"
+        ":",
       ];
 
       // Filter out invalid characters from the value
-      const foundInvalidChars = invalidChars.filter((char) => value.includes(char));
+      const foundInvalidChars = invalidChars.filter((char) =>
+        value.includes(char)
+      );
 
       if (foundInvalidChars.length > 0) {
         throw new Error(
-          `🚨 'generateRoute' Failed cause: Parameter "${key}" contains invalid characters (${foundInvalidChars.join(", ")}) in route: "${route}". These characters are not allowed because they could cause issues in URL structure. The following characters are forbidden in route parameters: (${invalidChars.join(", ")}).`
+          `🚨 'generateRoute' Failed cause: Parameter "${key}" contains invalid characters (${foundInvalidChars.join(
+            ", "
+          )}) in route: "${route}". These characters are not allowed because they could cause issues in URL structure. The following characters are forbidden in route parameters: (${invalidChars.join(
+            ", "
+          )}).`
         );
       }
 
