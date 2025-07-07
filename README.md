@@ -7,18 +7,20 @@
       \ V  V / (_) | | |  __/ | ||  __/\__ \__ \ /    |    \ (_|  __/\__ \
        \_/\_/ \___/|_|  \___|  \__\___||___/___/ \____|__  /\___\___||___/
                                                         \/          \/
-                      🚀 Rzl Utility JavaScript 🚀
+                    🚀 Rzl Utility JavaScript 🚀
 
 ```
 
 > A lightweight, modern TypeScript utility library for Node.js & browser.
+>
 > Provides reusable helpers to simplify your JavaScript / TypeScript projects.
+>
 > **Built with ❤️ by [@rzl-app](https://github.com/rzl-app).**
 
-[![Latest Version on NPM](https://img.shields.io/npm/v/rzl-utils-js?color=blue&style=flat-square)](https://npmjs.com/package/rzl-utils-js)
-[![downloads](https://img.shields.io/npm/dt/rzl-utils-js?style=flat-square)](https://npmjs.com/package/rzl-utils-js)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/CONTRIBUTING)
+[![Latest Version on NPM](https://img.shields.io/npm/v/rzl-utils-js?color=blue&style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
+[![downloads](https://img.shields.io/npm/dt/rzl-utils-js?style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/LICENSE.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/CONTRIBUTING.md)
 
 ---
 
@@ -101,6 +103,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 ---
 
 ✅ **Enjoy using `rzl-app/laravel-toaster`?**
+
 Star this repo ⭐ and share it with other Laravel developers!
 
 ---
