@@ -71,12 +71,20 @@
 
 #### Easy to use, just import on your code base.
 
-##### Example:
+##### Example Function Import:
 
 ```ts
 import { isServer } from "rzl-utils-js";
 
 console.log(isServer);
+```
+
+##### Example TypeScript Helper Import:
+
+```ts
+import { OmitStrict } from "rzl-utils-js/types";
+
+type MyType = OmitStrict<OtherType, "omitedProps">;
 ```
 
 ---

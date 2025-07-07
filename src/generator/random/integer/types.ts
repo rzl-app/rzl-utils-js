@@ -1,4 +1,4 @@
-import type { Range_1_to_999_AsExport } from "@/types/number/numbAsExports";
+import type { Range_1_to_999_AsExport } from "@/types/number/rangeNumberLimit";
 
 export type RandomINTProps = {
   /** * Minimal `1` maximal `16` as number

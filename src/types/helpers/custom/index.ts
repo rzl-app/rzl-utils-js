@@ -102,17 +102,17 @@ export type OverrideTypes<
  *
  * @template T The original object type.
  * @template K The keys to omit from `T`.
- * @template WithPrettify Whether to prettify the result (default is `false`).
+ * @template WithPrettify Whether to prettify the result (default is `true`).
  *
  * @example
  * type A = { a: number; b: string; c: boolean };
  * type B = OmitStrict<A, 'b'>; // { a: number; c: boolean }
- * type C = OmitStrict<A, 'b', true>; // Prettified version
+ * type C = OmitStrict<A, 'b', false>; // Without Prettified version
  */
 export type OmitStrict<
   T,
   K extends keyof T,
-  WithPrettify extends boolean = false
+  WithPrettify extends boolean = true
 > = WithPrettify extends true
   ? Prettify<Omit<T, K>>
   : WithPrettify extends false
