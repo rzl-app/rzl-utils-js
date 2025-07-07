@@ -1,6 +1,6 @@
 {
   "name": "rzl-utils-js",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "description": "A modern, lightweight set of JavaScript utility functions for everyday development, crafted to enhance code readability and maintainability.",
   "main": "./dist/index.cjs",
