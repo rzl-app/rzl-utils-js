@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# Fixtures / compiler artifacts
+fixtures/
+compiler/
+
+
+

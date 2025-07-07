@@ -1,0 +1,16 @@
+# Don't publish tests or dev files
+tests/
+fixtures/
+compiler/
+
+# Don't publish source TS
+src/
+
+# Ignore config files
+tsconfig.json
+*.tsbuildinfo
+*.log
+
+# Ignore editor/IDE stuff
+.editorconfig
+.gitattributes

@@ -1,0 +1,6 @@
+{
+  "delete": true,
+  "directory": "src",
+  "extension": "ts",
+  "single": true
+}
