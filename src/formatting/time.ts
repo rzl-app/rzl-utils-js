@@ -1,4 +1,4 @@
-import { id, enUS } from "date-fns/locale";
+import { id, enUS, type Locale } from "date-fns/locale";
 import { format as formatDns, type FormatOptions, parse } from "date-fns";
 import type { OmitStrict } from "@/types";
 
@@ -132,18 +132,47 @@ export const formatDateWithFns = (
 
     /**
      * The locale to be used for formatting.
-     * Accepts "id" for Indonesian or "en" for English.
+     * If `string` Only Accepts "id" for Indonesian or "en" for English.
+     * Or you can put props `Locale` from `date-fns/locale`, e.g :
+     *
+     * ```ts
+     *    import { ar } from "date-fns/locale";
+     *
+     *    // then passing `ar` to this props.
+     *    formatDateWithFns(
+     *    // your date input...,
+     *    {
+     *       locale: ar,
+     *       //.... other options.
+     *    });
+     *
+     * ```
      * @default "id"
      */
-    locale?: "id" | "en" | (string & {});
+    locale?: "id" | "en" | (string & {}) | Locale;
 
     /**
      * The Input locale to be used for parsing `inputFormat`.
-     * Accepts "id" for Indonesian or "en" for English.
+     * If `string` Only Accepts "id" for Indonesian or "en" for English.
      * Required if `date` is a non-standard string like "03 Mei 2025 10:25:42").
+     *
+     *  Or you can put props `Locale` from `date-fns/locale`, e.g :
+     *
+     * ```ts
+     *    import { ar } from "date-fns/locale";
+     *
+     *    // then passing `ar` to this props.
+     *    formatDateWithFns(
+     *    // your date input...,
+     *    {
+     *        inputLocale: ar,
+     *        //.... other options.
+     *    });
+     *```
+
      * @default undefined
      */
-    InputLocale?: "id" | "en" | (string & {});
+    inputLocale?: "id" | "en" | (string & {}) | Locale;
 
     /**
      * Input format string for parsing non-ISO string dates
@@ -160,16 +189,23 @@ export const formatDateWithFns = (
     format = "dd MMM yyyy - HH:mm:ss",
     inputFormat,
     locale,
-    InputLocale,
+    inputLocale,
     ...restOptions
   } = options || {};
 
   let parsedDate: Date;
 
-  if (typeof date === "string" && inputFormat && InputLocale) {
+  if (typeof date === "string" && inputFormat && inputLocale) {
+    const valueOfInputLocale =
+      typeof inputLocale === "string"
+        ? inputLocale === "id"
+          ? id
+          : enUS
+        : inputLocale;
+
     try {
       parsedDate = parse(date, inputFormat, new Date(), {
-        locale: InputLocale === "id" ? id : enUS,
+        locale: valueOfInputLocale,
       });
     } catch {
       return null;
@@ -180,22 +216,13 @@ export const formatDateWithFns = (
 
   if (isNaN(parsedDate.getTime())) return null;
 
+  const valueOfLocale =
+    typeof locale === "string" ? (locale === "id" ? id : enUS) : locale;
+
   return formatDns(parsedDate, format, {
     ...restOptions,
-    locale: locale === "id" ? id : enUS,
+    locale: valueOfLocale,
   });
-
-  // if (!date) return null;
-
-  // const parsedDate = new Date(date);
-  // if (isNaN(parsedDate.getTime())) return null; // Handle invalid dates
-
-  // const { format = "dd MMM yyyy - HH:mm:ss", locale, ...restOptions } = options || {};
-
-  // return formatDns(parsedDate, format, {
-  //   ...restOptions,
-  //   locale: locale === "id" ? id : enUS
-  // });
 };
 
 /** ----------------------------------------------------------

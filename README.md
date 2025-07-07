@@ -27,7 +27,6 @@
 - ⚙️ [Installation](#installation)
 - ✨ [Features](#features)
 - 🔥 [Usage](#usage)
-  - [Test](#test)
 - ❤️ [Sponsor](#sponsor-this-package)
 - 📜 [Changelog](#changelog)
 - 🤝 [Contributing](#contributing)
@@ -39,14 +38,21 @@
 
 <h2 id="installation">⚙️ Installation</h2>
 
+#### With NPM
+
 ```bash
-  # with npm
   npm install rzl-utils-js
+```
 
-  # with yarn
+#### With Yarn
+
+```bash
   yarn add rzl-utils-js
+```
 
-  # with pnpm
+#### With PNPM
+
+```bash
   pnpm add rzl-utils-js
 ```
 
@@ -58,6 +64,20 @@
 - ⚡ Small, tree-shakable & fast
 - 📦 Works in **Node.js** & modern browsers
 - ❤️ Simple API, easy to extend
+
+---
+
+<h2 id="usage">🔥 Usage</h2>
+
+#### Easy to use, just import on your code base.
+
+##### Example:
+
+```ts
+import { isServer } from "rzl-utils-js";
+
+console.log(isServer);
+```
 
 ---
 
