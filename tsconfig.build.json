@@ -19,6 +19,6 @@
     },
   },
   "include": [
-    "src"
+    "src/types/index.ts"
   ]
 }

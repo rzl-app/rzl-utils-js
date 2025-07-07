@@ -1,6 +1,13 @@
 {
   "delete": true,
-  "directory": "src",
+  "directory": ".",
+  "exclude": [
+    "**/types",
+    "**/types/**",
+    "**/types.ts",
+    "**/*types*",
+    "**/*types*/**"
+  ],
   "extension": "ts",
   "single": true
 }

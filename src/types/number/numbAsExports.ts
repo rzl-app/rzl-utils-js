@@ -1,5 +1,5 @@
 import { RangeNumberTo999 } from "./range0to999";
-import { IsGreaterThan, Sum } from "..";
+import { IsGreaterThan, Sum } from "../helpers";
 
 export type Range_1_to_999_AsExport<
   S extends number,

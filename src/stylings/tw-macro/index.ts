@@ -1,4 +1,4 @@
-import type { UnionToTuple } from "./types/types";
+import type { UnionToTuple } from "./types";
 
 /** ----------------------------------------
  * * ***Creates a helper function for `shouldForwardProp` in styled-components.***

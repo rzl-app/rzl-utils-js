@@ -1,5 +1,3 @@
-import type { RandomINTProps } from "./types";
-
 /** ----------------------------------------------------------
  * * ***Generates a random integer within a specified range of digit lengths.***
  * ----------------------------------------------------------

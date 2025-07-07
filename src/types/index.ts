@@ -1,3 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+export type * from "./color";
 export type * from "./helpers";
+export type * from "./number/numbAsExports";
+export type * from "./number/range0to999";

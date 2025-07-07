@@ -1,4 +1,5 @@
-import type { RandomStringOptions, RandomSTRProps } from "./types";
+import type { RandomStringOptions } from "./types";
+export type { RandomStringOptions } from "./types";
 
 /** ----------------------------
  * * ***Generates a random alphanumeric string or number with a specified length range.***

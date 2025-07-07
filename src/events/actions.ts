@@ -43,7 +43,9 @@ export const removeElementFocus = (): void => {
  * disableUserInteraction(); // Adds "on_processing" class to <html>
  * disableUserInteraction("loading"); // Adds "loading" class to <html>
  */
-export const disableUserInteraction = (className: string = "on_processing"): void => {
+export const disableUserInteraction = (
+  className: string = "on_processing"
+): void => {
   // Ensure function runs only in the browser
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
@@ -69,7 +71,9 @@ export const disableUserInteraction = (className: string = "on_processing"): voi
  * enableUserInteraction(); // Removes "on_processing" class from <html>
  * enableUserInteraction("loading"); // Removes "loading" class from <html>
  */
-export const enableUserInteraction = (className: string = "on_processing"): void => {
+export const enableUserInteraction = (
+  className: string = "on_processing"
+): void => {
   // Ensure function runs only in the browser
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
@@ -109,7 +113,7 @@ export const scrollToTop = (options?: ScrollToTopOptions): void => {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: behavior
+        behavior: behavior,
       });
     },
     timeout < 0 ? 1 : timeout
