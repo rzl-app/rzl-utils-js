@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+// import { NextRequest } from "next/server";
 
 import { formatEnvPort } from "./utils";
 import { normalizePathname } from "./pathname";
@@ -15,43 +15,43 @@ import { isEmptyObject } from "@/checkers";
  *
  * @returns {string} The extracted client IP address or the full constructed URL.
  */
-export const getClientIpOrUrl = (
-  /** * The incoming Next.js request object. */
-  request: NextRequest,
-  /** * Whether to return the full URL (protocol, IP, and port) or just the IP address.
-   *
-   * @default true
-   */
-  includeFullUrl: boolean = true
-): string => {
-  let forwardedIps = (request.headers.get("x-forwarded-for") ?? "127.0.0.1")
-    .trim()
-    .split(",");
+// export const getClientIpOrUrl = (
+//   /** * The incoming Next.js request object. */
+//   request: NextRequest,
+//   /** * Whether to return the full URL (protocol, IP, and port) or just the IP address.
+//    *
+//    * @default true
+//    */
+//   includeFullUrl: boolean = true
+// ): string => {
+//   let forwardedIps = (request.headers.get("x-forwarded-for") ?? "127.0.0.1")
+//     .trim()
+//     .split(",");
 
-  // Normalize IPv6 loopback addresses
-  if (forwardedIps[0] === "::ffff:127.0.0.1" || forwardedIps[0] === "::1") {
-    forwardedIps[0] = "127.0.0.1";
-  }
+//   // Normalize IPv6 loopback addresses
+//   if (forwardedIps[0] === "::ffff:127.0.0.1" || forwardedIps[0] === "::1") {
+//     forwardedIps[0] = "127.0.0.1";
+//   }
 
-  // Get the last non-empty IP from the list (more reliable for real client IP)
-  const clientIp =
-    forwardedIps.length > 1
-      ? forwardedIps[forwardedIps.length - 1].trim()
-      : forwardedIps[0];
+//   // Get the last non-empty IP from the list (more reliable for real client IP)
+//   const clientIp =
+//     forwardedIps.length > 1
+//       ? forwardedIps[forwardedIps.length - 1].trim()
+//       : forwardedIps[0];
 
-  if (!includeFullUrl) {
-    return clientIp;
-  }
+//   if (!includeFullUrl) {
+//     return clientIp;
+//   }
 
-  // Construct full URL using protocol, IP, and port
-  const protocol = request.headers.get("x-forwarded-proto") || "http";
-  // const protocol = "http";
-  const port = request.headers.get("x-forwarded-port") || "3000";
+//   // Construct full URL using protocol, IP, and port
+//   const protocol = request.headers.get("x-forwarded-proto") || "http";
+//   // const protocol = "http";
+//   const port = request.headers.get("x-forwarded-port") || "3000";
 
-  return `${
-    process.env.NODE_ENV == "production" ? protocol : "http"
-  }://${clientIp}:${port}`;
-};
+//   return `${
+//     process.env.NODE_ENV == "production" ? protocol : "http"
+//   }://${clientIp}:${port}`;
+// };
 
 /** ---------------------------------
  * * ***Constructs a valid URL with optional query parameters and allows selective removal of duplicate parameters.***
