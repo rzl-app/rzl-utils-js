@@ -2,15 +2,25 @@
 tests/
 fixtures/
 compiler/
+compiler/
 
 # Don't publish source TS
 src/
 
 # Ignore config files
 tsconfig.json
+tsup.config.ts
+barrelsby.json
 *.tsbuildinfo
 *.log
 
 # Ignore editor/IDE stuff
 .editorconfig
 .gitattributes
+
+*.ts
+*.yml
+.vscode/
+__tests__/
+examples/
+tests/
