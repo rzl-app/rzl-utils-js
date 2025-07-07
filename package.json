@@ -27,7 +27,8 @@
     "build:types": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
     "prepare": "npm run build",
-    "check-publish": "npm pack --dry-run"
+    "check-publish": "npm pack --dry-run",
+    "command-release-patch-inline": "npm version patch && git push && git push --tags && npm publish"
   },
   "files": [
     "dist",
