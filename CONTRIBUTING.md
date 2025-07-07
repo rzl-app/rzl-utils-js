@@ -1,7 +1,7 @@
 # 🙌 Contributing to rzl-utils-js
 
-Hi there! 🎉
-Thanks for considering to contribute to **rzl-utils-js** 🚀
+Hi there! 🎉  
+Thanks for considering to contribute to **rzl-utils-js** 🚀  
 This guide will help you set up everything you need to start hacking on the project.
 
 ---
@@ -81,7 +81,6 @@ We welcome all contributions, including:
 
 ## ❤️ Thank you
 
-We appreciate your contribution.
-Whether it's a tiny typo fix or a new utility function — you're awesome! ✨
-
+We appreciate your contribution.  
+Whether it's a tiny typo fix or a new utility function — you're awesome! ✨  
 Made with ❤️ **[@rzl-app](https://github.com/rzl-app).**

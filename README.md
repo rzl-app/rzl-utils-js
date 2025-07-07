@@ -11,10 +11,8 @@
 
 ```
 
-> A lightweight, modern TypeScript utility library for Node.js & browser.
->
-> Provides reusable helpers to simplify your JavaScript / TypeScript projects.
->
+> A lightweight, modern TypeScript utility library for Node.js & browser.  
+> Provides reusable helpers to simplify your JavaScript / TypeScript projects.  
 > **Built with ❤️ by [@rzl-app](https://github.com/rzl-app).**
 
 [![Latest Version on NPM](https://img.shields.io/npm/v/rzl-utils-js?color=blue&style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
@@ -65,8 +63,7 @@
 
 <h2 id="sponsor-this-package">❤️ Sponsor this package</h2>
 
-Help support development:
-
+Help support development:  
 [👉 Become a sponsor](https://github.com/sponsors/rzl-app)
 
 ---
@@ -102,8 +99,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 ---
 
-✅ **Enjoy using `rzl-app/laravel-toaster`?**
-
+✅ **Enjoy using `rzl-app/laravel-toaster`?**  
 Star this repo ⭐ and share it with other Laravel developers!
 
 ---

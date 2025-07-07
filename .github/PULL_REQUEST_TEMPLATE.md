@@ -1,19 +1,24 @@
 # 🚀 Pull Request
 
-## Description
+## 📄 Description
 
-Describe what this PR does and what feature/bug it solves.
+Please describe what this PR does and what problem it solves.
 
-## Related issue
+## 🔗 Related issue
 
-Closes # (issue)
+Closes #(issue number), if applicable.
 
-## Checklist
+## ✅ Checklist
 
-- [ ] My code follows the code style of this project.
+- [ ] My code follows the style guidelines of this project.
+- [ ] I have performed a self-review of my code.
 - [ ] I have run `npm run build` and verified the build works.
-- [ ] I have added tests that prove my fix is effective or my feature works.
-- [ ] I have updated the documentation (if needed).
+- [ ] I have added tests that prove my fix is effective or my feature works (if needed).
+- [ ] I have updated documentation or README (if needed).
+
+## 💬 Additional context
+
+Add any other context or screenshots about this PR here.
 
 ---
 
