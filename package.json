@@ -9,26 +9,37 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./types": {
       "types": "./dist/types/index.d.ts"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "engineStrict": true,
   "scripts": {
+    "preinstall": "node ./scripts/check-engines.js",
     "clean": "rimraf dist",
     "format": "prettier --check .",
     "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
     "bump:patch": "npm version patch",
     "bump:minor": "npm version minor",
     "bump:major": "npm version major",
     "barrel": "npx barrelsby --directory src --single --delete --exclude \"/types/index.ts\" && echo \"✅ Barrel generated clean!\"",
+    "dev": "tsc --watch",
     "build": "npm run clean && npm run barrel && tsup && npm run build:types",
     "build:types": "tsc -p tsconfig.build.json",
-    "dev": "tsc --watch",
     "prepare": "npm run build",
     "check-publish": "npm pack --dry-run",
-    "command-release-patch-inline": "npm version patch && git push && git push --tags && npm publish"
+    "release-patch": "npm version patch && git push && git push --tags && npm publish"
   },
   "files": [
     "dist",
