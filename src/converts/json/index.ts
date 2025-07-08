@@ -94,6 +94,12 @@ function cleanParsedData<T = unknown>(
   data: unknown,
   options: CleanParsedDataOptions = {}
 ): T | undefined | null {
+  if (typeof options !== "object") {
+    throw new TypeError(
+      `props 'options' must be \`object\` or empty as \`undefined\` type!`
+    );
+  }
+
   if (data === null) return options.removeNulls ? undefined : null;
   if (data === undefined)
     return options.removeUndefined ? undefined : undefined;
@@ -166,6 +172,12 @@ function cleanParsedData<T = unknown>(
  * @returns {Date | null} - Returns a Date object if valid, otherwise null.
  */
 function parseCustomDate(dateString: string, format: string): Date | null {
+  if (typeof dateString !== "string" && typeof format !== "string") {
+    throw new TypeError(
+      `props 'dateString' and 'format' must be \`string\` type!`
+    );
+  }
+
   const dateParts = dateString.split(/[-/]/).map(Number);
   if (dateParts.length !== 3) return null;
 
@@ -209,6 +221,12 @@ export function safeJsonParse<T = unknown>(
 ): T | undefined | null {
   if (value === null) return null;
   if (typeof value !== "string") return undefined;
+
+  if (typeof options !== "object") {
+    throw new TypeError(
+      `props 'options' must be \`object\` or empty as \`undefined\` type!`
+    );
+  }
 
   try {
     const parsed = JSON.parse(value);

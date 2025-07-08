@@ -85,6 +85,15 @@ export function convertArrayValuesToStrings<
 ): ConvertedStringType<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined {
   if (input === null || input === undefined) return undefined;
 
+  if (
+    typeof removeEmptyObjects !== "boolean" ||
+    typeof removeEmptyArrays !== "boolean"
+  ) {
+    throw new TypeError(
+      `props 'removeEmptyObjects' and 'removeEmptyArrays' must be \`boolean\` type!`
+    );
+  }
+
   if (typeof input === "number" || typeof input === "string") {
     return String(input) as ConvertedStringType<
       T,

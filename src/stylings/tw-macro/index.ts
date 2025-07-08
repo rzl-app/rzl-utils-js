@@ -1,3 +1,4 @@
+import { isArray } from "@/checkers";
 import type { UnionToTuple } from "./types";
 
 /** ----------------------------------------
@@ -13,7 +14,7 @@ import type { UnionToTuple } from "./types";
 export const shouldForwardProp = <CustomProps>(
   props: UnionToTuple<keyof CustomProps>
 ) => {
-  if (!Array.isArray(props)) {
+  if (!isArray(props)) {
     throw new Error(
       "Invalid argument: `props` must be an array from function `shouldForwardProp`."
     );

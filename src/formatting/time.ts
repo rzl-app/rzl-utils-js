@@ -28,8 +28,16 @@ export const formatDateTimeCustoms = (
   format: string = "YYYY-MM-DD hh:mm:ss"
 ): string | null => {
   try {
-    if (!date || !(date instanceof Date || typeof date === "string"))
+    if (
+      !date ||
+      !(
+        date instanceof Date ||
+        typeof date === "string" ||
+        typeof format === "string"
+      )
+    ) {
       return null;
+    }
 
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) return null; // Handle invalid dates
@@ -82,12 +90,17 @@ export const formatDateWithIntl = (
     locale?: Intl.LocalesArgument;
   }
 ): string | null => {
-  if (!date) return null;
+  if (!date || !(date instanceof Date || typeof date === "string")) return null;
 
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) return null; // Handle invalid dates
 
-  const { locale = "en-US", ...restProps } = options || {};
+  // Ensure options is an object and Defensive options check
+  if (typeof options !== "object" || options === null) {
+    options = {};
+  }
+
+  const { locale = "en-US", ...restProps } = options;
 
   return new Intl.DateTimeFormat(
     locale?.toString()?.trim()?.length ? locale : "en-US",
@@ -183,7 +196,12 @@ export const formatDateWithFns = (
     inputFormat?: string;
   }
 ): string | null => {
-  if (!date) return null;
+  if (!date || !(date instanceof Date || typeof date === "string")) return null;
+
+  // Ensure options is an object and Defensive options check
+  if (typeof options !== "object" || options === null) {
+    options = {};
+  }
 
   const {
     format = "dd MMM yyyy - HH:mm:ss",
@@ -191,7 +209,7 @@ export const formatDateWithFns = (
     locale,
     inputLocale,
     ...restOptions
-  } = options || {};
+  } = options;
 
   let parsedDate: Date;
 

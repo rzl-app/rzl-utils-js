@@ -19,6 +19,13 @@ export function formatNumberWithSeparator(
   value: string | number,
   separator: string = ","
 ): string {
+  if (!value || !(typeof value === "string" || typeof value === "number")) {
+    `props 'value' must be \`string\` or \`number\` type!`;
+  }
+  if (!separator || !(typeof separator === "string")) {
+    `props 'separator' must be \`string\` or empty as \`undefined\` type!`;
+  }
+
   separator =
     typeof separator === "string" && separator.trim().length ? separator : ",";
 

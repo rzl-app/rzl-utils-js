@@ -12,12 +12,22 @@ export type { RandomStringOptions } from "./types";
 export const generateRandomString = (
   options: RandomStringOptions = {}
 ): string => {
+  // Ensure options is an object and Defensive options check
+  if (typeof options !== "object" || options === null) {
+    options = {};
+  }
+
   let {
     minLength = 40,
     maxLength = 40,
     type = "string",
     avoidWhiteSpace = true,
   } = options;
+
+  // Validate `avoidWhiteSpace`
+  if (typeof avoidWhiteSpace !== "boolean") {
+    throw new Error("Invalid parameter: `avoidWhiteSpace` must be 'boolean'.");
+  }
 
   // Validate `minLength` & `maxLength`
   if (
@@ -32,16 +42,16 @@ export const generateRandomString = (
     );
   }
 
-  // Generate a random length within the range
-  const length =
-    Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-
   // Validate `type`
   if (type !== "string" && type !== "number") {
     throw new Error(
       "Invalid parameter: `type` must be either 'string' or 'number'."
     );
   }
+
+  // Generate a random length within the range
+  const length =
+    Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
 
   // Function to clean characters based on `avoidWhiteSpace`
   const cleanCharacters = (charSet: string) => {

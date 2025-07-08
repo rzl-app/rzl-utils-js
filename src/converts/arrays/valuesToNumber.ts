@@ -91,6 +91,15 @@ export function convertArrayValuesToNumbers<
   if (input === null || input === undefined) return undefined;
 
   if (
+    typeof removeEmptyObjects !== "boolean" ||
+    typeof removeEmptyArrays !== "boolean"
+  ) {
+    throw new TypeError(
+      `props 'removeEmptyObjects' and 'removeEmptyArrays' must be \`boolean\` type!`
+    );
+  }
+
+  if (
     typeof input === "number" ||
     (typeof input === "string" && !isNaN(Number(input)))
   ) {

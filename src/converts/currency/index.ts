@@ -1,4 +1,4 @@
-import type { FormatCurrencyOptions, PropsReplaceNonNumeric } from "./convert";
+import type { FormatCurrencyOptions, PropsReplaceNonNumeric } from "./types";
 
 /** ----------------------------------------------------------
  * * ***Formats a number or string into a currency with customizable separators and decimal options.***
@@ -24,19 +24,43 @@ export const formatCurrency = ({
   totalDecimal = 2,
   endDecimal = true,
   suffixDecimal = ".-",
-  separatorDecimals = ","
+  separatorDecimals = ",",
 }: FormatCurrencyOptions): string => {
+  if (!(typeof value === "string" || typeof value === "number")) {
+    throw new TypeError(`props 'value' must be \`string\` or \`number\` type!`);
+  }
+
   // Ensure value is a valid number by stripping non-numeric characters
   const numericValue = removeNonNumericCharacters({ value }).toString();
 
+  if (typeof decimal !== "boolean" || typeof endDecimal !== "boolean") {
+    throw new TypeError(
+      `props 'decimal' and 'endDecimal' must be \`boolean\` or empty as \`undefined\` type!`
+    );
+  }
+
+  if (
+    typeof separator !== "string" ||
+    typeof suffixDecimal !== "string" ||
+    typeof separatorDecimals !== "string"
+  ) {
+    throw new TypeError(
+      `props 'separator', 'suffixDecimal' and 'separatorDecimals' must be \`string\` or empty as \`undefined\` type!`
+    );
+  }
+
   // Apply thousands separator
-  const formattedNumber = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+  const formattedNumber = numericValue.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    separator
+  );
 
   // Generate decimal part if required
   let decimalPart = "";
   if (decimal) {
     const decimals = "0".repeat(totalDecimal);
-    decimalPart = separatorDecimals + decimals + (endDecimal ? suffixDecimal : "");
+    decimalPart =
+      separatorDecimals + decimals + (endDecimal ? suffixDecimal : "");
   }
 
   return formattedNumber + decimalPart;
@@ -59,8 +83,15 @@ export const formatCurrency = ({
  * removeNonNumericCharacters({ value: "9A8B7C6" });   // 9876
  * removeNonNumericCharacters({ value: undefined });   // 0
  */
-export const removeNonNumericCharacters = ({ value }: PropsReplaceNonNumeric): number => {
-  if (typeof value === "undefined" || value === null) return 0;
+export const removeNonNumericCharacters = ({
+  value,
+}: PropsReplaceNonNumeric): number => {
+  if (
+    typeof value === "undefined" ||
+    value === null ||
+    !(typeof value === "string" || typeof value === "number")
+  )
+    return 0;
 
   return Number(String(value).replace(/[^0-9]/g, "")) || 0;
 };

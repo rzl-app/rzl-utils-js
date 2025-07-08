@@ -91,6 +91,12 @@ export function safeJsonParseDeprecated<AsType = unknown>(
   if (value === null) return null;
   if (typeof value !== "string") return undefined;
 
+  if (typeof loggingOnFail !== "boolean") {
+    throw new TypeError(
+      `props 'loggingOnFail' must be \`boolean\` or empty as \`undefined\` type!`
+    );
+  }
+
   try {
     return JSON.parse(value);
   } catch (error) {

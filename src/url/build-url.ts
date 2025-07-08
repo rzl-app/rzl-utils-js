@@ -24,6 +24,16 @@ export const getClientIpOrUrl = (
    */
   includeFullUrl: boolean = true
 ): string => {
+  if (!(request instanceof NextRequest)) {
+    throw new TypeError(
+      "Argument `request` must be an instance of NextRequest."
+    );
+  }
+
+  if (typeof includeFullUrl !== "boolean") {
+    throw new TypeError("Expected `includeFullUrl` to be a boolean.");
+  }
+
   let forwardedIps = (request.headers.get("x-forwarded-for") ?? "127.0.0.1")
     .trim()
     .split(",");
@@ -68,12 +78,35 @@ export const constructURL = (
   queryParams?: URLSearchParamsIterator<[string, string]>,
   removeParams?: string[]
 ): URL => {
+  if (typeof baseUrl === "string") {
+    if (!baseUrl.trim()) {
+      throw new TypeError("`baseUrl` cannot be an empty string.");
+    }
+    baseUrl = removeAllSpaceString(baseUrl, { trimOnly: true });
+  } else if (!(baseUrl instanceof URL)) {
+    throw new TypeError(
+      `Invalid 'baseUrl'. Expected a non-empty string or a URL instance, received: ${typeof baseUrl}`
+    );
+  }
+
+  // 🔍 Check removeParams
+  if (removeParams !== undefined) {
+    if (!Array.isArray(removeParams)) {
+      throw new TypeError("`removeParams` must be an array of strings.");
+    }
+    if (!removeParams.every((param) => typeof param === "string")) {
+      throw new TypeError("`removeParams` must only contain strings.");
+    }
+  }
+
   try {
-    // Normalize the input URL
-    if (typeof baseUrl === "string") {
-      baseUrl = baseUrl.trim().length
-        ? removeAllSpaceString(baseUrl, { trimOnly: true })
-        : "";
+    // 🔍 Check queryParams
+    if (queryParams !== undefined) {
+      if (typeof queryParams[Symbol.iterator] !== "function") {
+        throw new TypeError(
+          "`queryParams` must be iterable (like URLSearchParams.entries() or an array of [string, string])"
+        );
+      }
     }
 
     const urlInstance = new URL(baseUrl);
@@ -160,6 +193,13 @@ export const getBackendApiUrl = ({
    * @default "/" */
   suffix?: string;
 } = {}): string => {
+  // ✅ Ensure suffix is a string
+  if (typeof suffix !== "string") {
+    throw new TypeError(
+      `Invalid type for 'suffix'. Expected string, received: ${typeof suffix}`
+    );
+  }
+
   try {
     // Retrieve the API base URL from environment variables or use the default value
     let baseUrl = removeAllSpaceString(
@@ -227,7 +267,24 @@ export const getBackendApiEndpoint = (
   } = {}
 ): string => {
   try {
-    const removeAllTrailingSlashes = (url: string) => url.replace(/\/+$/, "");
+    // ✅ Type checks
+    if (typeof pathname !== "string") {
+      throw new TypeError(
+        `Invalid type for 'pathname'. Expected 'string', received: ${typeof pathname}`
+      );
+    }
+
+    if (typeof prefix !== "string") {
+      throw new TypeError(
+        `Invalid type for 'prefix'. Expected 'string', received: ${typeof prefix}`
+      );
+    }
+
+    if (typeof withOrigin !== "boolean") {
+      throw new TypeError(
+        `Invalid type for 'withOrigin'. Expected 'boolean', received: ${typeof withOrigin}`
+      );
+    }
 
     // Normalize pathname
     pathname = pathname.trim().length
@@ -251,7 +308,7 @@ export const getBackendApiEndpoint = (
       ? `${baseApiUrl}${pathname}`
       : new URL(baseApiUrl).pathname + pathname;
 
-    return removeAllTrailingSlashes(fullPath);
+    return fullPath.replace(/\/+$/, "");
   } catch (error) {
     throw new Error(
       "Failed to generate backend API URL in `getBackendApiEndpoint()`, Error:" +

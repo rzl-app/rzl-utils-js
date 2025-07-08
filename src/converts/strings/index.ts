@@ -18,6 +18,12 @@ export const capitalizeFirstLetter = (
   }
 ) => {
   if (typeof string === "string" && string.trim().length > 0) {
+    if (typeof options !== "object" || options === null) {
+      options = {
+        lowerCaseNextOtherFirstLetter: true,
+      }; // fallback to default
+    }
+
     string = string[0].toUpperCase() + string.slice(1);
 
     if (options.lowerCaseNextOtherFirstLetter) {
@@ -101,6 +107,18 @@ export const replaceAt = (
   originalString: string,
   replaceTo: string
 ): string => {
+  if (
+    !(
+      typeof index === "number" ||
+      typeof replaceTo === "string" ||
+      typeof originalString === "string"
+    )
+  ) {
+    throw new TypeError(
+      "Expected 'index' to be a 'number' type, 'replaceTo' and 'originalString' to be a 'string' type"
+    );
+  }
+
   // Handle edge cases
   if (index < 0 || index >= originalString.length) {
     throw new Error("Index parameter is out of range at function `replaceAt`");
@@ -135,6 +153,19 @@ export const addSeparatorToString = (
   separator: string = " ",
   reCountAfterSpace: boolean = false
 ): string => {
+  if (
+    !(
+      typeof limiter === "number" ||
+      typeof subject === "string" ||
+      typeof separator === "string" ||
+      typeof reCountAfterSpace === "boolean"
+    )
+  ) {
+    throw new TypeError(
+      "Expected 'subject' and 'separator' to be a 'string' type, 'limiter' to be a 'number' type, 'reCountAfterSpace' to be a 'boolean' type"
+    );
+  }
+
   if (!subject || limiter <= 0) return subject; // Handle invalid inputs
 
   if (reCountAfterSpace) {
@@ -167,7 +198,7 @@ export const addSeparatorToString = (
  * getUserInitials("  ");            // "" (empty string)
  */
 export const getUserInitials = (name: string | null = ""): string => {
-  if (!name) return ""; // Handle empty string case
+  if (!name || typeof name !== "string") return ""; // Handle empty string case
 
   // Trim spaces and remove duplicate spaces
   name = name.replace(/\s+/g, " ").trim();
@@ -191,14 +222,14 @@ export const getUserInitials = (name: string | null = ""): string => {
  * @param {string} [input] - The string that may contain HTML tags.
  * @returns {string | undefined | null} The cleaned string without HTML tags, or the original input if invalid.
  */
-export function stripHtmlTags(
-  input?: string | null
-): string | undefined | null {
+export function stripHtmlTags<T extends string | null | undefined = undefined>(
+  input?: T
+): T {
   if (!input || typeof input !== "string" || !input.trim().length) {
-    return input;
+    return undefined as T;
   }
 
-  return input.replace(/<[^>]*>/g, "");
+  return input.replace(/<[^>]*>/g, "") as T;
 }
 
 /** ----------------------------------------------------------
@@ -211,17 +242,24 @@ export function stripHtmlTags(
  */
 export const removeAllSpaceString = (
   string?: string | null,
-  {
-    trimOnly = false,
-  }: {
+  options: {
     /**
      * @description If true, only trims the string.
      *
      * @default false */
     trimOnly?: boolean;
-  } = {}
+  } = {
+    trimOnly: false,
+  }
 ): string => {
-  if (typeof string == "string") {
+  if (typeof string === "string") {
+    // Ensure options is an object and Defensive options check
+    if (typeof options !== "object" || options === null) {
+      options = {};
+    }
+
+    const { trimOnly = false } = options;
+
     // If trimOnly is true, trim the string and return
     if (trimOnly) return string.trim();
 
@@ -255,17 +293,24 @@ export const normalizeString = (input?: string | null): string => {
  */
 export const removeDuplicateSpaceString = (
   string?: string | null,
-  {
-    trimOnly = false,
-  }: {
+  options: {
     /**
      * @description If true, only trims the string.
      *
      * @default false */
     trimOnly?: boolean;
-  } = {}
+  } = {
+    trimOnly: false,
+  }
 ): string => {
   if (typeof string == "string") {
+    // Ensure options is an object and Defensive options check
+    if (typeof options !== "object" || options === null) {
+      options = {};
+    }
+
+    const { trimOnly = false } = options;
+
     // If trimOnly is true, trim the string and return
     if (trimOnly) return string.trim();
 
@@ -292,7 +337,19 @@ export function truncateString(
   ending: string = "...",
   trim: boolean = true
 ): string {
-  if (!text || text.trim().length < 1) return "";
+  if (!text || typeof text !== "string" || text.trim().length < 1) return "";
+
+  if (
+    !(
+      typeof length === "number" ||
+      typeof ending === "string" ||
+      typeof trim === "boolean"
+    )
+  ) {
+    throw new TypeError(
+      "Expected 'ending' to be a 'string' type, 'length' to be a 'number' type, 'trim' to be a 'boolean' type"
+    );
+  }
 
   if (text.length <= length) {
     return trim ? text.trim() : text;
@@ -411,6 +468,13 @@ export function censorEmail(
   mode: "random" | "fixed" = "random"
 ): string {
   if (typeof email !== "string") return "";
+
+  // Ensure mode is either "random" or "fixed"
+  if (mode !== "random" && mode !== "fixed") {
+    throw new TypeError(
+      "Expected 'mode' to be a 'string' and the valid value is 'random' and 'fixed' only!"
+    );
+  }
 
   // Strict email validation regex
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -647,7 +711,7 @@ export function capitalizeName(name?: string | null): string {
  * toPascalCase(null); // ""
  */
 export const toPascalCase = (str?: string | null): string => {
-  return str
+  return str && typeof str === "string"
     ? str
         .replace(/[^a-zA-Z0-9\s-_]/g, "") // Remove unwanted characters
         .split(/[\s-_]+/) // Split by space, hyphen, or underscore
@@ -677,7 +741,7 @@ export const toPascalCase = (str?: string | null): string => {
  * toCamelCase(null); // ""
  */
 export const toCamelCase = (str?: string | null): string => {
-  return str
+  return str && typeof str === "string"
     ? str
         .replace(/[^a-zA-Z0-9\s-_]/g, "") // Remove unwanted characters
         .split(/[\s-_]+/) // Split by space, hyphen, or underscore

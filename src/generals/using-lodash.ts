@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import type { OmitStrict } from "@/libs/types/Global";
+import { isArray } from "@/checkers";
 import type { OmitStrict } from "@/types";
 import { filter, includes, isEqual } from "lodash";
 
@@ -44,6 +45,9 @@ export const areObjectsEqual = <
  * findDuplicates([true, false, true]); // Returns "[true]"
  */
 export const findDuplicates = <T>(values: T[]): string => {
+  if (!isArray(values)) {
+    throw new TypeError("Expected 'values' to be a 'array' type");
+  }
   // Find duplicates
   const duplicates = filter(values, (value, index, iteratee) =>
     includes(iteratee, value, index + 1)
@@ -75,6 +79,10 @@ export const omitKeys = <I extends Record<string, any>, K extends keyof I>(
   keysToOmit: K[]
 ): Omit<I, K> => {
   if (!object || typeof object !== "object") return {} as Omit<I, K>;
+
+  if (!isArray(keysToOmit)) {
+    throw new TypeError("Expected 'keysToOmit' to be a 'array' type");
+  }
 
   // Check for duplicate keys
   const duplicates = findDuplicates(keysToOmit);

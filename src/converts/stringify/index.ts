@@ -22,6 +22,12 @@ export const safeStableStringify = (
   sortKeys: boolean = true,
   ignoreOrder: boolean = false
 ): string => {
+  if (!(typeof sortKeys === "boolean" || typeof ignoreOrder === "boolean")) {
+    throw new TypeError(
+      "Expected 'sortKeys' and 'ignoreOrder' to be a 'boolean' type"
+    );
+  }
+
   try {
     if (typeof value !== "object" || value === null)
       return JSON.stringify(value);

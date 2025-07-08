@@ -110,6 +110,22 @@ export function generateRoute<T extends string>(
   route: T,
   params?: ExtractRouteParams<T>
 ): string {
+  // Validate the route string
+  if (typeof route !== "string" || !route.trim()) {
+    throw new TypeError(
+      `🚨 'generateRoute' Failed cause: Invalid 'route'. Expected non-empty string but received ${typeof route}: ${JSON.stringify(
+        route
+      )}`
+    );
+  }
+
+  // Validate that params is a plain object
+  if (!params || typeof params !== "object" || Array.isArray(params)) {
+    throw new Error(
+      `🚨 Missing or invalid parameters object for route: "${route}". Expected an object mapping parameters.`
+    );
+  }
+
   // If no dynamic segments exist, return the route as-is.
   if (!route.includes("[")) return route;
 

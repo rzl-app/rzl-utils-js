@@ -31,6 +31,13 @@ export const textMatchesAllPatterns = <T extends string>(
     return false;
   }
 
+  if (typeof exactMatch !== "boolean") {
+    throw new TypeError(`props 'exactMath' must be \`boolean\` type!`);
+  }
+  if (typeof flags !== "string") {
+    throw new TypeError(`props 'flags' must be \`string\` type!`);
+  }
+
   // Escape special regex characters to prevent unintended behavior
   const escapeRegex = (str: string) =>
     str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -78,6 +85,13 @@ export const textMatchesAnyPattern = <T extends string>(
 ): boolean => {
   if (typeof text !== "string" || !text.trim() || !Array.isArray(searchWords)) {
     return false;
+  }
+
+  if (typeof exactMatch !== "boolean") {
+    throw new TypeError(`props 'exactMath' must be \`boolean\` type!`);
+  }
+  if (typeof flags !== "string") {
+    throw new TypeError(`props 'flags' must be \`string\` type!`);
   }
 
   // Escape special regex characters to prevent unintended behavior
@@ -160,8 +174,8 @@ export const arrayHasAnyMatch = <T>(
   targetArray?: T[]
 ): boolean => {
   if (
-    !Array.isArray(sourceArray) ||
-    !Array.isArray(targetArray) ||
+    !isArray(sourceArray) ||
+    !isArray(targetArray) ||
     sourceArray.length === 0 ||
     targetArray.length === 0
   ) {
@@ -227,6 +241,18 @@ export const doesKeyExist = <T>(
 ): boolean => {
   if (!obj || typeof obj !== "object") return false; // Handle null, undefined, and non-objects
 
+  if (
+    !(
+      typeof key === "string" ||
+      typeof key === "number" ||
+      typeof key === "symbol"
+    )
+  ) {
+    throw new TypeError(
+      `props 'key' must be \`string\`, \`number\` or \`symbol\` type!`
+    );
+  }
+
   if (Object.prototype.hasOwnProperty.call(obj, key)) return true; // Direct match found
 
   if (Array.isArray(obj)) {
@@ -271,6 +297,13 @@ export const areArraysEqual = (
   arr2: unknown[],
   ignoreOrder: boolean = false
 ): boolean => {
+  if (!(isArray(arr1) || isArray(arr2))) {
+    throw new TypeError(`props 'arr1' and 'arr2' must be \`array\` type!`);
+  }
+  if (!(typeof ignoreOrder === "boolean")) {
+    throw new TypeError(`props 'ignoreOrder' must be \`boolean\` type!`);
+  }
+
   if (arr1.length !== arr2.length) return false;
 
   const sortedArr1 = ignoreOrder ? [...arr1].sort() : arr1;

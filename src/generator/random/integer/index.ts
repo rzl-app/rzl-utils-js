@@ -26,6 +26,11 @@ export const generateRandomInteger = (
     avoidZero?: boolean;
   } = {}
 ): number => {
+  // Ensure options is an object and Defensive options check
+  if (typeof options !== "object" || options === null) {
+    options = {};
+  }
+
   let { minLength = 1, maxLength = 16, avoidZero = false } = options;
 
   // Validate minLength and maxLength

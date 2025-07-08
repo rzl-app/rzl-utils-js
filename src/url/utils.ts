@@ -16,10 +16,8 @@
  * ```
  */
 export function formatEnvPort(envVar?: string): string {
-  const trimmed = envVar?.trim();
-  if (!trimmed) return "";
+  if (typeof envVar !== "string" || !envVar.trim()) return "";
 
   // Remove all leading colons, then prepend one
-  const normalized = trimmed.replace(/^:+/, "");
-  return `:${normalized}`;
+  return `:${envVar.replace(/^:+/, "")}`;
 }

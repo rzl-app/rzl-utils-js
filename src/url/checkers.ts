@@ -7,6 +7,12 @@
  * @returns {boolean} Returns `true` if both URLs are identical, otherwise `false`.
  */
 export function areURLsIdentical(urlA: URL, urlB: URL): boolean {
+  if (!(urlA instanceof URL) || !(urlB instanceof URL)) {
+    throw new TypeError(
+      "Both arguments to 'areURLsIdentical' must be instances of URL."
+    );
+  }
+
   return (
     urlA.protocol + "//" + urlA.host + urlA.pathname + urlA.search ===
     urlB.protocol + "//" + urlB.host + urlB.pathname + urlB.search
@@ -24,6 +30,12 @@ export function areURLsIdentical(urlA: URL, urlB: URL): boolean {
  * @returns {boolean} Returns `true` if both URLs are the same (ignoring search parameters), otherwise `false`.
  */
 export function areURLsEqualIgnoringQuery(urlA: URL, urlB: URL): boolean {
+  if (!(urlA instanceof URL) || !(urlB instanceof URL)) {
+    throw new TypeError(
+      "Both arguments to 'areURLsEqualIgnoringQuery' must be instances of URL."
+    );
+  }
+
   return (
     urlA.protocol + "//" + urlA.host + urlA.pathname ===
     urlB.protocol + "//" + urlB.host + urlB.pathname

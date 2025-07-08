@@ -32,8 +32,27 @@ export function formatPhoneNumber({
   openingNumberCountry = "(",
   closingNumberCountry = ")",
 }: FormatPhoneNumberProps) {
-  if (!value) {
+  if (!value || typeof value !== "string") {
     return "";
+  }
+
+  if (
+    typeof takeNumberOnly !== "boolean" ||
+    typeof checkValidOnly !== "boolean"
+  ) {
+    throw new TypeError(
+      `props 'takeNumberOnly' and 'checkValidOnly' must be \`boolean\` or empty as \`undefined\` type!`
+    );
+  }
+
+  if (
+    typeof separator !== "string" ||
+    typeof openingNumberCountry !== "string" ||
+    typeof closingNumberCountry !== "string"
+  ) {
+    throw new TypeError(
+      `props 'separator', 'openingNumberCountry' and 'closingNumberCountry' must be \`string\` or empty as \`undefined\` type!`
+    );
   }
 
   if (typeof value !== "string") {

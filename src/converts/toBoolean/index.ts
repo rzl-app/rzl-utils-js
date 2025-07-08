@@ -12,15 +12,22 @@
  */
 export const toStrictBoolean = <T>(val?: T): boolean => {
   // Handle undefined, null, and other falsy values early
-  if (val == null) return false;
+  if (val === null) return false;
 
   if (typeof val === "string") {
-    val = val.toLowerCase().trim() as T; // Normalize string input
+    const normalized = val.toLowerCase().trim();
+    return ["true", "on", "yes", "1", "indeterminate"].includes(normalized);
   }
 
-  return ["true", "on", "yes", "1", "indeterminate", 1, true].includes(
-    val as string | number | boolean
-  );
+  if (typeof val === "number") {
+    return val === 1;
+  }
+
+  if (typeof val === "boolean") {
+    return val;
+  }
+
+  return false;
 };
 
 /** ---------------------------------
@@ -38,7 +45,7 @@ export const toStrictBoolean = <T>(val?: T): boolean => {
  * @returns {boolean} `true` if the value is truthy, otherwise `false`.
  */
 export const convertToBoolean = <T>(value?: T): boolean => {
-  if (value === null || value === undefined) return false; // Handles both undefined & null
+  if (value == null) return false; // handles null & undefined
 
   if (typeof value === "string") {
     return value.trim().length > 0; // Empty string is false

@@ -1,3 +1,4 @@
+import { isArray } from "@/checkers";
 import { filterNullValuesArray } from ".";
 
 //  ** ---- array number to array string ----
@@ -63,10 +64,14 @@ export function arrayNumbValToStringVal<T extends string | number>(
     /** @default true */
     removeInvalidValue?: boolean;
   } = {
-    removeInvalidValue: true
+    removeInvalidValue: true,
   }
 ): Array<string | null | undefined> | undefined {
-  if (array) {
+  if (!(typeof options === "object")) {
+    throw new TypeError(`props 'options' must be \`object\` type!`);
+  }
+
+  if (array && isArray(array)) {
     // Convert each item in the array to a string, or null/undefined if it's not a valid value.
     const result = Array.from(array, (x) => {
       if (typeof x === "string" || typeof x === "number") {
@@ -150,10 +155,14 @@ export function arrayStringValToNumberVal<T>(
     /** @default true */
     removeInvalidValueNumber?: boolean;
   } = {
-    removeInvalidValueNumber: true
+    removeInvalidValueNumber: true,
   }
 ) {
-  if (array) {
+  if (!(typeof options === "object")) {
+    throw new TypeError(`props 'options' must be \`object\` type!`);
+  }
+
+  if (array && isArray(array)) {
     // Convert each item in the array to a number, or undefined if it's not a valid number
     const result = Array.from(array, (x) => {
       const numberValue = parseInt(String(x)); // Try converting value to a number

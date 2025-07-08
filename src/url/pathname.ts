@@ -116,6 +116,33 @@ export function getPrefixPathname(
   levels: number = 1,
   removeDuplicates: boolean = true
 ): string | string[] | null {
+  const errors: string[] = [];
+
+  if (typeof url !== "string" && !Array.isArray(url)) {
+    errors.push(
+      `'url' must be a string or an array of strings. Received: ${typeof url}`
+    );
+  }
+  if (typeof base !== "string" && !Array.isArray(base) && base !== null) {
+    errors.push(
+      `'base' must be a string, array of strings, or null. Received: ${typeof base}`
+    );
+  }
+  if (typeof levels !== "number") {
+    errors.push(`'levels' must be a number. Received: ${typeof levels}`);
+  }
+  if (typeof removeDuplicates !== "boolean") {
+    errors.push(
+      `'removeDuplicates' must be a boolean. Received: ${typeof removeDuplicates}`
+    );
+  }
+
+  if (errors.length > 0) {
+    throw new TypeError(
+      `Invalid parameter(s) in getPrefixPathname:\n- ${errors.join("\n- ")}`
+    );
+  }
+
   // Helper function to process a single URL
   function processUrl(singleUrl: string): string | null {
     // If a base is provided, check if URL starts with one of the bases
@@ -205,6 +232,29 @@ export function getFirstPrefixPathname(
   result: string | string[] | null,
   defaultValue: string = "/"
 ): string {
+  // Validate defaultValue is a proper string
+  if (typeof defaultValue !== "string" || !defaultValue.trim()) {
+    throw new TypeError(
+      `Invalid parameter: 'defaultValue' must be a non-empty string. Received: ${typeof defaultValue} (${defaultValue})`
+    );
+  }
+
+  // Validate result is only allowed types
+  if (
+    result !== null &&
+    !(
+      typeof result === "string" ||
+      (Array.isArray(result) &&
+        result.every((item) => typeof item === "string"))
+    )
+  ) {
+    throw new TypeError(
+      `Invalid parameter: 'result' must be a string, an array of strings, or null. Received: ${JSON.stringify(
+        result
+      )}`
+    );
+  }
+
   // If result is an array, return the first element
   if (Array.isArray(result)) {
     return result?.[0] || normalizePathname(defaultValue);
@@ -232,8 +282,17 @@ export const normalizePathname = (
   pathname?: string | null,
   defaultPath: string = "/"
 ): string => {
+  // Validate defaultPath
+  if (typeof defaultPath !== "string" || !defaultPath.trim()) {
+    throw new TypeError(
+      `Invalid parameter: 'defaultPath' must be a non-empty string. Received: ${typeof defaultPath} (${defaultPath})`
+    );
+  }
+
   // If the pathname is invalid (null, undefined, or an empty string), return the default value
-  if (!pathname || pathname.trim() === "") return defaultPath;
+  if (typeof pathname !== "string" || pathname.trim() === "") {
+    return defaultPath;
+  }
 
   try {
     // Trim spaces from the string (only trim leading and trailing spaces)

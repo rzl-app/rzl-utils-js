@@ -158,6 +158,21 @@ export const deleteObjMultipleDynamic = <T extends Record<string, unknown>>(
   deepClone: boolean = false
 ): Partial<T> => {
   if (typeof object !== "object" || object === null) return {} as Partial<T>;
+  if (
+    !Array.isArray(keysToDelete) ||
+    !keysToDelete.every(
+      (k) => typeof k === "object" && k !== null && "key" in k
+    )
+  ) {
+    throw new TypeError(
+      "Expected keysToDelete to be an array of { key, deep? } objects"
+    );
+  }
+  if (typeof deepClone !== "boolean") {
+    throw new TypeError("Expected 'deepClone' to be a 'boolean' type");
+  }
+
+  if (keysToDelete.length === 0) return { ...object };
 
   // Manual deep clone to avoid mutation
   const clone = <U>(obj: U): U => {
@@ -169,7 +184,7 @@ export const deleteObjMultipleDynamic = <T extends Record<string, unknown>>(
       return Object.fromEntries(
         Object.entries(obj).map(([k, v]) => [
           k,
-          typeof v === "object" && v !== null ? clone(v) : v
+          typeof v === "object" && v !== null ? clone(v) : v,
         ])
       ) as U;
     }
@@ -185,7 +200,9 @@ export const deleteObjMultipleDynamic = <T extends Record<string, unknown>>(
         if (keySet.has(key as keyof T)) return null; // Skip keys to be deleted
 
         const value = source[key as keyof T];
-        const keyConfig = keysToDelete.find(({ key: delKey }) => delKey === key);
+        const keyConfig = keysToDelete.find(
+          ({ key: delKey }) => delKey === key
+        );
 
         // Deep delete for nested objects & arrays
         if (keyConfig?.deep && typeof value === "object" && value !== null) {

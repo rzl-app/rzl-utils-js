@@ -86,7 +86,11 @@ export const removeDuplicatesArrayValues = <T extends boolean>(
   forceToString: T = false as T
 ): T extends true ? string[] : Array<string | number> => {
   if (!Array.isArray(inputArray)) {
-    throw new TypeError("Input must be an array.");
+    throw new TypeError(`props 'inputArray' must be \`array\` type!`);
+  }
+
+  if (!(typeof forceToString === "boolean")) {
+    throw new TypeError(`props 'forceToString' must be \`boolean\` type!`);
   }
 
   // Recursive function to flatten nested arrays
@@ -107,7 +111,7 @@ export const removeDuplicatesArrayValues = <T extends boolean>(
 
   // Flatten the input array and remove duplicates while preserving order
   const flatArray = flattenArray(inputArray);
-  return [...new Map(flatArray.map((item) => [item, item])).values()] as T extends true
-    ? string[]
-    : Array<string | number>;
+  return [
+    ...new Map(flatArray.map((item) => [item, item])).values(),
+  ] as T extends true ? string[] : Array<string | number>;
 };

@@ -49,6 +49,10 @@ export const disableUserInteraction = (
   // Ensure function runs only in the browser
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
+  if (!(typeof className === "string")) {
+    throw new TypeError("Expected 'className' to be a 'string' type");
+  }
+
   const { documentElement } = document;
 
   if (documentElement && !documentElement.classList.contains(className)) {
@@ -76,6 +80,10 @@ export const enableUserInteraction = (
 ): void => {
   // Ensure function runs only in the browser
   if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  if (!(typeof className === "string")) {
+    throw new TypeError("Expected 'className' to be a 'string' type");
+  }
 
   const { documentElement } = document;
 
@@ -106,7 +114,12 @@ export const scrollToTop = (options?: ScrollToTopOptions): void => {
   // Ensure function runs only in the browser
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const { behavior = "smooth", timeout = 1 } = options || {};
+  // Ensure options is an object and Defensive options check
+  if (typeof options !== "object" || options === null) {
+    options = {};
+  }
+
+  const { behavior = "smooth", timeout = 1 } = options;
 
   setTimeout(
     () => {
