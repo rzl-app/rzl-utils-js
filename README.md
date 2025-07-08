@@ -1,15 +1,18 @@
 # ⚡️ Packages `rzl-utils-js` 🚀
 
-```
-    __        __              _                  _______
-    \ \      / /__  _ __ ___  | |_ ___  ___ ___  \      \   ___ ___  ___
-     \ \ /\ / / _ \| '__/ _ \ | __/ _ \/ __/ __| /   |   \ / __/ _ \/ __|
-      \ V  V / (_) | | |  __/ | ||  __/\__ \__ \ /    |    \ (_|  __/\__ \
-       \_/\_/ \___/|_|  \___|  \__\___||___/___/ \____|__  /\___\___||___/
-                                                        \/          \/
-                    🚀 Rzl Utility JavaScript 🚀
-
-```
+<div align="center">
+  <pre>
+    <code>
+   __        __              ___                _______              
+      \ \      / /__  _ __ ___  | |_ ___  ___ ___  \      \   ___ ___  ___ 
+      \ \ /\ / / _ \| '__/ _ \ | __/ _ \/ __/ __| /   |   \ / __/ _ \/ __|
+        \ V  V / (_) | | |  __/ | ||  __/\__ \__ \ /    |    \ (_|  __/\__ \
+        \_/\_/ \___/|_|  \___|  \__\___||___/___/ \____|__  /\___\___||___/
+                                                          \/          \/   
+                      🚀 Rzl Utility JavaScript 🚀                          
+    </code>
+  </pre>
+</div>
 
 > A lightweight, modern TypeScript utility library for Node.js & browser.  
 > Provides reusable helpers to simplify your JavaScript / TypeScript projects.  
@@ -77,6 +80,7 @@
 import { isServer } from "rzl-utils-js";
 
 console.log(isServer);
+// true if running on Node.js, false if browser
 ```
 
 ##### Example TypeScript Helper Import:
@@ -85,6 +89,7 @@ console.log(isServer);
 import type { OmitStrict } from "rzl-utils-js/types";
 
 type MyType = OmitStrict<OtherType, "omitedProps">;
+// Fully strict TS omit that requires all keys to exist in target
 ```
 
 ---
@@ -129,6 +134,6 @@ Please see [License File](LICENSE.md) for more information.
 ---
 
 ✅ **Enjoy using `rzl-utils-js`?**  
-Star this repo ⭐ and share it with other Laravel developers!
+Star this repo ⭐ and share it with other JavaScript developers!
 
 ---
