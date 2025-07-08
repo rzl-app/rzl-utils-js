@@ -9,8 +9,7 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.js"
     },
     "./types": {
       "types": "./dist/types/index.d.ts"
@@ -25,7 +24,6 @@
   },
   "engineStrict": true,
   "scripts": {
-    "preinstall": "node ./scripts/check-engines.js",
     "clean": "rimraf dist",
     "format": "prettier --check .",
     "lint": "eslint . --ext .ts,.js",
