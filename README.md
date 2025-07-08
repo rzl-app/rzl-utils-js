@@ -82,7 +82,7 @@ console.log(isServer);
 ##### Example TypeScript Helper Import:
 
 ```ts
-import { OmitStrict } from "rzl-utils-js/types";
+import type { OmitStrict } from "rzl-utils-js/types";
 
 type MyType = OmitStrict<OtherType, "omitedProps">;
 ```
@@ -123,11 +123,12 @@ Please report issues to [rizalvindwiky1998@gmail.com](mailto:rizalvindwiky1998@g
 
 <h2 id="license">📜 License</h2>
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT).  
+Please see [License File](LICENSE.md) for more information.
 
 ---
 
-✅ **Enjoy using `rzl-app/laravel-toaster`?**  
+✅ **Enjoy using `rzl-utils-js`?**  
 Star this repo ⭐ and share it with other Laravel developers!
 
 ---
