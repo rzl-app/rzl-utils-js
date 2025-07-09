@@ -32,3 +32,5 @@
 ---
 
 [⬅ Back](https://github.com/rzl-app/rzl-utils-js?tab=readme-ov-file#nextjs-support--server-only)
+
+---
