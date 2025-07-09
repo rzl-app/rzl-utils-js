@@ -202,6 +202,8 @@
 
 ---
 
-[⬅ Back](https://github.com/rzl-app/rzl-utils-js?tab=readme-ov-file#detailed-features--conversion-json)
+[⬅ Back Conversion Utils Lists](https://github.com/rzl-app/rzl-utils-js/blob/main/docs/detailed-features/index.md)
+
+[⬅ Back to All Detailed features](https://github.com/rzl-app/rzl-utils-js?tab=readme-ov-file#detailed-features)
 
 ---

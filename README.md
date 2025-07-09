@@ -22,8 +22,8 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 </div>
 
 ---
-
-## 📚 Table of Contents
+ 
+<h2 id="table-of-contents">📚 Table of Contents</h2>
 
 - 💻 [Requirements](#requirements)
 - ⚙️ [Installation](#installation)
@@ -32,14 +32,14 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 - 💎 [Detailed Features](#detailed-features)
   - [Checker](#detailed-features--checker)
   - [Conversion](#detailed-features--conversion)
-    - [Conversion Array](#detailed-features--conversion-array)
-    - [Currency](#detailed-features--conversion-currency)
-    - [Json](#detailed-features--conversion-json)
-    - [Number](#detailed-features--conversion-number)
-    - [Object](#detailed-features--conversion-object)
-    - [Stringify](#detailed-features--conversion-stringify)
-    - [Strings](#detailed-features--conversion-strings)
-    - [Boolean](#detailed-features--conversion-boolean)
+    - [Conversion Array](/docs/detailed-features/conversion/array.md)
+    - [Currency](/docs/detailed-features/conversion/currency.md)
+    - [Json](/docs/detailed-features/conversion/json.md)
+    - [Number](/docs/detailed-features/conversion/number.md)
+    - [Object](/docs/detailed-features/conversion/object.md)
+    - [Stringify](/docs/detailed-features/conversion/stringify.md)
+    - [Strings](/docs/detailed-features/conversion/strings.md)
+    - [Boolean](/docs/detailed-features/conversion/boolean.md)
 - 🔥 [Usage](#usage)
 - ❤️ [Sponsor](#sponsor-this-package)
 - 📜 [Changelog](#changelog)
@@ -102,7 +102,7 @@ This package also provides utilities specially built for Next.js environments, n
   Helpers for building URLs, generating dynamic routes, reading environment variables, etc.  
   ✅ Safe to use in both Next.js pages & API routes.
 
-  [Read More Docs](docs/next-js/global.md)
+  [Read More Docs](/docs/next-js/global.md)
 
   ***
 
@@ -110,52 +110,25 @@ This package also provides utilities specially built for Next.js environments, n
   Utilities meant to run in Next.js server-only contexts (like middleware or server actions) for tasks such as extracting real client IPs.  
   ⚠️ Will throw if used outside a Next.js server environment.
 
-  [Read More Docs](docs/next-js/server-only.md)
+  [Read More Docs](/docs/next-js/server-only.md)
 
 ---
 
 <h2 id="detailed-features">💎 Detailed Features</h2>
 
-  - <h3 id="detailed-features--checker">
-    Checker - 
-    <a href="/docs/detailed-features/checker.md">
-      Read More Docs.
-    </a> 
-    </h3> 
-    
-    ***
-
-  - <h3 id="detailed-features--conversion">Conversion</h3>  
-
-    - <h4 id="detailed-features--conversion-array">
-        Array -
-        <a href="/docs/detailed-features/conversion/array.md">
-          Read More Docs.
-        </a> 
-      </h4>
-
-      ***
-    - <h4 id="detailed-features--conversion-currency">Currency - 
-        <a href="/docs/detailed-features/conversion/currency.md">
-          Read More Docs.
-        </a> 
-      </h4> 
-
-      ***
-    - <h4 id="detailed-features--conversion-json">
-      Json - 
-      <a href="/docs/detailed-features/conversion/json.md">
+  - <h4 id="detailed-features--checker">
+      Checker - 
+      <a href="/docs/detailed-features/checker.md">
         Read More Docs.
       </a> 
     </h4> 
 
-     
-    - <h4 id="detailed-features--conversion-number">
-        Number - 
-        <a href="/docs/detailed-features/conversion/number.md">
-          Read More Docs.
-        </a> 
-      </h4> 
+  - <h4 id="detailed-features--conversion">
+      Conversion -
+      <a href="/docs/detailed-features/conversion/">
+        Read More Docs.
+      </a> 
+    </h4>
       
 ---
 
