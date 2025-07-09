@@ -34,15 +34,15 @@ export default defineConfig([
   //todo: bundle nextjs-server
   {
     entry: ["src/next/server/index.ts"],
+    outDir: "dist/next/server",
     format: ["cjs", "esm"],
     dts: true,
-    outDir: "dist/next/server",
-    external: ["next", "next/*", "react", "react/*"],
+    external: ["next", "next/server", "next/*", "react", "react-dom"],
+    bundle: true,
+    clean: true,
     splitting: false,
     minify: true,
     sourcemap: false,
-    bundle: true,
-    clean: true,
     esbuildOptions(options) {
       options.legalComments = "none";
     },
