@@ -125,7 +125,7 @@ This package also provides utilities specially built for Next.js environments, n
 
   - <h4 id="detailed-features--conversions">
       Conversions -
-      <a href="/docs/detailed-features/conversions/index.md">
+      <a href="/docs/detailed-features/conversions/index.md#conversions-lists">
         Read More Docs.
       </a> 
     </h4>
