@@ -52,47 +52,47 @@
 
   #### ⚡ Quick Example TypeScript/JavaScript (with type support):
 
-    ```ts
-    import { formatPhoneNumber,formatNumberWithSeparator } from "rzl-utils-js";
+  ```ts
+  import { formatPhoneNumber,formatNumberWithSeparator } from "rzl-utils-js";
 
-    // ✅ Example 1: Format phone number to string
-    const ex1 = formatPhoneNumber({
-      value: "+628123456789",
-    });
-    console.log(ex1);
-    // Output: "(+62) 812 3456 789"
+  // ✅ Example 1: Format phone number to string
+  const ex1 = formatPhoneNumber({
+    value: "+628123456789",
+  });
+  console.log(ex1);
+  // Output: "(+62) 812 3456 789"
 
-    // ✅ Example 2: Extract digits only
-    const ex2 = formatPhoneNumber({
-      value: "+62 812-3456-789",
-      takeNumberOnly: true,
-    });
-    console.log(ex2);
-    // Output: "628123456789"
+  // ✅ Example 2: Extract digits only
+  const ex2 = formatPhoneNumber({
+    value: "+62 812-3456-789",
+    takeNumberOnly: true,
+  });
+  console.log(ex2);
+  // Output: "628123456789"
 
-    // ✅ Example 3: Validate phone format only (returns boolean)
-    const ex3 = formatPhoneNumber({
-      value: "+62 812 3456 789",
-      checkValidOnly: true,
-    });
-    console.log(ex3);
-    // Output: true or false
+  // ✅ Example 3: Validate phone format only (returns boolean)
+  const ex3 = formatPhoneNumber({
+    value: "+62 812 3456 789",
+    checkValidOnly: true,
+  });
+  console.log(ex3);
+  // Output: true or false
 
-    // ✅ Example 4: Custom separator & country style
-    const ex4 = formatPhoneNumber({
-      value: "+62 8123456789",
-      separator: "-",
-      openingNumberCountry: "[",
-      closingNumberCountry: "]",
-    });
-    console.log(ex4);
-    // Output: "[+62] 812-3456-789"
+  // ✅ Example 4: Custom separator & country style
+  const ex4 = formatPhoneNumber({
+    value: "+62 8123456789",
+    separator: "-",
+    openingNumberCountry: "[",
+    closingNumberCountry: "]",
+  });
+  console.log(ex4);
+  // Output: "[+62] 812-3456-789"
 
-    // ✅ Example 5: Format large number with custom separator
-    const ex5 = formatNumberWithSeparator(987654321, " ");
-    console.log(ex5);
-    // Output: "987 654 321"
-    ```
+  // ✅ Example 5: Format large number with custom separator
+  const ex5 = formatNumberWithSeparator(987654321, " ");
+  console.log(ex5);
+  // Output: "987 654 321"
+  ```
 
 ---
 

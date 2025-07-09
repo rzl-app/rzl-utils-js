@@ -31,7 +31,7 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 - 🧬 [NextJS Support](#nextjs-support)
 - 💎 [Detailed Features](#detailed-features)
   - [Checkers](#detailed-features--checkers)
-  - [Conversions](#detailed-features--conversion)
+  - [Conversions](#detailed-features--conversions)
     - [Array](/docs/detailed-features/conversions/array.md)
     - [Currency](/docs/detailed-features/conversions/currency.md)
     - [Json](/docs/detailed-features/conversions/json.md)
@@ -125,7 +125,7 @@ This package also provides utilities specially built for Next.js environments, n
 
   - <h4 id="detailed-features--conversions">
       Conversions -
-      <a href="/docs/detailed-features/conversions/">
+      <a href="/docs/detailed-features/conversions/index.md">
         Read More Docs.
       </a> 
     </h4>

@@ -63,6 +63,6 @@
   
 ---
 
-[⬅ Back](https://github.com/rzl-app/rzl-utils-js?tab=readme-ov-file#detailed-features--checker)
+[⬅ Back](https://github.com/rzl-app/rzl-utils-js?tab=readme-ov-file#detailed-features--checkers)
 
 ---

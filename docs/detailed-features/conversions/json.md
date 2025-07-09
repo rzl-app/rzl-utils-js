@@ -58,42 +58,109 @@
   </table>
 
   #### ⚡ Quick Example (Conversion Helpers - Json)
-    #### ➡️ TypeScript (with type support):
+  #### ➡️ TypeScript (with type support):
 
-    ```ts
+  ```ts
+  import { safeJsonParse } from "rzl-utils-js";
+
+  type User = {
+    age?: number;
+    isActive?: boolean;
+    birthday?: Date;
+    name?: string;
+    nickname?: string;
+  };
+
+  // ✅ Example 1: Convert numbers and booleans automatically
+  const example1 = safeJsonParse<User>(
+    '{"age":"30","isActive":"true"}',
+    { convertNumbers: true, convertBooleans: true }
+  );
+  console.log(example1);
+  // Output: { age: 30, isActive: true }
+
+  // ✅ Example 2: Parse custom date format (DD/MM/YYYY)
+  const example2 = safeJsonParse<User>(
+    '{"birthday":"25/12/2000"}',
+    { convertDates: true, customDateFormats: ["DD/MM/YYYY"] }
+  );
+  console.log(example2);
+  // Output: { birthday: Date("2000-12-25T00:00:00.000Z") }
+
+  // ✅ Example 3: Remove nulls and undefined
+  const example3 = safeJsonParse<User>(
+    '{"name":"John","nickname":null,"status":undefined}',
+    { removeNulls: true, removeUndefined: true }
+  );
+  console.log(example3);
+  // Output: { name: "John" }
+
+  // ✅ Example 4: Remove empty objects and arrays
+  const example4 = safeJsonParse(
+    '{"a":{},"b":[],"c":"non-empty"}',
+    { removeEmptyObjects: true, removeEmptyArrays: true }
+  );
+  console.log(example4);
+  // Output: { c: "non-empty" }
+
+  // ✅ Example 5: Strict mode (removes all invalid conversions)
+  const example5 = safeJsonParse(
+    '{"score":"99abc","empty":"   "} ',
+    { convertNumbers: true, strictMode: true }
+  );
+  console.log(example5);
+  // Output: {} (both removed because not valid strict conversions)
+
+  // ✅ Example 6: Logging error if JSON invalid
+  const example6 = safeJsonParse(
+    '{"invalid JSON...',
+    { loggingOnFail: true }
+  );
+  console.log(example6);
+  // Output: undefined, logs: JSON parsing failed from `safeJsonParse`: ...
+
+  /**
+  * Bonus: Custom onError handler
+  */
+  safeJsonParse('{"invalid JSON...', {
+    onError: (err) => {
+      console.log("Custom error handler:", (err as Error).message);
+    }
+  });
+  // Output: Custom error handler: Unexpected end of JSON input
+  ```
+
+  #### ➡️ JavaScript (without TypeScript): 
+
+  ```ts
     import { safeJsonParse } from "rzl-utils-js";
 
-    type User = {
-      age?: number;
-      isActive?: boolean;
-      birthday?: Date;
-      name?: string;
-      nickname?: string;
-    };
-
     // ✅ Example 1: Convert numbers and booleans automatically
-    const example1 = safeJsonParse<User>(
+    const example1 = safeJsonParse(
       '{"age":"30","isActive":"true"}',
       { convertNumbers: true, convertBooleans: true }
     );
     console.log(example1);
     // Output: { age: 30, isActive: true }
 
+
     // ✅ Example 2: Parse custom date format (DD/MM/YYYY)
-    const example2 = safeJsonParse<User>(
+    const example2 = safeJsonParse(
       '{"birthday":"25/12/2000"}',
       { convertDates: true, customDateFormats: ["DD/MM/YYYY"] }
     );
     console.log(example2);
     // Output: { birthday: Date("2000-12-25T00:00:00.000Z") }
 
+
     // ✅ Example 3: Remove nulls and undefined
-    const example3 = safeJsonParse<User>(
+    const example3 = safeJsonParse(
       '{"name":"John","nickname":null,"status":undefined}',
       { removeNulls: true, removeUndefined: true }
     );
     console.log(example3);
     // Output: { name: "John" }
+
 
     // ✅ Example 4: Remove empty objects and arrays
     const example4 = safeJsonParse(
@@ -103,6 +170,7 @@
     console.log(example4);
     // Output: { c: "non-empty" }
 
+
     // ✅ Example 5: Strict mode (removes all invalid conversions)
     const example5 = safeJsonParse(
       '{"score":"99abc","empty":"   "} ',
@@ -111,94 +179,26 @@
     console.log(example5);
     // Output: {} (both removed because not valid strict conversions)
 
+
     // ✅ Example 6: Logging error if JSON invalid
     const example6 = safeJsonParse(
       '{"invalid JSON...',
       { loggingOnFail: true }
     );
     console.log(example6);
-    // Output: undefined, logs: JSON parsing failed from `safeJsonParse`: ...
+    // Output: undefined, logs: JSON parsing failed: ...
+
 
     /**
     * Bonus: Custom onError handler
     */
     safeJsonParse('{"invalid JSON...', {
       onError: (err) => {
-        console.log("Custom error handler:", (err as Error).message);
+        console.log("Custom error handler:", err.message);
       }
     });
     // Output: Custom error handler: Unexpected end of JSON input
-    ```
-
-    #### ➡️ JavaScript (without TypeScript): 
-
-    ```ts
-      import { safeJsonParse } from "rzl-utils-js";
-
-      // ✅ Example 1: Convert numbers and booleans automatically
-      const example1 = safeJsonParse(
-        '{"age":"30","isActive":"true"}',
-        { convertNumbers: true, convertBooleans: true }
-      );
-      console.log(example1);
-      // Output: { age: 30, isActive: true }
-
-
-      // ✅ Example 2: Parse custom date format (DD/MM/YYYY)
-      const example2 = safeJsonParse(
-        '{"birthday":"25/12/2000"}',
-        { convertDates: true, customDateFormats: ["DD/MM/YYYY"] }
-      );
-      console.log(example2);
-      // Output: { birthday: Date("2000-12-25T00:00:00.000Z") }
-
-
-      // ✅ Example 3: Remove nulls and undefined
-      const example3 = safeJsonParse(
-        '{"name":"John","nickname":null,"status":undefined}',
-        { removeNulls: true, removeUndefined: true }
-      );
-      console.log(example3);
-      // Output: { name: "John" }
-
-
-      // ✅ Example 4: Remove empty objects and arrays
-      const example4 = safeJsonParse(
-        '{"a":{},"b":[],"c":"non-empty"}',
-        { removeEmptyObjects: true, removeEmptyArrays: true }
-      );
-      console.log(example4);
-      // Output: { c: "non-empty" }
-
-
-      // ✅ Example 5: Strict mode (removes all invalid conversions)
-      const example5 = safeJsonParse(
-        '{"score":"99abc","empty":"   "} ',
-        { convertNumbers: true, strictMode: true }
-      );
-      console.log(example5);
-      // Output: {} (both removed because not valid strict conversions)
-
-
-      // ✅ Example 6: Logging error if JSON invalid
-      const example6 = safeJsonParse(
-        '{"invalid JSON...',
-        { loggingOnFail: true }
-      );
-      console.log(example6);
-      // Output: undefined, logs: JSON parsing failed: ...
-
-
-      /**
-      * Bonus: Custom onError handler
-      */
-      safeJsonParse('{"invalid JSON...', {
-        onError: (err) => {
-          console.log("Custom error handler:", err.message);
-        }
-      });
-      // Output: Custom error handler: Unexpected end of JSON input
-    ```
+  ```
 
 ---
 
