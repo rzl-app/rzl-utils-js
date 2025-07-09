@@ -1,4 +1,6 @@
-# ⚡️ Packages `rzl-utils-js` 🚀
+<div align="center">
+  <h1><strong>⚡️ Packages <code>rzl-utils-js</code> 🚀</strong></h1>
+</div>
 
 <p align="center">
 🚀 <strong>Rzl Utility JavaScript</strong> 🚀<br/>
@@ -11,7 +13,7 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 
 [![Latest Version on NPM](https://img.shields.io/npm/v/rzl-utils-js?color=blue&style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
 [![downloads](https://img.shields.io/npm/dt/rzl-utils-js?style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D16-blue.svg?logo=node.js&style=flat-square)](https://nodejs.org/en/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.17.0-blue.svg?logo=node.js&style=flat-square)](https://nodejs.org/en/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/CONTRIBUTING.md)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/LICENSE.md)
 [![GitHub](https://img.shields.io/badge/GitHub-rzl--app%2Frzl--utils--js-181717?logo=github)](https://github.com/rzl-app/rzl-utils-js)
@@ -39,11 +41,11 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 
 <h2 id="requirements">💻 Requirements</h2>
 
-- **Node.js >=16**  
-  This package leverages modern JavaScript & TypeScript features that require Node.js version 16 or higher.
+- **Node.js >=18.17.0**  
+  This package leverages modern JavaScript & TypeScript features that require Node.js version 18.17.0 or higher.
 
 - Works with:
-  - ✅ Node.js (16+)
+  - ✅ Node.js (18.17.0+)
   - ✅ Modern browsers (via bundlers like Webpack / Vite)
 
 ---
@@ -76,6 +78,7 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 - ⚡ Small, tree-shakable & fast
 - 📦 Works in **Node.js** & modern browsers
 - ❤️ Simple API, easy to extend
+- 🧬 Next.js Support
 
 ---
 

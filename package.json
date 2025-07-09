@@ -46,7 +46,7 @@
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=16"
+    "node": ">=18.17.0"
   },
   "engineStrict": true,
   "scripts": {
