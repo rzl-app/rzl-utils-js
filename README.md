@@ -240,7 +240,6 @@ This package also provides utilities specially built for Next.js environments, n
     ***
 
   - <h3 id="detailed-features--conversion">Conversion</h3>  
-  <div style="margin-left: 2em;margin-bottom:1em !important;">
 
     - <h4 id="detailed-features--conversion-array">Array</h4>
 
@@ -299,7 +298,6 @@ This package also provides utilities specially built for Next.js environments, n
           </tr> 
         </tbody>
       </table>
-
 
       ### ⚡ Quick Example (Checker Helpers - Conversion Array)
 
@@ -368,10 +366,11 @@ This package also provides utilities specially built for Next.js environments, n
       type AsString = ConvertedStringType<MyInput, false, true>;
       // => { a: string; b: string[]; c: string }
       ```
+
       ***
 
     - <h4 id="detailed-features--conversion-currency">Currency</h4>
-  </div>
+  
 
 ---
 
