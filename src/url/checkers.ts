@@ -6,7 +6,7 @@
  * @param {URL} urlB - The second URL to compare.
  * @returns {boolean} Returns `true` if both URLs are identical, otherwise `false`.
  */
-export function areURLsIdentical(urlA: URL, urlB: URL): boolean {
+export const areURLsIdentical = (urlA: URL, urlB: URL): boolean => {
   if (!(urlA instanceof URL) || !(urlB instanceof URL)) {
     throw new TypeError(
       "Both arguments to 'areURLsIdentical' must be instances of URL."
@@ -17,7 +17,7 @@ export function areURLsIdentical(urlA: URL, urlB: URL): boolean {
     urlA.protocol + "//" + urlA.host + urlA.pathname + urlA.search ===
     urlB.protocol + "//" + urlB.host + urlB.pathname + urlB.search
   );
-}
+};
 
 /** ---------------------------------
  * * ***Checks if two URLs are the same, ignoring query parameters.***
@@ -29,7 +29,7 @@ export function areURLsIdentical(urlA: URL, urlB: URL): boolean {
  * @param {URL} urlB - The second URL to compare.
  * @returns {boolean} Returns `true` if both URLs are the same (ignoring search parameters), otherwise `false`.
  */
-export function areURLsEqualIgnoringQuery(urlA: URL, urlB: URL): boolean {
+export const areURLsEqualIgnoringQuery = (urlA: URL, urlB: URL): boolean => {
   if (!(urlA instanceof URL) || !(urlB instanceof URL)) {
     throw new TypeError(
       "Both arguments to 'areURLsEqualIgnoringQuery' must be instances of URL."
@@ -40,7 +40,7 @@ export function areURLsEqualIgnoringQuery(urlA: URL, urlB: URL): boolean {
     urlA.protocol + "//" + urlA.host + urlA.pathname ===
     urlB.protocol + "//" + urlB.host + urlB.pathname
   );
-}
+};
 
 /** ---------------------------------
  * * ***Validates whether a given string is a properly formatted URL.***
@@ -52,7 +52,7 @@ export function areURLsEqualIgnoringQuery(urlA: URL, urlB: URL): boolean {
  * @param {string} [url] - The URL string to validate.
  * @returns {boolean} `true` if the URL is valid, otherwise `false`.
  */
-export function isValidURL(url?: string | null): boolean {
+export const isValidURL = (url?: string | null): boolean => {
   if (typeof url !== "string" || !url.trim().length) return false;
 
   // Regular expression to validate the structure of the URL (after decoding),
@@ -87,7 +87,7 @@ export function isValidURL(url?: string | null): boolean {
 
   // Test the decoded URL against the regex pattern
   return urlPattern.test(decodedUrl);
-}
+};
 
 /** ---------------------------------
  * * ***Extracts all valid URLs from a given string.***
@@ -99,7 +99,7 @@ export function isValidURL(url?: string | null): boolean {
  * @param {string} [url] - The input string containing potential URLs.
  * @returns {string[] | null} An array of extracted URLs or `null` if no URLs are found.
  */
-export function extractURLs(url: string): string[] | null {
+export const extractURLs = (url: string): string[] | null => {
   if (typeof url !== "string" || !isValidURL(url)) {
     return null;
   }
@@ -120,4 +120,4 @@ export function extractURLs(url: string): string[] | null {
 
   const matches = decodedUrl.match(urlPattern);
   return matches && matches.length > 0 ? matches : null;
-}
+};

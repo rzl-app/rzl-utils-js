@@ -215,10 +215,10 @@ function parseCustomDate(dateString: string, format: string): Date | null {
  * const result = safeJsonParse('{"birthday": "25/12/2000"}', { convertDates: true, customDateFormats: ["DD/MM/YYYY"] });
  * console.log(result); // Output: { birthday: Date("2000-12-25T00:00:00.000Z") }
  */
-export function safeJsonParse<T = unknown>(
+export const safeJsonParse = <T = unknown>(
   value: string | null | undefined,
   options: CleanParsedDataOptions = {}
-): T | undefined | null {
+): T | undefined | null => {
   if (value === null) return null;
   if (typeof value !== "string") return undefined;
 
@@ -240,4 +240,4 @@ export function safeJsonParse<T = unknown>(
     }
     return undefined;
   }
-}
+};

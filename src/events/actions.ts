@@ -1,4 +1,4 @@
-import type { ScrollToTopOptions } from "./types";
+import type { ScrollToTopOptions } from "@/types/events/types";
 
 /** ----------------------------------------------------------
  * * ***Removes focus from the currently active element.***

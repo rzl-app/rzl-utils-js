@@ -222,15 +222,15 @@ export const getUserInitials = (name: string | null = ""): string => {
  * @param {string} [input] - The string that may contain HTML tags.
  * @returns {string | undefined | null} The cleaned string without HTML tags, or the original input if invalid.
  */
-export function stripHtmlTags<T extends string | null | undefined = undefined>(
+export const stripHtmlTags = <T extends string | null | undefined = undefined>(
   input?: T
-): T {
+): T => {
   if (!input || typeof input !== "string" || !input.trim().length) {
     return undefined as T;
   }
 
   return input.replace(/<[^>]*>/g, "") as T;
-}
+};
 
 /** ----------------------------------------------------------
  * * ***Removes all spaces from a string and trimmed or trimmed only the string based on the options provided.*** ✅
@@ -331,12 +331,12 @@ export const removeDuplicateSpaceString = (
  * @param {boolean} [trim=true] - Whether to trim the truncated string, defaultValue is `true`.
  * @returns {string} - The truncated string with optional trimming and ending, if text is null, undefined or length < 1 will return "" as empty string.
  */
-export function truncateString(
+export const truncateString = (
   text?: string | null,
   length: number = 10,
   ending: string = "...",
   trim: boolean = true
-): string {
+): string => {
   if (!text || typeof text !== "string" || text.trim().length < 1) return "";
 
   if (
@@ -359,7 +359,7 @@ export function truncateString(
     (trim ? truncated.trim() : truncated) +
     (text.trim().length > length ? ending : "")
   );
-}
+};
 
 /** ----------------------------------------------------------
  * * Censors an email by randomly replacing characters with "*"
@@ -387,7 +387,7 @@ export function truncateString(
  * console.log(censorEmail("invalid-email"));
  * // Output: ""
  */
-export function censorEmailOld(email?: string | null): string {
+export const censorEmailOld = (email?: string | null): string => {
   if (typeof email !== "string") return "";
 
   // Strict email validation regex
@@ -445,7 +445,7 @@ export function censorEmailOld(email?: string | null): string {
   const censoredTLD = tld.length <= 2 ? tld : randomCensor(tld, 1, 0.4);
 
   return `${censoredLocal}@${censoredDomain}.${censoredTLD}`;
-}
+};
 
 /**
  * Censors an email by replacing characters with "*", with support for random or fixed mode.
@@ -463,10 +463,10 @@ export function censorEmailOld(email?: string | null): string {
  * censorEmail("john.doe@gmail.com", "fixed");  // -> j**n.**e@g***l.com (always the same)
  * censorEmail("invalid-email");                // -> ""
  */
-export function censorEmail(
+export const censorEmail = (
   email?: string | null,
   mode: "random" | "fixed" = "random"
-): string {
+): string => {
   if (typeof email !== "string") return "";
 
   // Ensure mode is either "random" or "fixed"
@@ -542,7 +542,7 @@ export function censorEmail(
   const censoredTLD = tld.length <= 2 ? tld : censor(tld, 1, 0.4);
 
   return `${censoredLocal}@${censoredDomain}.${censoredTLD}`;
-}
+};
 
 /** ----------------------------------------------------------
  * * Capitalizes each word in a name string while preserving punctuation and handling honorifics/titles correctly.
@@ -559,7 +559,7 @@ export function censorEmail(
  * console.log(capitalizeName("  prof emile zola "));         // "Prof. Émile Zola"
  * console.log(capitalizeName("sir isaac newton"));          // "Sir Isaac Newton"
  */
-export function capitalizeName(name?: string | null): string {
+export const capitalizeName = (name?: string | null): string => {
   if (typeof name !== "string" || !name.trim()) return "";
 
   const titles = new Map([
@@ -691,7 +691,7 @@ export function capitalizeName(name?: string | null): string {
     .join(" ")
     .replace(/\s+([.,])/g, "$1") // Remove unnecessary spaces before punctuation
     .replace(/(\bS\.)\s+(?=[A-Z])/, "$1"); // Ensure no space inside abbreviations like S.Pd.
-}
+};
 
 /** ----------------------------------------------------------
  * * ***Converts a string to PascalCase.***

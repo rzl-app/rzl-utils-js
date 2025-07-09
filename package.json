@@ -8,11 +8,37 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./types": {
       "types": "./dist/types/index.d.ts"
+    },
+    "./next": {
+      "import": {
+        "types": "./dist/next/index.d.ts",
+        "default": "./dist/next/index.js"
+      },
+      "require": {
+        "types": "./dist/next/index.d.ts",
+        "default": "./dist/next/index.cjs"
+      }
+    },
+    "./next/server": {
+      "import": {
+        "types": "./dist/next/server/index.d.ts",
+        "default": "./dist/next/server/index.js"
+      },
+      "require": {
+        "types": "./dist/next/server/index.d.ts",
+        "default": "./dist/next/server/index.cjs"
+      }
     }
   },
   "publishConfig": {
@@ -25,16 +51,17 @@
   "engineStrict": true,
   "scripts": {
     "clean": "rimraf dist",
-    "format": "prettier --check .",
+    "barrel": "npx barrelsby --directory src --single --delete --exclude \"/types/index.ts\" \"/_types-entry.ts\" \"/next\" && echo \"✅ Barrel generated clean!\"",
+    "build": "npm run clean && npm run barrel && tsup && npm run build:types && npm run postbuild",
+    "build:types": "npm run build:types-dts && npm run build:types:bundle",
+    "build:types-dts": "dts-bundle-generator --config dts-config.cjs --silent --external-imports next",
+    "build:types-all": "npm run build:types-dts && npm run build:types:bundle",
+    "build:types:bundle": "rollup -c",
+    "postbuild": "del-cli \"dist/**/*.d.cts\"",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
-    "bump:patch": "npm version patch",
-    "bump:minor": "npm version minor",
-    "bump:major": "npm version major",
-    "barrel": "npx barrelsby --directory src --single --delete --exclude \"/types/index.ts\" && echo \"✅ Barrel generated clean!\"",
+    "format": "prettier --check .",
     "dev": "tsc --watch",
-    "build": "npm run clean && npm run barrel && tsup && npm run build:types",
-    "build:types": "tsc -p tsconfig.build.json",
     "prepare": "npm run build",
     "check-publish": "npm pack --dry-run",
     "release-patch": "npm version patch && git push && git push --tags && npm publish"
@@ -69,13 +96,21 @@
   "devDependencies": {
     "@types/lodash": "^4.17.20",
     "@types/node": "^20.19.4",
+    "@types/rollup": "^0.51.4",
+    "del-cli": "^6.0.0",
+    "dts-bundle-generator": "^9.5.1",
     "lodash": "^4.17.21",
     "release-please": "^17.1.1",
     "rimraf": "^6.0.1",
+    "rollup": "^4.44.2",
+    "rollup-plugin-dts": "^6.2.1",
+    "rollup-plugin-tsconfig-paths": "^1.5.2",
     "tsup": "^8.5.0",
+    "type-samurai": "^1.1.1",
     "typescript": "^5.2.0"
   },
   "dependencies": {
-    "date-fns": "^4.1.0"
+    "date-fns": "^4.1.0",
+    "server-only": "^0.0.1"
   }
 }

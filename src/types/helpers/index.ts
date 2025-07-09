@@ -1,215 +1,431 @@
-export type * from "./custom";
+export type * from "type-samurai";
 
-export { AreAnagrams } from "./utils/anagram";
-export { And, AndArr } from "./utils/and";
-export {
-  AnifyProperties,
-  AnifyPropertiesOptions,
-  IfAny,
-  IsAny,
-} from "./utils/any";
-export {
-  EmptyArray,
-  IfEmptyArray,
-  IsEmptyArray,
-  NonEmptyArray,
-  IfNonEmptyArray,
-  IsNonEmptyArray,
-} from "./utils/array";
-export { ArrayElementType } from "./utils/array-element-type";
-export { Ceil } from "./utils/ceil";
-export {
-  IsColor,
-  IsHEX,
-  IsHSL,
-  IsRGB,
-  IfHSL,
-  HSL,
-  RGB,
-  HEX,
-  Color,
-  IfColor,
-  IfHEX,
-  IfRGB,
-  ColorOptions,
-  DefaultColorOptions,
-  DefaultHSLOptions,
-  DefaultRGBOptions,
-  RGBOptions,
-  HSLOptions,
-} from "./utils/color";
-export { Concat } from "./utils/concat";
-export { Decrement } from "./utils/decrement";
-export { DigitsTuple } from "./utils/digits-tuple";
-export { Div } from "./utils/div";
-export { Dot } from "./utils/dot";
-export { EndsWith } from "./utils/ends-with";
-export { IfEqual, IsEqual, IsNotEqual, IfNotEqual } from "./utils/equal";
-export {
-  Extends,
-  ExtendsArr,
-  IfExtends,
-  NotExtends,
-  IfNotExtends,
-} from "./utils/extends";
-export { Factorial } from "./utils/factorial";
-export { Fibonacci } from "./utils/fibonacci";
-export { FirstCharacter, FirstCharacterOptions } from "./utils/first-character";
-export { FirstDigit } from "./utils/first-digit";
-export { Floor } from "./utils/floor";
-export { GetFloatNumberParts } from "./utils/get-float-number-parts";
-export {
-  IfGreaterThan,
-  IsGreaterThan,
-  IfGreaterOrEqual,
-  IsGreaterOrEqual,
-} from "./utils/greater-than";
-export { IfNot } from "./utils/if-not";
-export { If } from "./utils/if";
-export { Includes } from "./utils/includes";
-export { Increment } from "./utils/increment";
-export { IndexOf } from "./utils/index-of";
-export { IsArrayIndex } from "./utils/is-array-index";
-export { IsArray, IsMutableArray, IsReadonlyArray } from "./utils/is-array";
-export { IsBetween } from "./utils/is-between";
-export {
-  IsDivisible,
-  IsDivisibleByFive,
-  IsDivisibleByHundred,
-  IsDivisibleBySix,
-  IsDivisibleByTen,
-  IsDivisibleByThree,
-  IsDivisibleByTwo,
-} from "./utils/is-divisible";
-export { IsLetter } from "./utils/is-letter";
-export { IsStringLiteral } from "./utils/is-string-literal";
-export { IsTuple } from "./utils/is-tuple";
-export { IsUnion } from "./utils/is-union";
-export { Join } from "./utils/join";
-export { LastCharacter, LastCharacterOptions } from "./utils/last-character";
-export { IfLowerThan, IsLowerThan } from "./utils/lower-than";
-export { Max, MaxArr } from "./utils/max";
-export { Min, MinArr } from "./utils/min";
-export { Mod } from "./utils/mod";
-export { Mult } from "./utils/mult";
-export { Mutable, MutableExcept, MutableOnly } from "./utils/mutable";
-export {
-  NeverifyProperties,
-  NeverifyPropertiesOptions,
-  IfNever,
-  IsNever,
-} from "./utils/never";
-export {
-  NonNullableObject,
-  NonNullableObjectExcept,
-  NonNullableObjectOnly,
-} from "./utils/non-nullable-object";
-export { Not } from "./utils/not";
-export {
-  CompareNumberLength,
-  NumberLength,
-  IsLongerNumber,
-  IsSameLengthNumber,
-  IsShorterNumber,
-} from "./utils/number-length";
-export {
-  Abs,
-  Even,
-  Float,
-  IfEven,
-  IfFloat,
-  IfInteger,
-  IfNegative,
-  IfNegativeFloat,
-  IfNegativeInteger,
-  IfOdd,
-  IfPositive,
-  IfPositiveFloat,
-  IfPositiveInteger,
-  Integer,
-  IsEven,
-  IsFloat,
-  IsInteger,
-  IsNegative,
-  IsNegativeFloat,
-  IsNegativeInteger,
-  IsOdd,
-  IsPositive,
-  IsPositiveFloat,
-  IsPositiveInteger,
-  Negate,
-  Negative,
-  NegativeFloat,
-  NegativeInteger,
-  Odd,
-  ParseNumber,
-  Positive,
-  PositiveFloat,
-  PositiveInteger,
-} from "./utils/number";
-export { Or, OrArr } from "./utils/or";
-export { IsPalindrome } from "./utils/palindrome";
-export { PathToFields, PathToFieldsOptions } from "./utils/path-to-fields";
-export { PartialOnly, PartialExcept } from "./utils/partial";
-export { Pop, PopOptions } from "./utils/pop";
-export { Pow } from "./utils/pow";
-export {
-  Prettify as PrettifyNew,
-  PrettifyOptions as PrettifyOptionsNew,
-} from "./utils/prettify";
-export { Push } from "./utils/push";
-export { ReadonlyExcept, ReadonlyOnly } from "./utils/readonly";
-export { RemoveIndexSignature } from "./utils/remove-index-signature";
-export { RemoveLeading } from "./utils/remove-leading";
-export { Repeat } from "./utils/repeat";
-export { ReplaceAll as ReplaceAllNew } from "./utils/replace-all";
-export { Replace } from "./utils/replace";
-export { RequiredExcept, RequiredOnly } from "./utils/required";
-export {
-  ReturnItselfIfExtends,
-  ReturnItselfIfNotExtends,
-} from "./utils/return-itself-if-extends";
-export { Reverse } from "./utils/reverse";
-export { Round } from "./utils/round";
-export { Shift, ShiftOptions } from "./utils/shift";
-export { Slice } from "./utils/slice";
-export { Sort } from "./utils/sort";
-export { Split } from "./utils/split";
-export { StartsWith } from "./utils/starts-with";
-export {
-  StringLength,
-  CompareStringLength,
-  IsLongerString,
-  IsSameLengthString,
-  IsShorterString,
-} from "./utils/string-length";
-export {
-  EmptyString,
-  NonEmptyString,
-  IfEmptyString,
-  IsEmptyString,
-  IfNonEmptyString,
-  IsNonEmptyString,
-} from "./utils/string";
-export { Stringify } from "./utils/stringify";
-export { Sub } from "./utils/sub";
-export { Sum, SumArr } from "./utils/sum";
-export { Swap } from "./utils/swap";
-export { Switch } from "./utils/switch";
-export { ToPrimitive } from "./utils/to-primitive";
-export { Trunc } from "./utils/trunc";
-export { TupleToObject } from "./utils/tuple-to-object";
-export { UnionToIntersection } from "./utils/union-to-intersection";
-export {
-  UnknownifyProperties,
-  UnknownifyPropertiesOptions,
-  IfUnknown,
-  IsUnknown,
-} from "./utils/unknown";
-export { Unshift } from "./utils/unshift";
-export {
-  ValueOf,
-  ValueOfExcept,
-  ValueOfOnly,
-  ValueOfArray,
-} from "./utils/value-of";
+import type { Prettify } from "@/types";
+/**
+ * Extracts the argument types of a given function type `F`.
+ *
+ * Useful when you need to infer or reuse the parameter types from an existing function signature.
+ *
+ * @template F A function type from which to extract argument types.
+ *
+ * @example
+ * type Args = ArgumentTypes<(a: number, b: string) => void>; // [number, string]
+ */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+export type ArgumentTypes<F extends Function> = F extends (
+  ...args: infer A
+) => any
+  ? A
+  : never;
+
+/**
+ * Gets the element type from a readonly array or tuple.
+ *
+ * Useful when working with `as const` arrays to extract the union of literal types.
+ *
+ * @template T A readonly array or tuple type.
+ *
+ * @example
+ * const roles = ['admin', 'user'] as const;
+ * type Role = GetArrayElementType<typeof roles>; // "admin" | "user"
+ */
+export type GetArrayElementType<T extends readonly any[]> =
+  T extends readonly (infer U)[] ? U : never;
+
+/**
+ * Converts specific keys `K` in type `T` to required (non-optional), while keeping the rest unchanged.
+ *
+ * This is useful when you need to enforce required fields conditionally.
+ *
+ * @template T The base object type.
+ * @template K The keys within `T` to make required. Defaults to all keys in `T`.
+ *
+ * @example
+ * type A = { a?: string; b?: number };
+ * type B = RequiredKeys<A, 'a'>; // { a: string; b?: number }
+ */
+// @ts-expect-error no check
+export type RequiredKeys<T, K extends keyof T = T> = Required<
+  Pick<T, Extract<keyof T, K>>
+> &
+  OmitStrict<T, K> extends infer O
+  ? { [P in keyof O]: O[P] }
+  : never;
+
+/**
+ * Converts specific keys `K` in type `T` to optional (partial), while keeping the rest unchanged.
+ *
+ * Useful when certain keys should be optional in certain contexts (e.g., form inputs).
+ *
+ * @template T The base object type.
+ * @template K The keys within `T` to make optional. Defaults to all keys in `T`.
+ *
+ * @example
+ * type A = { a: string; b: number };
+ * type B = PartialKeys<A, 'a'>; // { a?: string; b: number }
+ */
+// @ts-expect-error no check
+export type PartialKeys<T, K extends keyof T = T> = Partial<
+  Pick<T, Extract<keyof T, K>>
+> &
+  OmitStrict<T, K> extends infer O
+  ? { [P in keyof O]: O[P] }
+  : never;
+
+/**
+ * Overrides properties in type `T` with properties from type `U`, based on matching keys.
+ *
+ * Ensures the result retains all properties from `T`, but values from `U` override corresponding keys.
+ *
+ * @template T The base object type to override.
+ * @template U The object type containing overriding properties.
+ *
+ * @example
+ * type A = { a: number; b: string };
+ * type B = { b: boolean };
+ * type C = OverrideTypes<A, B>; // { a: number; b: boolean }
+ */
+export type OverrideTypes<
+  T,
+  U extends Partial<Record<keyof T, unknown>>
+> = OmitStrict<
+  T,
+  // @ts-expect-error no check
+  keyof U
+> &
+  U extends infer U
+  ? { [K in keyof U]: U[K] }
+  : never;
+
+/** ---------------------------------
+ * * ***Strictly omits keys `K` from type `T`, with optional flattening for readability using `Prettify`.***
+ * ---------------------------------
+ *
+ * Greatly enhances autocomplete and type inspection clarity in editors by optionally flattening
+ * nested intersections or mapped types into a cleaner shape.
+ *
+ * @template T The original object type.
+ * @template K The keys to omit from `T`.
+ * @template WithPrettify Whether to prettify the result (default is `true`).
+ * @template WithPrettifyRecursive Whether to prettify nested object properties recursively (defaults to `true`).
+ *
+ * @example
+ * type A = { a: number; b: string; c: boolean };
+ * type B = OmitStrict<A, 'b'>;
+ * // -> { a: number; c: boolean }
+ *
+ * type C = OmitStrict<A, 'b', false>;
+ * // -> Omit without prettifying, keeps intersection structure
+ *
+ * type D = OmitStrict<A, 'b', true, false>;
+ * // -> Prettifies only top level, does not recurse into nested objects
+ *
+ */
+export type OmitStrict<
+  T,
+  K extends keyof T,
+  WithPrettify extends boolean = true,
+  WithPrettifyRecursive extends boolean = true
+> = WithPrettify extends true
+  ? Prettify<Omit<T, K>, { recursive: WithPrettifyRecursive }>
+  : WithPrettify extends false
+  ? Omit<T, K>
+  : never;
+
+/**
+ * ---------------------------------
+ * * Pick Key Type Property with Enhanced Type Autocomplete.
+ * ---------------------------------
+ *
+ * Utility type that behaves exactly like the native `Pick<T, K>`, but can help with
+ * type inference and IDE autocomplete in more constrained generic scenarios.
+ *
+ * @template T The base object type.
+ * @template K The keys from `T` to be picked.
+ *
+ * @example
+ * type A = { a: number; b: string; c: boolean };
+ * type B = PickStrict<A, 'a' | 'c'>; // { a: number; c: boolean }
+ */
+export type PickStrict<T, K extends keyof T> = Pick<T, K>;
+
+/**
+ * ---------------------------------
+ * * Exclude Key Type Property with Enhanced Type Autocomplete.
+ * ---------------------------------
+ *
+ * Utility type that performs a stricter version of `Exclude<T, U>` by ensuring better type
+ * narrowing and improved behavior in complex generic conditions.
+ *
+ * Especially useful in generic libraries or utility types where standard `Exclude` may
+ * collapse or widen types unintentionally.
+ *
+ * @template T The full union or set of types.
+ * @template U The type(s) to be excluded from `T`.
+ *
+ * @example
+ * type A = 'a' | 'b' | 'c';
+ * type B = ExcludeStrict<A, 'b'>; // 'a' | 'c'
+ */
+export type ExcludeStrict<T, U extends T> = T extends unknown
+  ? 0 extends (U extends T ? ([T] extends [U] ? 0 : never) : never)
+    ? never
+    : T
+  : never;
+
+/**
+ * Identity utility type that preserves the structure and inference of type `T`.
+ *
+ * This is commonly used to force TypeScript to expand a mapped or intersection type
+ * into a more readable and usable shape.
+ *
+ * @template T The type to preserve and normalize.
+ *
+ * @example
+ * type A = { a: string; b: number };
+ * type B = Identity<A>; // Same as A, but fully expanded in IDEs
+ */
+export type Identity<T> = { [P in keyof T]: T[P] };
+
+/**
+ * Replaces specified keys in a type with a new value type, making them optional.
+ *
+ * This is useful when certain properties in a type should allow partial overrides
+ * while keeping the rest of the structure intact.
+ *
+ * @template TypeToBeChecked The original object type.
+ * @template KeyToBeReplaced The keys in the original type to be replaced.
+ * @template NewValueToUse The new type to assign to the replaced keys.
+ *
+ * @example
+ * type A = { name: string; age: number };
+ * type B = ReplacingToPartial<A, 'age', string>; // { name: string; age?: string }
+ */
+export type ReplacingToPartial<
+  TypeToBeChecked,
+  KeyToBeReplaced extends keyof TypeToBeChecked,
+  NewValueToUse
+> = Identity<
+  Pick<TypeToBeChecked, Exclude<keyof TypeToBeChecked, KeyToBeReplaced>> & {
+    [P in KeyToBeReplaced]?: NewValueToUse;
+  }
+>;
+
+/**
+ * Replaces specified keys in a type with a new value type, making them required.
+ *
+ * This is useful when redefining a property’s type while ensuring it's required in the resulting structure.
+ *
+ * @template TypeToBeChecked The original object type.
+ * @template KeyToBeReplaced The keys in the original type to be replaced.
+ * @template NewValueToUse The new type to assign to the replaced keys.
+ *
+ * @example
+ * type A = { name?: string; age: number };
+ * type B = ReplacingToRequired<A, 'name', string>; // { name: string; age: number }
+ */
+export type ReplacingToRequired<
+  TypeToBeChecked,
+  KeyToBeReplaced extends keyof TypeToBeChecked,
+  NewValueToUse
+> = Identity<
+  Pick<TypeToBeChecked, Exclude<keyof TypeToBeChecked, KeyToBeReplaced>> & {
+    [P in KeyToBeReplaced]: NewValueToUse;
+  }
+>;
+
+/**
+ * Represents an object with arbitrary string keys and values of any type.
+ *
+ * This type is commonly used as a fallback or catch-all for flexible key-value structures
+ * such as query parameters, configuration maps, or JSON-like data.
+ *
+ * ⚠️ Use with caution — `any` disables type safety. Prefer stricter typing when possible.
+ *
+ * @example
+ * const config: ObjArrayKeyStringAny = {
+ *   mode: "dark",
+ *   retries: 3,
+ *   debug: true,
+ * };
+ */
+export type ObjArrayKeyStringAny = {
+  [key: string]: any;
+};
+
+/**
+ * Represents a broad union of commonly used JavaScript data types.
+ *
+ * Includes primitive types, `object`, `null`, `undefined`, `symbol`, and a function signature.
+ * This type is useful for scenarios where you need to support a wide range of inputs,
+ * such as dynamic data processors, serializers, or value validators.
+ *
+ * @example
+ * function isValidType(value: DataTypes): boolean {
+ *   return value !== undefined && value !== null;
+ * }
+ */
+// prettier-ignore
+export type DataTypes =
+  | bigint
+  | boolean
+  | ((string?: any) => void)
+  | null
+  | number
+  | object
+  | string
+  | symbol
+  | undefined;
+
+/**
+ * A custom extension of the native `Promise` type that allows explicit typing for both
+ * the resolved (`onSuccess`) and rejected (`onError`) values.
+ *
+ * This type is useful when you want to strongly type both the success and error cases of an asynchronous operation,
+ * particularly in scenarios like server actions, remote procedure calls (RPC), or custom async wrappers.
+ *
+ * @template onSuccess The type of the resolved value when the promise is fulfilled.
+ * @template onError The type of the rejection reason when the promise is rejected. Defaults to `any`.
+ *
+ * @example
+ * const fetchUser = (): CustomPromise<User, ApiError> => {
+ *   return customRequest().catch(err => {
+ *     handleError(err); // `err` is typed as `ApiError`
+ *     return fallbackUser;
+ *   });
+ * };
+ *
+ * fetchUser().then(user => {
+ *   // user is typed as `User`
+ * });
+ */
+export type CustomPromise<onSuccess, onError = any> = {
+  catch<TResult = never>(
+    onrejected?:
+      | ((reason: onError) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null
+  ): Promise<onSuccess | TResult>;
+} & Promise<onSuccess>;
+
+/** ---------------------------------
+ * * Helper: Prettify a Type or Interface for Easier Readability
+ * ---------------------------------
+ *
+ * This utility type recursively resolves and flattens the structure of a given type,
+ * making the resulting type easier to read in IDE tooltips or inline type inspection.
+ *
+ * It is especially useful when dealing with deeply nested generics or intersection types
+ * that are difficult to interpret directly.
+ *
+ * @template T The type or interface to prettify.
+ *
+ * @example
+ * // Without Prettify:
+ * type Result = A & B & { extra: string };
+ *
+ * // With Prettify:
+ * type Result = PrettifyOld<A & B & { extra: string }>;
+ *
+ * @deprecated use type `Prettify` instead.
+ */
+export type PrettifyOld<T> = {
+  [K in keyof T]: T[K] extends object ? PrettifyOld<T[K]> : T[K];
+} & {};
+
+/**
+ * Represents common whitespace characters.
+ * Used as the default trimming characters.
+ */
+export type Whitespace = " " | "\t" | "\r" | "\n";
+
+/**
+ * Recursively trims specified characters (default: whitespace) from the start (left) of a string.
+ *
+ * @template Text The string to trim.
+ * @template Chars The characters to remove from the beginning of the string. Defaults to `Whitespace`.
+ *
+ * @example
+ * type T = TrimLeft<"\n  hello", " " | "\n">; // "hello"
+ */
+export type TrimLeft<
+  Text extends string,
+  Chars extends string | number = Whitespace
+> = Text extends `${Chars}${infer Rest}` ? TrimLeft<Rest, Chars> : Text;
+
+/**
+ * Recursively trims specified characters (default: whitespace) from the end (right) of a string.
+ *
+ * @template Text The string to trim.
+ * @template Chars The characters to remove from the end of the string. Defaults to `Whitespace`.
+ *
+ * @example
+ * type T = TrimRight<"hello  \t", " " | "\t">; // "hello"
+ */
+export type TrimRight<
+  Text extends string,
+  Chars extends string | number = Whitespace
+> = Text extends `${infer Rest}${Chars}` ? TrimRight<Rest, Chars> : Text;
+
+/**
+ * Trims specified characters (default: whitespace) from both the start and end of a string.
+ *
+ * @template Text The string to trim.
+ * @template Chars The characters to remove. Defaults to `Whitespace`.
+ *
+ * @example
+ * type T = Trim<"  hello  ", " ">; // "hello"
+ */
+export type Trim<
+  Text extends string,
+  Chars extends string | number = Whitespace
+> = TrimRight<TrimLeft<Text, Chars>, Chars>;
+
+/**
+ * Replaces all occurrences of a pattern in a string with a replacement string.
+ *
+ * @template Text The input string.
+ * @template Pattern The substring to replace.
+ * @template Replacement The replacement string. Defaults to an empty string.
+ *
+ * @example
+ * type T = ReplaceAllOld<"foo-bar-bar", "bar", "baz">; // "foo-baz-baz"
+ *
+ * @deprecated use `ReplaceAll` instead.
+ */
+export type ReplaceAllOld<
+  Text extends string,
+  Pattern extends string | number,
+  Replacement extends string = ""
+> = Text extends `${infer Start extends string}${Pattern}${infer Rest extends string}`
+  ? `${Start}${Replacement}${ReplaceAllOld<Rest, Pattern, Replacement>}`
+  : Text;
+
+/**
+ * Converts a string to lowercase and trims leading and trailing whitespace.
+ *
+ * @template S The input string.
+ *
+ * @example
+ * type T = TrimsLower<"  HeLLo \n">; // "hello"
+ */
+export type TrimsLower<S extends string> = Trim<Lowercase<S>>;
+
+/**
+ * Recursively traverses an array (or nested object structure) and replaces all values of a given type (`Target`) with `NewType`.
+ *
+ * Useful for remapping deeply nested arrays or records.
+ *
+ * @template Arr The input array or object.
+ * @template Target The type to match and replace.
+ * @template NewType The new type to assign in place of `Target`.
+ *
+ * @example
+ * type A = [number, string, [number]];
+ * type B = ChangeTypeOfValuesArray<A, number, boolean>; // [boolean, string, [boolean]]
+ */
+export type ChangeTypeOfValuesArray<Arr, Target, NewType> = Arr extends object
+  ? {
+      [K in keyof Arr]: ChangeTypeOfValuesArray<Arr[K], Target, NewType>;
+    }
+  : NewType;

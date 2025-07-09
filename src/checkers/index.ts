@@ -208,9 +208,9 @@ export const arrayHasAnyMatch = <T>(
  * isArray(null); // false
  * isArray(undefined); // false
  */
-export function isArray<T>(value: unknown): value is Array<T> {
+export const isArray = <T>(value: unknown): value is Array<T> => {
   return Array.isArray(value);
-}
+};
 
 /**
  * ----------------------------------------------------------

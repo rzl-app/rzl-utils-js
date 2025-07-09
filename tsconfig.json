@@ -20,7 +20,9 @@
     "skipLibCheck": true
   },
   "include": [
-    "src"
+    "src",
+    "deprecated/types/utils",
+    "deprecated/types/index.ts"
   ],
   "exclude": [
     "node_modules",

@@ -1,22 +1,13 @@
 # ⚡️ Packages `rzl-utils-js` 🚀
 
-<div align="center">
-  <pre>
-    <code>
-   __        __              ___                _______              
-      \ \      / /__  _ __ ___  | |_ ___  ___ ___  \      \   ___ ___  ___ 
-      \ \ /\ / / _ \| '__/ _ \ | __/ _ \/ __/ __| /   |   \ / __/ _ \/ __|
-        \ V  V / (_) | | |  __/ | ||  __/\__ \__ \ /    |    \ (_|  __/\__ \
-        \_/\_/ \___/|_|  \___|  \__\___||___/___/ \____|__  /\___\___||___/
-                                                          \/          \/   
-                      🚀 Rzl Utility JavaScript 🚀                          
-    </code>
-  </pre>
-</div>
+<p align="center">
+🚀 <strong>Rzl Utility JavaScript</strong> 🚀<br/>
+A lightweight, modern TypeScript utility library for Node.js & browser.<br/>
+Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/>
+<strong>Built with ❤️ by <a href="https://github.com/rzl-app">@rzl-app</a>.</strong>
+</p>
 
-> A lightweight, modern TypeScript utility library for Node.js & browser.  
-> Provides reusable helpers to simplify your JavaScript / TypeScript projects.  
-> **Built with ❤️ by [@rzl-app](https://github.com/rzl-app).**
+<div align="center">
 
 [![Latest Version on NPM](https://img.shields.io/npm/v/rzl-utils-js?color=blue&style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
 [![downloads](https://img.shields.io/npm/dt/rzl-utils-js?style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
@@ -25,6 +16,8 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/LICENSE.md)
 [![GitHub](https://img.shields.io/badge/GitHub-rzl--app%2Frzl--utils--js-181717?logo=github)](https://github.com/rzl-app/rzl-utils-js)
 [![Repo on GitHub](https://img.shields.io/badge/Repo-on%20GitHub-181717?logo=github&style=flat-rounded)](https://github.com/rzl-app)
+
+</div>
 
 ---
 

@@ -50,50 +50,50 @@ type UnknownObject = Record<string, unknown>;
 export function safeJsonParseDeprecated<AsType>(
   value: null,
   loggingOnFail?: false,
-  onError?: undefined
+  onError?: undefined,
 ): null;
 
 export function safeJsonParseDeprecated<AsType>(
   value: undefined,
   loggingOnFail?: false,
-  onError?: undefined
+  onError?: undefined,
 ): undefined;
 
 export function safeJsonParseDeprecated<AsType = UnknownObject>(
   value: string,
   loggingOnFail?: boolean,
-  onError?: (error: unknown) => void
+  onError?: (error: unknown) => void,
 ): AsType;
 
 export function safeJsonParseDeprecated<AsType = UnknownObject>(
   value: StringOrNull,
   loggingOnFail?: boolean,
-  onError?: (error: unknown) => void
+  onError?: (error: unknown) => void,
 ): AsType | null;
 
 export function safeJsonParseDeprecated<AsType = UnknownObject>(
   value?: string,
   loggingOnFail?: boolean,
-  onError?: (error: unknown) => void
+  onError?: (error: unknown) => void,
 ): AsType | undefined;
 
 export function safeJsonParseDeprecated<AsType = UnknownObject>(
   value?: StringOrNull,
   loggingOnFail?: boolean,
-  onError?: (error: unknown) => void
+  onError?: (error: unknown) => void,
 ): AsType | NullOrUndefined;
 
 export function safeJsonParseDeprecated<AsType = unknown>(
   value?: StringOrNull,
   loggingOnFail: boolean = false,
-  onError?: (error: unknown) => void
+  onError?: (error: unknown) => void,
 ): AsType | NullOrUndefined {
   if (value === null) return null;
   if (typeof value !== "string") return undefined;
 
   if (typeof loggingOnFail !== "boolean") {
     throw new TypeError(
-      `props 'loggingOnFail' must be \`boolean\` or empty as \`undefined\` type!`
+      `props 'loggingOnFail' must be \`boolean\` or empty as \`undefined\` type!`,
     );
   }
 

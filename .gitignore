@@ -18,5 +18,8 @@ coverage/
 fixtures/
 compiler/
 
+# Deprecated Script
+deprecated/
+
 
 

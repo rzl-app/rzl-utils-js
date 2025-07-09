@@ -1,5 +1,5 @@
 import { isArray } from "@/checkers";
-import type { UnionToTuple } from "./types";
+import { UnionToTupleStrict } from "./types";
 
 /** ----------------------------------------
  * * ***Creates a helper function for `shouldForwardProp` in styled-components.***
@@ -12,7 +12,7 @@ import type { UnionToTuple } from "./types";
  * @throws {Error} If the provided `props` is not an array.
  */
 export const shouldForwardProp = <CustomProps>(
-  props: UnionToTuple<keyof CustomProps>
+  props: UnionToTupleStrict<keyof CustomProps>
 ) => {
   if (!isArray(props)) {
     throw new Error(

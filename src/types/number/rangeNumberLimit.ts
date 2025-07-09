@@ -1,4 +1,4 @@
-import { IsGreaterThan, Sum } from "../helpers";
+import type { Sum, IsGreaterThan } from "@/types";
 
 /**
  * --------------------------------------------------

@@ -1,5 +1,4 @@
-import type { RandomStringOptions } from "./types";
-export type { RandomStringOptions } from "./types";
+import type { RandomStringOptions } from "@/types/generator/random/string";
 
 /** ----------------------------
  * * ***Generates a random alphanumeric string or number with a specified length range.***

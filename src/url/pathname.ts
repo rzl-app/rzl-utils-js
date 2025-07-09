@@ -110,12 +110,12 @@ import { NormalizePathnameError } from "./exceptions";
  *
  * @function
  */
-export function getPrefixPathname(
+export const getPrefixPathname = (
   url: string | string[],
   base: string | string[] | null = null,
   levels: number = 1,
   removeDuplicates: boolean = true
-): string | string[] | null {
+): string | string[] | null => {
   const errors: string[] = [];
 
   if (typeof url !== "string" && !Array.isArray(url)) {
@@ -187,7 +187,7 @@ export function getPrefixPathname(
 
   // If url is a single string, process it and return the result
   return processUrl(url);
-}
+};
 
 /**
  * 📌 **Extract First Prefix from Result or Return Default Path**
@@ -228,10 +228,10 @@ export function getPrefixPathname(
  *
  * @function
  */
-export function getFirstPrefixPathname(
+export const getFirstPrefixPathname = (
   result: string | string[] | null,
   defaultValue: string = "/"
-): string {
+): string => {
   // Validate defaultValue is a proper string
   if (typeof defaultValue !== "string" || !defaultValue.trim()) {
     throw new TypeError(
@@ -267,7 +267,7 @@ export function getFirstPrefixPathname(
 
   // If result is null or any other case, return the default value
   return normalizePathname(defaultValue);
-}
+};
 
 /** ---------------------------------
  * * ***Normalizes a given pathname by ensuring proper formatting.***

@@ -13,7 +13,7 @@
  * @returns {T[] | undefined} A new array with `null` and `undefined` values removed,
  * or `undefined` if the input is invalid or results in an empty array.
  */
-export function filterNullValuesArray<T>(input?: T[]): T[] | undefined {
+export const filterNullValuesArray = <T>(input?: T[]): T[] | undefined => {
   if (!Array.isArray(input)) return undefined; // Ensure input is a valid array
 
   const filtered = input.reduce<T[]>((output, element) => {
@@ -31,7 +31,7 @@ export function filterNullValuesArray<T>(input?: T[]): T[] | undefined {
   }, []);
 
   return filtered.length > 0 ? filtered : undefined;
-}
+};
 
 /**
  * Flattens a nested array and removes duplicate values while maintaining the original order.

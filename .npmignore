@@ -24,3 +24,6 @@ barrelsby.json
 __tests__/
 examples/
 tests/
+
+# Deprecated Script
+deprecated/

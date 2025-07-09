@@ -135,7 +135,7 @@ export const formatDateWithFns = (
   /**
    * Options for formatting and parsing a date using `date-fns`.
    */
-  options?: OmitStrict<FormatOptions, "locale"> & {
+  options?: OmitStrict<FormatOptions, "locale", true, false> & {
     /**
      * Output format string using `date-fns/format`.
      * @default "dd MMM yyyy - HH:mm:ss"

@@ -3,7 +3,7 @@ import type {
   FormatPhoneNumberPropsString,
   FormatPhoneNumberPropsBoolean,
   FormatPhoneNumberPropsTransform,
-} from "./types";
+} from "@/types/converts/number";
 
 export function formatPhoneNumber({
   value,

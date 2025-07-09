@@ -15,10 +15,10 @@
  * formatNumberWithSeparator(1234567.89);   // "1,234,567.89"
  * formatNumberWithSeparator("987654321", " "); // "987 654 321"
  */
-export function formatNumberWithSeparator(
+export const formatNumberWithSeparator = (
   value: string | number,
   separator: string = ","
-): string {
+): string => {
   if (!value || !(typeof value === "string" || typeof value === "number")) {
     `props 'value' must be \`string\` or \`number\` type!`;
   }
@@ -30,4 +30,4 @@ export function formatNumberWithSeparator(
     typeof separator === "string" && separator.trim().length ? separator : ",";
 
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
-}
+};

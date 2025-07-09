@@ -15,9 +15,9 @@
  * formatEnvPort(process.env.PORT_BE); // ":8080" or ""
  * ```
  */
-export function formatEnvPort(envVar?: string): string {
+export const formatEnvPort = (envVar?: string): string => {
   if (typeof envVar !== "string" || !envVar.trim()) return "";
 
   // Remove all leading colons, then prepend one
   return `:${envVar.replace(/^:+/, "")}`;
-}
+};
