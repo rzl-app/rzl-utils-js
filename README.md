@@ -102,7 +102,7 @@ This package also provides utilities specially built for Next.js environments, n
   Helpers for building URLs, generating dynamic routes, reading environment variables, etc.  
   ✅ Safe to use in both Next.js pages & API routes.
 
-  [Read More Docs](https://github.com/rzl-app/rzl-utils-js/docs/next-js/global.md)
+  [Read More Docs](docs/next-js/global.md)
 
   ***
 
@@ -110,7 +110,7 @@ This package also provides utilities specially built for Next.js environments, n
   Utilities meant to run in Next.js server-only contexts (like middleware or server actions) for tasks such as extracting real client IPs.  
   ⚠️ Will throw if used outside a Next.js server environment.
 
-  [Read More Docs](https://github.com/rzl-app/rzl-utils-js/docs/next-js/server-only.md)
+  [Read More Docs](docs/next-js/server-only.md)
 
 ---
 
