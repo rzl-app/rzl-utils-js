@@ -30,16 +30,16 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 - ✨ [Features](#features)
 - 🧬 [NextJS Support](#nextjs-support)
 - 💎 [Detailed Features](#detailed-features)
-  - [Checker](#detailed-features--checker)
-  - [Conversion](#detailed-features--conversion)
-    - [Conversion Array](/docs/detailed-features/conversion/array.md)
-    - [Currency](/docs/detailed-features/conversion/currency.md)
-    - [Json](/docs/detailed-features/conversion/json.md)
-    - [Number](/docs/detailed-features/conversion/number.md)
-    - [Object](/docs/detailed-features/conversion/object.md)
-    - [Stringify](/docs/detailed-features/conversion/stringify.md)
-    - [Strings](/docs/detailed-features/conversion/strings.md)
-    - [Boolean](/docs/detailed-features/conversion/boolean.md)
+  - [Checkers](#detailed-features--checkers)
+  - [Conversions](#detailed-features--conversion)
+    - [Array](/docs/detailed-features/conversions/array.md)
+    - [Currency](/docs/detailed-features/conversions/currency.md)
+    - [Json](/docs/detailed-features/conversions/json.md)
+    - [Number](/docs/detailed-features/conversions/number.md)
+    - [Object](/docs/detailed-features/conversions/object.md)
+    - [Stringify](/docs/detailed-features/conversions/stringify.md)
+    - [Strings](/docs/detailed-features/conversions/strings.md)
+    - [Boolean](/docs/detailed-features/conversions/boolean.md)
 - 🔥 [Usage](#usage)
 - ❤️ [Sponsor](#sponsor-this-package)
 - 📜 [Changelog](#changelog)
@@ -116,16 +116,16 @@ This package also provides utilities specially built for Next.js environments, n
 
 <h2 id="detailed-features">💎 Detailed Features</h2>
 
-  - <h4 id="detailed-features--checker">
-      Checker - 
-      <a href="/docs/detailed-features/checker.md">
+  - <h4 id="detailed-features--checkers">
+      Checkers - 
+      <a href="/docs/detailed-features/checkers.md">
         Read More Docs.
       </a> 
     </h4> 
 
-  - <h4 id="detailed-features--conversion">
-      Conversion -
-      <a href="/docs/detailed-features/conversion/">
+  - <h4 id="detailed-features--conversions">
+      Conversions -
+      <a href="/docs/detailed-features/conversions/">
         Read More Docs.
       </a> 
     </h4>
