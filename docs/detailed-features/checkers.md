@@ -1,4 +1,7 @@
-### Docs Checker `rzl-utils-js`   
+<h3 id="docs-sub-main--title">
+  Docs Checkers `rzl-utils-js`   
+</h3>
+
   #### 🚀 Checker Utils Helpers
 
   | <small>Function / Type</small>          | <small>What it does</small>                                                             | <small>Highlights</small>                                   |

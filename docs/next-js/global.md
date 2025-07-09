@@ -1,4 +1,6 @@
-### Docs `rzl-utils-js/next`   
+<h3 id="docs-sub-main--title">
+  Docs for Next.JS Utils - Globals `rzl-utils-js/next`    
+</h3>
   
   #### 🚀 Next.js Helper Summary
 

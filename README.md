@@ -32,14 +32,14 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 - 💎 [Detailed Features](#detailed-features)
   - [Checkers](#detailed-features--checkers)
   - [Conversions](#detailed-features--conversions)
-    - [Array](/docs/detailed-features/conversions/array.md)
-    - [Currency](/docs/detailed-features/conversions/currency.md)
-    - [Json](/docs/detailed-features/conversions/json.md)
-    - [Number](/docs/detailed-features/conversions/number.md)
-    - [Object](/docs/detailed-features/conversions/object.md)
-    - [Stringify](/docs/detailed-features/conversions/stringify.md)
-    - [Strings](/docs/detailed-features/conversions/strings.md)
-    - [Boolean](/docs/detailed-features/conversions/boolean.md)
+    - [Array](/docs/detailed-features/conversions/array.md#docs-sub-main--title)
+    - [Currency](/docs/detailed-features/conversions/currency.md#docs-sub-main--title)
+    - [Json](/docs/detailed-features/conversions/json.md#docs-sub-main--title)
+    - [Number](/docs/detailed-features/conversions/number.md#docs-sub-main--title)
+    - [Object](/docs/detailed-features/conversions/object.md#docs-sub-main--title)
+    - [Stringify](/docs/detailed-features/conversions/stringify.md#docs-sub-main--title)
+    - [Strings](/docs/detailed-features/conversions/strings.md#docs-sub-main--title)
+    - [Boolean](/docs/detailed-features/conversions/boolean.md#docs-sub-main--title)
 - 🔥 [Usage](#usage)
 - ❤️ [Sponsor](#sponsor-this-package)
 - 📜 [Changelog](#changelog)
@@ -102,7 +102,7 @@ This package also provides utilities specially built for Next.js environments, n
   Helpers for building URLs, generating dynamic routes, reading environment variables, etc.  
   ✅ Safe to use in both Next.js pages & API routes.
 
-  [Read More Docs](/docs/next-js/global.md)
+  [Read More Docs](/docs/next-js/global.md#docs-sub-main--title)
 
   ***
 
@@ -110,7 +110,7 @@ This package also provides utilities specially built for Next.js environments, n
   Utilities meant to run in Next.js server-only contexts (like middleware or server actions) for tasks such as extracting real client IPs.  
   ⚠️ Will throw if used outside a Next.js server environment.
 
-  [Read More Docs](/docs/next-js/server-only.md)
+  [Read More Docs](/docs/next-js/server-only.md#docs-sub-main--title)
 
 ---
 
@@ -118,7 +118,7 @@ This package also provides utilities specially built for Next.js environments, n
 
   - <h4 id="detailed-features--checkers">
       Checkers - 
-      <a href="/docs/detailed-features/checkers.md">
+      <a href="/docs/detailed-features/checkers.md#docs-sub-main--title">
         Read More Docs.
       </a> 
     </h4> 

@@ -1,4 +1,7 @@
-### Docs Conversion `rzl-utils-js`   
+<h3 id="docs-sub-main--title">
+  Docs Conversion `rzl-utils-js`   
+</h3>
+
   #### 🚀 Currency Conversion Utils Helpers
 
   <table>
@@ -67,7 +70,7 @@
   ```
 ---
 
-[⬅ Back Conversion Utils Lists](https://github.com/rzl-app/rzl-utils-js/blob/main/docs/detailed-features/conversions/index.md)
+[⬅ Back Conversion Utils Lists](https://github.com/rzl-app/rzl-utils-js/blob/main/docs/detailed-features/conversions/index.md#conversions-lists)
 
 [⬅ Back to All Detailed features](https://github.com/rzl-app/rzl-utils-js?tab=readme-ov-file#detailed-features)
 
