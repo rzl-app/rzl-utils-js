@@ -98,78 +98,19 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 
 This package also provides utilities specially built for Next.js environments, neatly separated into their own entry points:
 
-- `rzl-utils-js/next`  
-   Helpers for building URLs, generating dynamic routes, reading environment variables, etc.  
-   ✅ Safe to use in both Next.js pages & API routes.
+- <h3 id="nextjs-support--globals">`rzl-utils-js/next`</h3>  
+  Helpers for building URLs, generating dynamic routes, reading environment variables, etc.  
+  ✅ Safe to use in both Next.js pages & API routes.
 
-  #### 🚀 Next.js Helper Summary
-
-  | <small>Function / Type </small>          | <small>What it does</small>                                                                                                                                        | <small>Reads / Validates</small>                                                                | <small>Example Output</small>                                           |
-  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-  | <small>getBaseUrl()</small>              | <small>Get frontend base URL from `NEXT_PUBLIC_BASE_URL` (defaults to `http://localhost:3000`), appends FE port if needed, normalizes URL.</small>                 | <small>✅ `NEXT_PUBLIC_BASE_URL`<br>✅ `NEXT_PUBLIC_PORT_FE`</small>                            | <small>`"http://localhost:3000"`</small>                                |
-  | <small>getBackendApiUrl(options)</small> | <small>Get backend API base URL from `NEXT_PUBLIC_BACKEND_API_URL` (defaults to `http://localhost:8000`), appends BE port, plus optional `options.suffix`.</small> | <small>✅ `NEXT_PUBLIC_BACKEND_API_URL`<br>✅ `NEXT_PUBLIC_PORT_BE`</small>                     | <small>`"http://localhost:8000/api"`</small>                            |
-  | <small>getBackendApiEndpoint()</small>   | <small>Build full endpoint URL combining `getBackendApiUrl` + prefix (`/api` by default) + pathname, can exclude origin.</small>                                   | <small>✅ Prefix (`/api`)<br>✅ Normalizes duplicate slashes<br>✅ Boolean `withOrigin`</small> | <small>`"http://localhost:8000/api/users"`<br>or `"/api/users"`</small> |
-  | <small>generateRoute()</small>           | <small>Generates URL from dynamic Next.js route (`/post/[id]`) with params object. Validates missing, empty & invalid chars.</small>                               | <small>✅ Params cleaned strings<br>❌ Invalid: `? & # = / space ' " ( ) + ; % @ :`</small>     | <small>`"/post/123"`</small>                                            |
-  | <small>ExtractRouteParams<T></small>     | <small>Type helper: extracts `[param]` from string into `{ param: string }`. Recursive.</small>                                                                    | <small>⚡️ Pure TS type — compile time only</small>                                             | <small>`{ id: string }`</small>                                         |
-  | <small>HasDynamicSegments<T></small>     | <small>Type helper: checks if string contains `[param]`.</small>                                                                                                   | <small>⚡️ Pure TS type — compile time only</small>                                             | <small>`true` / `false`</small>                                         |
-
-  #### ✨ Example for `"rzl-utils-js/next"`: Dynamic route & URL helpers (Next.js)
-
-  ```ts
-  import {
-    getBaseUrl,
-    getBackendApiUrl,
-    getBackendApiEndpoint,
-    generateRoute,
-  } from "rzl-utils-js/next";
-
-  console.log(getBaseUrl());
-  // -> "http://localhost:3000"
-
-  console.log(getBackendApiUrl({ suffix: "/v1" }));
-  // -> "http://localhost:8000/v1"
-
-  console.log(getBackendApiEndpoint("/users"));
-  // -> "http://localhost:8000/api/users"
-
-  console.log(generateRoute("/post/[id]", { id: "123" }));
-  // -> "/post/123"
-  ```
+  [Read More Docs](https://github.com/rzl-app/rzl-utils-js/docs/next-js/global.md)
 
   ***
 
-- `rzl-utils-js/next/server`  
+- <h3 id="nextjs-support--server-only">`rzl-utils-js/next/server`</h3>   
   Utilities meant to run in Next.js server-only contexts (like middleware or server actions) for tasks such as extracting real client IPs.  
   ⚠️ Will throw if used outside a Next.js server environment.
 
-  #### 🚀 Server-only Helpers (Next.js)
-
-  | <small>Function / Type </small>                            | <small>What it does</small>                                                                                                                                                                                               | <small>Reads / Validates</small>                                                                                                                                     | <small>Example Output</small>                                |
-  | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-  | <small>`getClientIpOrUrl(request, includeFullUrl)`</small> | <small>Extracts the real client IP from `x-forwarded-for`, normalizes IPv6, optionally builds full URL using `x-forwarded-proto` & `x-forwarded-port`. Designed for **Next.js middleware / server actions** only.</small> | <small>✅ Checks `NextRequest` instance<br>✅ Reads `x-forwarded-for`, `x-forwarded-proto`, `x-forwarded-port`<br>✅ Validates `boolean` on `includeFullUrl`</small> | <small>`"127.0.0.1"`<br>or `"http://127.0.0.1:3000"`</small> |
-
-  #### ⚡ Example for `"rzl-utils-js/next/server"`: Server-only helpers (middleware/server-action)
-
-  ```ts
-  import { NextRequest } from "next/server";
-  import { getClientIpOrUrl } from "rzl-utils-js/next/server";
-
-  export function middleware(request: NextRequest) {
-    console.log(getClientIpOrUrl(request)); // full URL
-    console.log(getClientIpOrUrl(request, false)); // IP only
-    return new Response("OK");
-  }
-  ```
-
-  #### ⚠️ Important:
-
-  If you run this outside of a Next.js environment (like plain Node.js or in non-Next projects), you might see errors such as:
-
-  ```js
-    Error: Cannot find module 'next/server'
-    // or:
-    Could not resolve "next/server"
-  ```
+  [Read More Docs](https://github.com/rzl-app/rzl-utils-js/docs/next-js/server-only.md)
 
 ---
 
