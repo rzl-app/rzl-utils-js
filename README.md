@@ -33,7 +33,7 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
   - [Checker](#detailed-features--checker)
   - [Conversion](#detailed-features--conversion)
     - [Conversion Array](#detailed-features--conversion-array)
-    - [Currency](#detailed-features--conversion-array)
+    - [Currency](#detailed-features--conversion-currency)
     - [Json](#detailed-features--conversion-json)
     - [Number](#detailed-features--conversion-number)
     - [Object](#detailed-features--conversion-object)
@@ -299,7 +299,7 @@ This package also provides utilities specially built for Next.js environments, n
         </tbody>
       </table>
 
-      ### ⚡ Quick Example (Checker Helpers - Conversion Array)
+      ### ⚡ Quick Example (Conversion Helpers - Array)
 
       ```ts
       import {
@@ -370,7 +370,367 @@ This package also provides utilities specially built for Next.js environments, n
       ***
 
     - <h4 id="detailed-features--conversion-currency">Currency</h4>
-  
+
+      <table>
+        <thead>
+          <tr>
+            <th><small>Function / Type</small></th>
+            <th><small>What it does</small></th>
+            <th><small>Highlights</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><small><code>formatCurrency</code></small></td>
+            <td><small>Formats a number or string into a currency string with customizable separators, decimals, and suffixes.</small></td>
+            <td><small>✅ Custom thousands & decimal separators<br>✅ Supports suffix decimals (e.g., ".-")<br>✅ Safe type validation</small></td>
+          </tr>
+          <tr>
+            <td><small><code>removeNonNumericCharacters</code></small></td>
+            <td><small>Strips out all non-numeric characters from a string or number input, returning a cleaned number.</small></td>
+            <td><small>✅ Handles <code>null</code> & <code>undefined</code><br>✅ Ensures numeric result<br>✅ Simple fallback to <code>0</code></small></td>
+          </tr>
+        </tbody>
+      </table>
+
+      ### ⚡ Quick Example (Conversion Helpers - Currency)
+
+      ```ts
+      import { formatCurrency, removeNonNumericCharacters } from "rzl-utils-js";
+
+      // Example: formatCurrency
+      console.log(formatCurrency({ value: 1000000 }));
+      // → "1.000.000"
+
+      console.log(formatCurrency({ value: 2500.5, decimal: true }));
+      // → "2.500,00" (because totalDecimal default is 2)
+
+      console.log(formatCurrency({ value: "98765", separator: " " }));
+      // → "98 765"
+
+      console.log(
+        formatCurrency({
+          value: 1999.99,
+          endDecimal: true,
+          suffixDecimal: ".-",
+          decimal: true,
+          separatorDecimals: ",",
+        })
+      );
+      // → "1.999,00.-"
+
+      // Example: removeNonNumericCharacters
+      console.log(removeNonNumericCharacters({ value: "123abc456" }));
+      // → 123456
+
+      console.log(removeNonNumericCharacters({ value: "$1,234.56" }));
+      // → 123456
+
+      console.log(removeNonNumericCharacters({ value: "9A8B7C6" }));
+      // → 9876
+
+      console.log(removeNonNumericCharacters({ value: undefined }));
+      // → 0
+
+      console.log(removeNonNumericCharacters({ value: null }));
+      // → 0
+      ```
+      ***
+    - <h4 id="detailed-features--conversion-json">Json</h4>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;"><small>Function</small></th>
+            <th style="text-align:left;"><small>Description</small></th>
+            <th style="text-align:left;"><small>Parameters</small></th>
+            <th style="text-align:left;"><small>Returns</small></th>
+            <th style="text-align:left;"><small>Highlights</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><small><code>safeJsonParse</code></small></td>
+            <td>
+              <small>
+                Safely parses a JSON string while cleaning and transforming data based on flexible options.<br>
+                Handles automatic type conversions, removes empty/unwanted values, and supports custom date parsing.
+              </small>
+            </td>
+            <td>
+              <small>
+                <strong>value:</strong> <code>string | null | undefined</code><br>
+                JSON string to parse.<br><br>
+                <strong>options:</strong> <code>CleanParsedDataOptions</code> (optional)<br>
+                <ul>
+                  <li><code>convertNumbers</code>: Convert numeric strings to numbers</li>
+                  <li><code>convertBooleans</code>: Convert "true"/"false" to booleans</li>
+                  <li><code>convertDates</code>: Parse ISO or custom date formats</li>
+                  <li><code>customDateFormats</code>: e.g. ["DD/MM/YYYY"]</li>
+                  <li><code>removeNulls</code>, <code>removeUndefined</code>, <code>removeEmptyObjects</code>, <code>removeEmptyArrays</code></li>
+                  <li><code>strictMode</code>: Clean aggressively</li>
+                  <li><code>loggingOnFail</code>: Log parse failures</li>
+                  <li><code>onError</code>: Custom error callback</li>
+                </ul>
+              </small>
+            </td>
+            <td>
+              <small>
+                <code>T | undefined | null</code><br>
+                Returns cleaned data or <code>undefined</code> if parsing fails.<br>
+                If input is <code>null</code>, returns <code>null</code>.
+              </small>
+            </td>
+            <td>
+              <small>
+                ✅ Converts numeric & boolean strings<br>
+                ✅ Parses ISO & custom dates<br>
+                ✅ Removes <code>null</code>, <code>undefined</code>, empty objects/arrays<br>
+                ✅ Strict mode for aggressive cleaning<br>
+                ✅ Custom error handler & logging
+              </small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      ### ⚡ Quick Example (Conversion Helpers - Json)
+        #### ➡️ TypeScript (with type support):
+        ```ts
+        import { safeJsonParse } from "rzl-utils-js";
+
+        type User = {
+          age?: number;
+          isActive?: boolean;
+          birthday?: Date;
+          name?: string;
+          nickname?: string;
+        };
+
+        // ✅ Example 1: Convert numbers and booleans automatically
+        const example1 = safeJsonParse<User>(
+          '{"age":"30","isActive":"true"}',
+          { convertNumbers: true, convertBooleans: true }
+        );
+        console.log(example1);
+        // Output: { age: 30, isActive: true }
+
+        // ✅ Example 2: Parse custom date format (DD/MM/YYYY)
+        const example2 = safeJsonParse<User>(
+          '{"birthday":"25/12/2000"}',
+          { convertDates: true, customDateFormats: ["DD/MM/YYYY"] }
+        );
+        console.log(example2);
+        // Output: { birthday: Date("2000-12-25T00:00:00.000Z") }
+
+        // ✅ Example 3: Remove nulls and undefined
+        const example3 = safeJsonParse<User>(
+          '{"name":"John","nickname":null,"status":undefined}',
+          { removeNulls: true, removeUndefined: true }
+        );
+        console.log(example3);
+        // Output: { name: "John" }
+
+        // ✅ Example 4: Remove empty objects and arrays
+        const example4 = safeJsonParse(
+          '{"a":{},"b":[],"c":"non-empty"}',
+          { removeEmptyObjects: true, removeEmptyArrays: true }
+        );
+        console.log(example4);
+        // Output: { c: "non-empty" }
+
+        // ✅ Example 5: Strict mode (removes all invalid conversions)
+        const example5 = safeJsonParse(
+          '{"score":"99abc","empty":"   "} ',
+          { convertNumbers: true, strictMode: true }
+        );
+        console.log(example5);
+        // Output: {} (both removed because not valid strict conversions)
+
+        // ✅ Example 6: Logging error if JSON invalid
+        const example6 = safeJsonParse(
+          '{"invalid JSON...',
+          { loggingOnFail: true }
+        );
+        console.log(example6);
+        // Output: undefined, logs: JSON parsing failed from `safeJsonParse`: ...
+
+        /**
+        * Bonus: Custom onError handler
+        */
+        safeJsonParse('{"invalid JSON...', {
+          onError: (err) => {
+            console.log("Custom error handler:", (err as Error).message);
+          }
+        });
+        // Output: Custom error handler: Unexpected end of JSON input
+        ```
+
+        #### ➡️ JavaScript (without TypeScript): 
+        ```ts
+          import { safeJsonParse } from "rzl-utils-js";
+
+          // ✅ Example 1: Convert numbers and booleans automatically
+          const example1 = safeJsonParse(
+            '{"age":"30","isActive":"true"}',
+            { convertNumbers: true, convertBooleans: true }
+          );
+          console.log(example1);
+          // Output: { age: 30, isActive: true }
+
+
+          // ✅ Example 2: Parse custom date format (DD/MM/YYYY)
+          const example2 = safeJsonParse(
+            '{"birthday":"25/12/2000"}',
+            { convertDates: true, customDateFormats: ["DD/MM/YYYY"] }
+          );
+          console.log(example2);
+          // Output: { birthday: Date("2000-12-25T00:00:00.000Z") }
+
+
+          // ✅ Example 3: Remove nulls and undefined
+          const example3 = safeJsonParse(
+            '{"name":"John","nickname":null,"status":undefined}',
+            { removeNulls: true, removeUndefined: true }
+          );
+          console.log(example3);
+          // Output: { name: "John" }
+
+
+          // ✅ Example 4: Remove empty objects and arrays
+          const example4 = safeJsonParse(
+            '{"a":{},"b":[],"c":"non-empty"}',
+            { removeEmptyObjects: true, removeEmptyArrays: true }
+          );
+          console.log(example4);
+          // Output: { c: "non-empty" }
+
+
+          // ✅ Example 5: Strict mode (removes all invalid conversions)
+          const example5 = safeJsonParse(
+            '{"score":"99abc","empty":"   "} ',
+            { convertNumbers: true, strictMode: true }
+          );
+          console.log(example5);
+          // Output: {} (both removed because not valid strict conversions)
+
+
+          // ✅ Example 6: Logging error if JSON invalid
+          const example6 = safeJsonParse(
+            '{"invalid JSON...',
+            { loggingOnFail: true }
+          );
+          console.log(example6);
+          // Output: undefined, logs: JSON parsing failed: ...
+
+
+          /**
+          * Bonus: Custom onError handler
+          */
+          safeJsonParse('{"invalid JSON...', {
+            onError: (err) => {
+              console.log("Custom error handler:", err.message);
+            }
+          });
+          // Output: Custom error handler: Unexpected end of JSON input
+        ```
+
+    - <h4 id="detailed-features--conversion-number">Number</h4>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left"><small>Function</small></th>
+            <th style="text-align: left"><small>Description</small></th>
+            <th style="text-align: left"><small>Props / Usage</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <code><small>formatPhoneNumber()</small></code>
+            </td>
+            <td>
+              <small>
+                Overloaded function to format, validate, or extract numbers from phone
+                strings.<br />
+                Returns <code>string</code> or <code>boolean</code> based on props.
+              </small>
+            </td>
+            <td>
+              <small>
+                ✅ <code>takeNumberOnly: true</code> → digits<br />
+                ✅ <code>checkValidOnly: true</code> → boolean<br />
+                ✅ Normal → formatted phone string
+              </small>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code><small>formatNumberWithSeparator()</small></code>
+            </td>
+            <td>
+              <small>
+                Adds separators every 3 digits.<br />
+                Works with integers, decimals, and customizable separator chars.
+              </small>
+            </td>
+            <td>
+              <small>
+                <code>formatNumberWithSeparator(1000000)</code> → <code>"1,000,000"</code><br />
+                <code>formatNumberWithSeparator(1234567.89, " ")</code> →
+                <code>"1 234 567.89"</code>
+              </small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      ### ⚡ Quick Example (Conversion Helpers - Number)
+        #### ➡️ TypeScript/JavaScript (with type support): 
+        ```ts
+          import { formatPhoneNumber,formatNumberWithSeparator } from "rzl-utils-js";
+
+          // ✅ Example 1: Format phone number to string
+          const ex1 = formatPhoneNumber({
+            value: "+628123456789",
+          });
+          console.log(ex1);
+          // Output: "(+62) 812 3456 789"
+
+          // ✅ Example 2: Extract digits only
+          const ex2 = formatPhoneNumber({
+            value: "+62 812-3456-789",
+            takeNumberOnly: true,
+          });
+          console.log(ex2);
+          // Output: "628123456789"
+
+          // ✅ Example 3: Validate phone format only (returns boolean)
+          const ex3 = formatPhoneNumber({
+            value: "+62 812 3456 789",
+            checkValidOnly: true,
+          });
+          console.log(ex3);
+          // Output: true or false
+
+          // ✅ Example 4: Custom separator & country style
+          const ex4 = formatPhoneNumber({
+            value: "+62 8123456789",
+            separator: "-",
+            openingNumberCountry: "[",
+            closingNumberCountry: "]",
+          });
+          console.log(ex4);
+          // Output: "[+62] 812-3456-789"
+
+          // ✅ Example 5: Format large number with custom separator
+          const ex5 = formatNumberWithSeparator(987654321, " ");
+          console.log(ex5);
+          // Output: "987 654 321"
+        ```
+
+      
 
 ---
 
