@@ -1,25 +1,25 @@
 /** --------------------------------------------------
  * * ***Type utility to define the output type while maintaining structure.***
  * --------------------------------------------------
- * - Converts strings and numbers to `number`.
- * - Removes `null`, `undefined`, and non-numeric values.
- * - Supports deeply nested structures.
- * - Keeps empty arrays and objects unless `removeEmptyObjects` or `removeEmptyArrays` is enabled.
+ *
+ * - Converts numbers and strings to `string`.
+ * - Removes `null` and `undefined` values from objects and arrays.
+ * - Keeps array/objects structure unless `removeEmptyObjects` or `removeEmptyArrays` is enabled.
  */
-type ConvertedNumberType<
+type ConvertedDeepStrings<
   T,
   RemoveEmptyObjects extends boolean,
   RemoveEmptyArrays extends boolean
 > = T extends null | undefined
   ? never // Removes null & undefined
-  : T extends number | `${number}`
-  ? number // Convert valid numbers
+  : T extends number | string
+  ? string // Convert number & string to string
   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends any[]
-  ? ConvertedNumberType<T[number], RemoveEmptyObjects, RemoveEmptyArrays>[] // Maintain array structure
+  ? ConvertedDeepStrings<T[number], RemoveEmptyObjects, RemoveEmptyArrays>[] // Maintain array structure
   : T extends Record<string, unknown>
   ? {
-      [K in keyof T]: ConvertedNumberType<
+      [K in keyof T]: ConvertedDeepStrings<
         T[K],
         RemoveEmptyObjects,
         RemoveEmptyArrays
@@ -34,51 +34,47 @@ type ConvertedNumberType<
   : never; // Remove unsupported types
 
 /** --------------------------------------------------
- * * ***Converts an array or object of values into numbers (including decimals) while maintaining structure.***
+ * * ***Converts all values in an array (or nested structure) to strings while maintaining structure.***
  * --------------------------------------------------
  *
- * - ✅ Removes `null`, `undefined`, and non-numeric values.
- * - ✅ Recursively processes nested objects and arrays.
- * - ✅ Supports valid numbers, including decimals (`"3.5"` → `3.5`).
- * - ✅ If an object or array is empty, it can be removed based on the provided options.
+ * - ✅ Numbers and strings are converted to string format.
+ * - ✅ If a value is `null` or `undefined`, it is removed.
+ * - ✅ If a value is an array, it is recursively processed.
+ * - ✅ If a value is an object, its properties are processed recursively.
+ * - ✅ Supports options to remove empty objects `{}` and empty arrays `[]`.
  *
- * @template T - The input data type (Array or Object).
- * @template RemoveEmptyObjects - Whether to remove empty objects `{}`.
- * @template RemoveEmptyArrays - Whether to remove empty arrays `[]`.
+ * @template T - The input array or object type.
+ * @template RemoveEmptyObjects - Whether to remove empty objects.
+ * @template RemoveEmptyArrays - Whether to remove empty arrays.
  *
- * @param {T} input - The data to be converted.
+ * @param {T} input - The input array or object to be converted.
  * @param {boolean} [removeEmptyObjects=false] - Whether to remove empty objects `{}`.
  * @param {boolean} [removeEmptyArrays=false] - Whether to remove empty arrays `[]`.
  *
- * @returns {ConvertedNumberType<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined}
- *          The converted data with numbers or `undefined` if empty.
+ * @returns {ConvertedDeepStrings<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined}
+ *          The converted array/object with all values as strings, or `undefined` if input is invalid.
  *
  * @example
- * // Convert an array with numbers and decimals
- * console.log(convertArrayValuesToNumbers(["1", "2.5", "hello", "3.5", 4, null]));
- * // Output: [1, 2.5, 3.5, 4]
+ * // Simple conversion of numbers to strings
+ * console.log(deepStrings([1, "2", 3.5]));
+ * // Output: ["1", "2", "3.5"]
  *
  * @example
- * // Convert a nested array
- * console.log(convertArrayValuesToNumbers(["1", ["2.5", "invalid", "3.5"], 4]));
- * // Output: [1, [2.5, 3.5], 4]
+ * // Nested array handling
+ * console.log(deepStrings(["1", ["2", "3.5"], 4]));
+ * // Output: ["1", ["2", "3.5"], "4"]
  *
  * @example
- * // Convert an object with number strings and remove invalid values
- * console.log(convertArrayValuesToNumbers({ a: "5", b: "10.2", c: "xyz" }));
- * // Output: { a: 5, b: 10.2 }
- *
- * @example
- * // Convert a nested object with arrays and numbers
- * console.log(convertArrayValuesToNumbers({ a: "5", b: ["6.5", { c: "7.2", d: null }] }));
- * // Output: { a: 5, b: [6.5, { c: 7.2 }] }
+ * // Object conversion
+ * console.log(deepStrings({ a: 1, b: "2", c: { d: 3.5, e: null } }));
+ * // Output: { a: "1", b: "2", c: { d: "3.5" } }
  *
  * @example
  * // Removing empty objects and arrays
- * console.log(convertArrayValuesToNumbers({ a: {}, b: [], c: { d: null } }, true, true));
+ * console.log(deepStrings({ a: {}, b: [], c: { d: null } }, true, true));
  * // Output: {}
  */
-export function convertArrayValuesToNumbers<
+export function deepStrings<
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
   T extends unknown,
   RemoveEmptyObjects extends boolean = false,
@@ -87,7 +83,7 @@ export function convertArrayValuesToNumbers<
   input: T,
   removeEmptyObjects: RemoveEmptyObjects = false as RemoveEmptyObjects,
   removeEmptyArrays: RemoveEmptyArrays = false as RemoveEmptyArrays
-): ConvertedNumberType<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined {
+): ConvertedDeepStrings<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined {
   if (input === null || input === undefined) return undefined;
 
   if (
@@ -99,11 +95,8 @@ export function convertArrayValuesToNumbers<
     );
   }
 
-  if (
-    typeof input === "number" ||
-    (typeof input === "string" && !isNaN(Number(input)))
-  ) {
-    return Number(input) as ConvertedNumberType<
+  if (typeof input === "number" || typeof input === "string") {
+    return String(input) as ConvertedDeepStrings<
       T,
       RemoveEmptyObjects,
       RemoveEmptyArrays
@@ -112,14 +105,12 @@ export function convertArrayValuesToNumbers<
 
   if (Array.isArray(input)) {
     const newArray = input
-      .map((item) =>
-        convertArrayValuesToNumbers(item, removeEmptyObjects, removeEmptyArrays)
-      )
+      .map((item) => deepStrings(item, removeEmptyObjects, removeEmptyArrays))
       .filter((item) => item !== undefined);
 
     if (removeEmptyArrays && newArray.length === 0) return undefined;
 
-    return newArray as ConvertedNumberType<
+    return newArray as ConvertedDeepStrings<
       T,
       RemoveEmptyObjects,
       RemoveEmptyArrays
@@ -130,7 +121,7 @@ export function convertArrayValuesToNumbers<
     const newObject: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(input)) {
-      const convertedValue = convertArrayValuesToNumbers(
+      const convertedValue = deepStrings(
         value,
         removeEmptyObjects,
         removeEmptyArrays
@@ -144,7 +135,7 @@ export function convertArrayValuesToNumbers<
     if (removeEmptyObjects && Object.keys(newObject).length === 0)
       return undefined;
 
-    return newObject as ConvertedNumberType<
+    return newObject as ConvertedDeepStrings<
       T,
       RemoveEmptyObjects,
       RemoveEmptyArrays

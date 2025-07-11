@@ -21,6 +21,7 @@
   },
   "include": [
     "src",
+    "tests",
     "deprecated/types/utils",
     "deprecated/types/index.ts"
   ],

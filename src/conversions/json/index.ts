@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /** --------------------------------------------------
  * * ***Options for cleaning and transforming parsed JSON data.***
  * --------------------------------------------------

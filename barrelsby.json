@@ -1,7 +1,10 @@
 {
   "delete": true,
-  "directory": ".",
+  "directory": "src",
   "exclude": [
+    "/next",
+    "/types/index.ts",
+    "/_types-entry.ts",
     "**/types",
     "**/types/**",
     "**/types.ts",

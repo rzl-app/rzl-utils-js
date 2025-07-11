@@ -1,8 +1,9 @@
 # Don't publish tests or dev files
-tests/
 fixtures/
 compiler/
-compiler/
+tests/
+examples/
+__tests__/
 
 # Don't publish source TS
 src/
@@ -12,18 +13,16 @@ tsconfig.json
 tsup.config.ts
 barrelsby.json
 *.tsbuildinfo
+*.ts
 *.log
+*.yml
 
 # Ignore editor/IDE stuff
 .editorconfig
 .gitattributes
-
-*.ts
-*.yml
 .vscode/
-__tests__/
-examples/
-tests/
+
+
 
 # Deprecated Script
 deprecated/

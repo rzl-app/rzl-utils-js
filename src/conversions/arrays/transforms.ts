@@ -1,5 +1,4 @@
-/**
- * ----------------------------------------------------------
+/** ----------------------------------------------------------
  * * ***Removes `null` and `undefined` values from an array, including nested arrays.***
  * ----------------------------------------------------------
  * - ✅ Returns `undefined` if the input is not a valid array.
@@ -13,13 +12,13 @@
  * @returns {T[] | undefined} A new array with `null` and `undefined` values removed,
  * or `undefined` if the input is invalid or results in an empty array.
  */
-export const filterNullValuesArray = <T>(input?: T[]): T[] | undefined => {
+export const filterNullArray = <T>(input?: T[]): T[] | undefined => {
   if (!Array.isArray(input)) return undefined; // Ensure input is a valid array
 
   const filtered = input.reduce<T[]>((output, element) => {
     if (element !== null && element !== undefined) {
       if (Array.isArray(element)) {
-        const cleanedNested = filterNullValuesArray(element);
+        const cleanedNested = filterNullArray(element);
         if (cleanedNested && cleanedNested.length > 0) {
           output.push(cleanedNested as unknown as T);
         }
@@ -33,9 +32,11 @@ export const filterNullValuesArray = <T>(input?: T[]): T[] | undefined => {
   return filtered.length > 0 ? filtered : undefined;
 };
 
-/**
- * Flattens a nested array and removes duplicate values while maintaining the original order.
+/** ----------------------------------------------------------
+ * * ***Flattens a nested array and removes duplicate values while maintaining the original order.***
+ * ----------------------------------------------------------
  * Supports an option to force all elements to be strings.
+ *
  *
  * @param {Array<any>} inputArray - The input array, which may contain nested arrays.
  * @param {boolean} [forceToString=false] - Whether to convert all elements to strings before deduplication.
@@ -45,43 +46,43 @@ export const filterNullValuesArray = <T>(input?: T[]): T[] | undefined => {
  *
  * @example
  * // Removing duplicates from a flat array
- * const result1 = removeDuplicates(["apple", "banana", "apple", "orange"]);
+ * const result1 = dedupeArray(["apple", "banana", "apple", "orange"]);
  * console.log(result1); // ["apple", "banana", "orange"]
  *
  * @example
  * // Removing duplicates from a number array
- * const result2 = removeDuplicates([1, 2, 2, 3, 4, 1]);
+ * const result2 = dedupeArray([1, 2, 2, 3, 4, 1]);
  * console.log(result2); // [1, 2, 3, 4]
  *
  * @example
  * // Removing duplicates from a nested array
- * const result3 = removeDuplicates(["apple", [1, 2, "apple"], 2, 1]);
+ * const result3 = dedupeArray(["apple", [1, 2, "apple"], 2, 1]);
  * console.log(result3); // ["apple", 1, 2]
  *
  * @example
  * // Removing duplicates from a nested array with forceToString = true
- * const result4 = removeDuplicates(["apple", [1, 2, "apple"], 2, 1], true);
+ * const result4 = dedupeArray(["apple", [1, 2, "apple"], 2, 1], true);
  * console.log(result4); // ["apple", "1", "2"]
  *
  * @example
  * // Handling deeply nested arrays
- * const result5 = removeDuplicates([["apple", "banana"], ["apple", "orange"], "banana"]);
+ * const result5 = dedupeArray([["apple", "banana"], ["apple", "orange"], "banana"]);
  * console.log(result5); // ["apple", "banana", "orange"]
  *
  * @example
  * // Handling empty array
- * const result6 = removeDuplicates([]);
+ * const result6 = dedupeArray([]);
  * console.log(result6); // []
  *
  * @example
  * // Handling invalid input
  * try {
- *   removeDuplicates("not an array"); // Throws TypeError
+ *   dedupeArray("not an array"); // Throws TypeError
  * } catch (error) {
  *   console.error(error.message);
  * }
  */
-export const removeDuplicatesArrayValues = <T extends boolean>(
+export const dedupeArray = <T extends boolean>(
   inputArray: unknown[],
   forceToString: T = false as T
 ): T extends true ? string[] : Array<string | number> => {

@@ -6,7 +6,7 @@ import tsconfigPaths from "rollup-plugin-tsconfig-paths";
  * @type {import('rollup').RollupOptions[]}
  */
 const config = [
-  //todo: bundle roll-up global utils
+  //todo: re-bundle roll-up global utils
   {
     input: "./dist/index.d.ts",
     output: {
@@ -17,7 +17,7 @@ const config = [
     plugins: [tsconfigPaths(), dts()],
   },
 
-  //todo: bundle roll-up nextjs-client
+  //todo: re-bundle roll-up nextjs-client
   {
     input: "./dist/next/index.d.ts",
     output: {

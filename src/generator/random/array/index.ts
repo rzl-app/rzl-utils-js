@@ -1,4 +1,4 @@
-import { isArray } from "@/checkers";
+import { isArray } from "@/predicates";
 
 /** ---------------------------------
  * * ***Returns a random element from a given array.***

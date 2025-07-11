@@ -1,4 +1,4 @@
-import { isArray } from "@/checkers";
+import { isArray } from "@/predicates";
 import { UnionToTupleStrict } from "./types";
 
 /** ----------------------------------------

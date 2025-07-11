@@ -75,7 +75,7 @@ export function formatPhoneNumber({
 
   value = value.replace(/\D/g, "");
 
-  let char = {
+  const char = {
     0: `${openingNumberCountry}${plusNumberCountry}`,
     3: `${closingNumberCountry} `,
     6: separator,

@@ -1,6 +1,6 @@
 /** * @see https://github.com/timocov/dts-bundle-generator */
 
-/** @type {import('./dts-config.types').BundlerConfig} */
+/** @type {import('./dts-config').BundlerConfig} */
 module.exports = {
   compilationOptions: {
     preferredConfigPath: "./tsconfig.json",

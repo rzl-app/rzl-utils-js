@@ -1,64 +1,75 @@
-import { isArray } from "@/checkers";
-import { filterNullValuesArray } from ".";
+import { isArray } from "@/predicates";
+import { filterNullArray } from "./transforms";
 
 //  ** ---- array number to array string ----
 
 /** ---------------------------------------------
  * * ***Converts all values in an array from numbers or other types to strings.***
  * * ***The function can also remove invalid values (null, undefined) based on the options provided.***
+ * *
+ * * 🚫 Note: This function does NOT support recursive or nested arrays.
+ *   It only processes a flat array of values.
+ *
+ * * Use `deepStrings` if you want to recursive.
  * ---------------------------------------------
  *
  * @param {Array<string | number | null | undefined>} [array] - The array to be transformed.
  * @param {Object} [options] - The options object that controls the transformation behavior.
  * @param {boolean} [options.removeInvalidValue=true] - If true, removes invalid values (null, undefined) from the result. Default is true.
  * @returns {Array<string | null | undefined>} - A new array with string representations of the values or an array with invalid values removed if specified.
+ *
+ * @example
+ * toStringArrayUnRecursive([1, 2, '3'])
+ * // => ['1', '2', '3']
+ *
+ * @example
+ * toStringArrayUnRecursive([1, null, undefined, 'abc'], { removeInvalidValue: true })
+ * // => ['1', 'abc']
+ *
+ * @example
+ * toStringArrayUnRecursive([1, null, undefined, 'abc'], { removeInvalidValue: false })
+ * // => ['1', null, undefined, 'abc']
+ *
+ * @example
+ * toStringArrayUnRecursive(undefined)
+ * // => undefined
  */
-export function arrayNumbValToStringVal(
-  // eslint-disable-next-line no-unused-vars
+export function toStringArrayUnRecursive(
   array?: undefined,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValue: boolean;
   }
 ): undefined;
-export function arrayNumbValToStringVal(
-  // eslint-disable-next-line no-unused-vars
+export function toStringArrayUnRecursive(
   array?: Array<never>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValue: boolean;
   }
 ): Array<never>;
-export function arrayNumbValToStringVal(
-  // eslint-disable-next-line no-unused-vars
+export function toStringArrayUnRecursive(
   array?: Array<undefined | null> | Array<null | undefined>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValue: boolean;
   }
 ): Array<undefined>;
-export function arrayNumbValToStringVal<T>(
-  // eslint-disable-next-line no-unused-vars
+export function toStringArrayUnRecursive<T>(
   array?: Array<T>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValue: true;
   }
 ): Array<string> | undefined;
-export function arrayNumbValToStringVal<T>(
-  // eslint-disable-next-line no-unused-vars
+export function toStringArrayUnRecursive<T>(
   array?: Array<T>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValue: false;
   }
 ): Array<string | null | undefined> | undefined;
-export function arrayNumbValToStringVal<T extends string | number>(
+export function toStringArrayUnRecursive<T extends string | number>(
   array?: Array<T>,
   options: {
     /** @default true */
@@ -83,7 +94,7 @@ export function arrayNumbValToStringVal<T extends string | number>(
 
     // Remove invalid values (null, undefined) if specified in options
     if (options.removeInvalidValue) {
-      return filterNullValuesArray(result);
+      return filterNullArray(result);
     }
 
     return result;
@@ -97,6 +108,11 @@ export function arrayNumbValToStringVal<T extends string | number>(
 /** ---------------------------------
  * * ***Converts an array of string values (or values that can be cast to string) to an array of numbers.***
  * * ***Optionally removes invalid values (non-numeric values) based on the provided options.***
+ * *
+ * * 🚫 Note: This function does NOT support recursive or nested arrays.
+ *   It only processes a flat array of values.
+ *
+ * * Use `deepNumbers` if you want to recursive.
  * ---------------------------------
  *
  * @param {Array<string | null | undefined>} [array] - The array of string values (or values convertible to strings) to be transformed into numbers.
@@ -104,52 +120,42 @@ export function arrayNumbValToStringVal<T extends string | number>(
  * @param {boolean} [options.removeInvalidValueNumber=true] - If true, removes invalid number values (e.g., NaN, undefined) from the result. Default is true.
  * @returns {Array<number | undefined>} - An array of numbers converted from the string values, or an array with invalid values removed if specified.
  */
-export function arrayStringValToNumberVal(
-  // eslint-disable-next-line no-unused-vars
+export function toNumberArrayUnRecursive(
   array?: undefined,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValueNumber?: boolean;
   }
 ): undefined;
-export function arrayStringValToNumberVal(
-  // eslint-disable-next-line no-unused-vars
+export function toNumberArrayUnRecursive(
   array?: Array<never>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValueNumber?: boolean;
   }
 ): Array<never>;
-export function arrayStringValToNumberVal(
-  // eslint-disable-next-line no-unused-vars
+export function toNumberArrayUnRecursive(
   array?: Array<undefined | null> | Array<null | undefined>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValueNumber?: boolean;
   }
 ): Array<undefined>;
-export function arrayStringValToNumberVal<T>(
-  // eslint-disable-next-line no-unused-vars
+export function toNumberArrayUnRecursive<T>(
   array?: Array<T>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValueNumber?: true;
   }
 ): Array<number> | undefined;
-export function arrayStringValToNumberVal<T>(
-  // eslint-disable-next-line no-unused-vars
+export function toNumberArrayUnRecursive<T>(
   array?: Array<T>,
-  // eslint-disable-next-line no-unused-vars
   options?: {
     /** @default true */
     removeInvalidValueNumber: false;
   }
 ): Array<number | undefined> | undefined;
-export function arrayStringValToNumberVal<T>(
+export function toNumberArrayUnRecursive<T>(
   array?: Array<T>,
   options: {
     /** @default true */
@@ -175,7 +181,7 @@ export function arrayStringValToNumberVal<T>(
     }
 
     // Filter out undefined (invalid) values if `removeInvalidValueNumber` is true
-    return filterNullValuesArray(result);
+    return filterNullArray(result);
   }
 
   return undefined; // Return undefined if no array is provided

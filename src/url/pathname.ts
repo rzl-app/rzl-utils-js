@@ -1,4 +1,4 @@
-import { removeAllSpaceString } from "../converts/strings";
+import { removeAllSpaceString } from "../conversions/strings";
 import { NormalizePathnameError } from "./exceptions";
 
 /**
@@ -151,7 +151,7 @@ export const getPrefixPathname = (
 
       if (Array.isArray(base)) {
         // Check if the URL starts with any of the base values in the array
-        for (let b of base) {
+        for (const b of base) {
           if (singleUrl.startsWith(normalizePathname(b))) {
             return normalizePathname(b); // Return the matching base if URL starts with it
           }

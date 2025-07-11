@@ -19,7 +19,7 @@
         <td><small>✅ Custom thousands & decimal separators<br>✅ Supports suffix decimals (e.g., ".-")<br>✅ Safe type validation</small></td>
       </tr>
       <tr>
-        <td><small><code>removeNonNumericCharacters</code></small></td>
+        <td><small><code>extractDigits</code></small></td>
         <td><small>Strips out all non-numeric characters from a string or number input, returning a cleaned number.</small></td>
         <td><small>✅ Handles <code>null</code> & <code>undefined</code><br>✅ Ensures numeric result<br>✅ Simple fallback to <code>0</code></small></td>
       </tr>
@@ -29,7 +29,7 @@
   #### ⚡ Quick Example (Conversion Helpers - Currency)
 
   ```ts
-  import { formatCurrency, removeNonNumericCharacters } from "rzl-utils-js";
+  import { formatCurrency, extractDigits } from "rzl-utils-js";
 
   // Example: formatCurrency
   console.log(formatCurrency({ value: 1000000 }));
@@ -52,20 +52,20 @@
   );
   // → "1.999,00.-"
 
-  // Example: removeNonNumericCharacters
-  console.log(removeNonNumericCharacters({ value: "123abc456" }));
+  // Example: extractDigits
+  console.log(extractDigits({ value: "123abc456" }));
   // → 123456
 
-  console.log(removeNonNumericCharacters({ value: "$1,234.56" }));
+  console.log(extractDigits({ value: "$1,234.56" }));
   // → 123456
 
-  console.log(removeNonNumericCharacters({ value: "9A8B7C6" }));
+  console.log(extractDigits({ value: "9A8B7C6" }));
   // → 9876
 
-  console.log(removeNonNumericCharacters({ value: undefined }));
+  console.log(extractDigits({ value: undefined }));
   // → 0
 
-  console.log(removeNonNumericCharacters({ value: null }));
+  console.log(extractDigits({ value: null }));
   // → 0
   ```
 ---

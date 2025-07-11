@@ -1,34 +1,6 @@
 import type { ScrollToTopOptions } from "@/types/events/types";
 
 /** ----------------------------------------------------------
- * * ***Removes focus from the currently active element.***
- * ----------------------------------------------------------
- *
- * - Works only in **browser environments** (does nothing on the server-side).
- * - If an element is focused, it will lose focus.
- * - Logs a warning if no element is focused.
- *
- * @returns {void}
- *
- * @example
- * removeElementFocus(); // Removes focus from an active currently element.
- */
-export const removeElementFocus = (): void => {
-  // Ensure function runs only in the browser
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-
-  const activeElement = document.activeElement;
-
-  if (activeElement instanceof HTMLElement) {
-    activeElement.blur();
-  } else {
-    console.warn(
-      "removeElementFocus: No active element to blur or is not supported on null element."
-    );
-  }
-};
-
-/** ----------------------------------------------------------
  * * ***Disables user interaction by adding a CSS class to the `<html>` element.***
  * ----------------------------------------------------------
  *
@@ -89,6 +61,34 @@ export const enableUserInteraction = (
 
   if (documentElement && documentElement.classList.contains(className)) {
     documentElement.classList.remove(className);
+  }
+};
+
+/** ----------------------------------------------------------
+ * * ***Removes focus from the currently active element.***
+ * ----------------------------------------------------------
+ *
+ * - Works only in **browser environments** (does nothing on the server-side).
+ * - If an element is focused, it will lose focus.
+ * - Logs a warning if no element is focused.
+ *
+ * @returns {void}
+ *
+ * @example
+ * removeElementFocus(); // Removes focus from an active currently element.
+ */
+export const removeElementFocus = (): void => {
+  // Ensure function runs only in the browser
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  const activeElement = document.activeElement;
+
+  if (activeElement instanceof HTMLElement) {
+    activeElement.blur();
+  } else {
+    console.warn(
+      "removeElementFocus: No active element to blur or is not supported on null element."
+    );
   }
 };
 

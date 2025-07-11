@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isArray } from "@/checkers";
+import { isArray } from "@/predicates";
 import type { OmitStrict } from "@/types";
 import { filter, includes, isEqual } from "lodash";
 
