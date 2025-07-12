@@ -1,0 +1,17 @@
+{
+  "baseUrl": "./../",
+  "delete": true,
+  "directory": "src/",
+  "exclude": [
+    "/next",
+    "/types/index\\.ts$",
+    "/_types-entry\\.ts$",
+    "types$",
+    "types/",
+    "types\\.ts$",
+    "types"
+  ],
+  "extension": "ts",
+  "single": true,
+  "verbose": false
+}

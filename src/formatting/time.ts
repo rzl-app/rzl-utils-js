@@ -1,6 +1,6 @@
 import { id, enUS, type Locale } from "date-fns/locale";
 import { format as formatDns, type FormatOptions, parse } from "date-fns";
-import type { OmitStrict } from "@/types";
+import type { OmitStrict } from "../types";
 
 /** ----------------------------------------------------------
  * * ***Formats a date into a custom string format.***

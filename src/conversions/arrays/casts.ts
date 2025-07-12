@@ -35,7 +35,7 @@ import { filterNullArray } from "./transforms";
  * // => undefined
  */
 export function toStringArrayUnRecursive(
-  array?: undefined,
+  array?: undefined | null,
   options?: {
     /** @default true */
     removeInvalidValue: boolean;
@@ -70,7 +70,7 @@ export function toStringArrayUnRecursive<T>(
   }
 ): Array<string | null | undefined> | undefined;
 export function toStringArrayUnRecursive<T extends string | number>(
-  array?: Array<T>,
+  array?: Array<T> | null,
   options: {
     /** @default true */
     removeInvalidValue?: boolean;
@@ -121,7 +121,7 @@ export function toStringArrayUnRecursive<T extends string | number>(
  * @returns {Array<number | undefined>} - An array of numbers converted from the string values, or an array with invalid values removed if specified.
  */
 export function toNumberArrayUnRecursive(
-  array?: undefined,
+  array?: undefined | null,
   options?: {
     /** @default true */
     removeInvalidValueNumber?: boolean;
@@ -156,7 +156,7 @@ export function toNumberArrayUnRecursive<T>(
   }
 ): Array<number | undefined> | undefined;
 export function toNumberArrayUnRecursive<T>(
-  array?: Array<T>,
+  array?: Array<T> | null,
   options: {
     /** @default true */
     removeInvalidValueNumber?: boolean;
@@ -170,9 +170,15 @@ export function toNumberArrayUnRecursive<T>(
 
   if (array && isArray(array)) {
     // Convert each item in the array to a number, or undefined if it's not a valid number
+    // const result = Array.from(array, (x) => {
+    //   const numberValue = parseInt(String(x)); // Try converting value to a number
+    //   return isNaN(numberValue) ? undefined : numberValue; // Return undefined if NaN
+    // });
+
     const result = Array.from(array, (x) => {
-      const numberValue = parseInt(String(x)); // Try converting value to a number
-      return isNaN(numberValue) ? undefined : numberValue; // Return undefined if NaN
+      const str = String(x).trim();
+      const match = str.match(/-?\d+(\.\d+)?/);
+      return match ? Number(match[0]) : undefined;
     });
 
     // If `removeInvalidValueNumber` is false, return the result as-is, including invalid numbers (undefined)

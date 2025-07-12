@@ -52,7 +52,7 @@
   "scripts": {
     "coverage": "vitest run --coverage",
     "clean": "rimraf dist",
-    "barrel": "npx barrelsby --directory src --single --delete --exclude \"/types/index.ts\" \"/_types-entry.ts\" \"/next\" && echo \"✅ Barrel generated clean!\"",
+    "barrel": "barrelsby --config barrelsby.config.json",
     "build": "npm run clean && npm run barrel && tsup && npm run build:types && npm run postbuild",
     "build:types": "npm run build:types-dts && npm run build:types:bundle",
     "build:types-dts": "dts-bundle-generator --config dts-config.cjs --silent --external-imports next",

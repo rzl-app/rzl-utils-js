@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { removeAllSpaceString } from "@/strings/sanitize";
 import { normalizePathname } from "@/url/pathname";
-import { removeAllSpaceString } from "@/conversions/strings";
 import { formatEnvPort } from "@/url/utils";
 
 /**
@@ -28,7 +30,7 @@ import { formatEnvPort } from "@/url/utils";
 type ExtractRouteParams<T extends string> =
   T extends `${infer _Start}[${infer Param}]${infer Rest}`
     ? { [K in Param]: string } & ExtractRouteParams<Rest>
-    : {}; // Ensures an empty object if no dynamic segments are found.
+    : Record<any, any>; // Ensures an empty object if no dynamic segments are found.
 
 /**
  * Determines whether a given route contains dynamic segments.
@@ -379,7 +381,6 @@ export function generateRoute<T extends string>(
         " ",
         // ".",
         "'",
-        // eslint-disable-next-line quotes
         '"',
         "(",
         ")",

@@ -1,8 +1,6 @@
-import { formatEnvPort } from "./utils";
-import { normalizePathname } from "./pathname";
-import { removeAllSpaceString } from "@/conversions/strings";
+import { isEmptyValue } from "@/predicates";
+import { removeAllSpaceString } from "@/strings/sanitize";
 import { toStringArrayUnRecursive } from "@/conversions/arrays/casts";
-import { isEmptyObject } from "@/predicates";
 
 /** ---------------------------------
  * * ***Constructs a valid URL with optional query parameters and allows selective removal of duplicate parameters.***
@@ -56,7 +54,7 @@ export const constructURL = (
     if (queryParams) {
       const paramObject = Object.fromEntries(queryParams);
 
-      if (!isEmptyObject(paramObject)) {
+      if (!isEmptyValue(paramObject)) {
         const urlSearchParams = new URLSearchParams(paramObject);
 
         // Remove specific query parameters if needed

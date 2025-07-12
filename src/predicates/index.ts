@@ -1,5 +1,5 @@
-import { parseCurrencyString } from "@/conversions/currency";
-import { safeStableStringify } from "../conversions/stringify";
+import { parseCurrencyString } from "@/conversions/currency/parsing";
+import { safeStableStringify } from "@/conversions/stringify";
 
 /** ----------------------------------------------------------
  * * ***Compares two arrays deeply to check if they are equal.***
@@ -113,7 +113,7 @@ export const doesKeyExist = <T>(
 
   if (Object.prototype.hasOwnProperty.call(obj, key)) return true; // Direct match found
 
-  if (Array.isArray(obj)) {
+  if (isArray(obj)) {
     return obj.some((item) => doesKeyExist(item, key)); // Check each array item recursively
   }
 
@@ -123,16 +123,16 @@ export const doesKeyExist = <T>(
 };
 
 /** ----------------------------------------------------------
- * * ***Checks if the given value is an array.***
+ * * ***Type guard: Checks if a value is an array.***
  * ----------------------------------------------------------
  *
  * - ✅ Uses `Array.isArray()` for reliable and safe type checking.
- * - ✅ Supports TypeScript **type narrowing** using `value is Array<T>`.
+ * - ✅ Supports TypeScript **type narrowing** using `value is T[]`.
  * - ✅ Handles edge cases like `null`, `undefined`, and non-array objects.
  *
  * @template T - The expected type of array elements.
  * @param {unknown} value - The value to check.
- * @returns {value is Array<T>} Returns `true` if the value is an array, otherwise `false`.
+ * @returns {value is T[]} Returns `true` if the value is an array, otherwise `false`.
  *
  * @example
  * isArray([1, 2, 3]); // true
@@ -142,8 +142,24 @@ export const doesKeyExist = <T>(
  * isArray(null); // false
  * isArray(undefined); // false
  */
-export const isArray = <T>(value: unknown): value is Array<T> => {
+export const isArray = <T>(value: unknown): value is T[] => {
   return Array.isArray(value);
+};
+
+/** ---------------------------------------------------------
+ * * ***Type guard: Checks if a value is of type `boolean`.***
+ * ---------------------------------------------------------
+ *
+ * @param {unknown} val - The value to check.
+ * @returns {val is boolean} Returns `true` if the value is a boolean, otherwise `false`.
+ *
+ * @example
+ * isBoolean(true);   // true
+ * isBoolean(false);  // true
+ * isBoolean("true"); // false
+ */
+export const isBoolean = (val: unknown): val is boolean => {
+  return typeof val === "boolean";
 };
 
 /** -----------------------------------------------------------
@@ -201,29 +217,32 @@ export const isCurrencyLike = (input: string | number): boolean => {
 };
 
 /** ----------------------------------------------------------
- * * ***Checks if a given value is an empty object (`{}`), empty array (`[]`), or falsy.***
+ * * ***Determines if a value is an empty object (`{}`), empty array (`[]`), or generally falsy.***
  * ----------------------------------------------------------
  *
- * - Returns `true` for `{}`, `[]`, `null`, `undefined`, and other falsy values.
- * - Returns `false` for objects with properties, non-empty arrays, and other non-empty values.
- * - Ensures safe handling of `null`, `undefined`, and unexpected types.
+ * - Returns `true` for `{}`, `[]`, `null`, `undefined`, `""`, `false`, and `NaN`.
+ * - Returns `false` for objects with properties, non-empty arrays, numbers, functions, and other non-empty values.
+ * - Safely handles `null`, `undefined`, and non-object types without throwing.
  *
- * @param {unknown} value - The value to check.
- * @returns {boolean} - `true` if the value is an empty object, empty array, or falsy, otherwise `false`.
+ * @param {unknown} value - The value to evaluate.
+ * @returns {boolean} `true` if the value is considered empty, otherwise `false`.
  *
  * @example
- * isEmptyObject({}); // true
- * isEmptyObject([]); // true
- * isEmptyObject({ key: "value" }); // false
- * isEmptyObject([1, 2, 3]); // false
- * isEmptyObject(null); // true
- * isEmptyObject(undefined); // true
- * isEmptyObject(0); // false (because 0 is not an object)
+ * isEmptyValue({}); // true
+ * isEmptyValue([]); // true
+ * isEmptyValue({ key: "value" }); // false
+ * isEmptyValue([1, 2, 3]); // false
+ * isEmptyValue(null); // true
+ * isEmptyValue(undefined); // true
+ * isEmptyValue(""); // true
+ * isEmptyValue("   "); // true
+ * isEmptyValue(0); // false
+ * isEmptyValue(() => {}); // false
  */
-export const isEmptyObject = (value: unknown): boolean => {
-  if (!value) return true; // Handle null, undefined, false, "", 0, NaN
-
-  if (Array.isArray(value)) return value.length === 0; // Check if array is empty
+export const isEmptyValue = (value: unknown): boolean => {
+  if (isString(value)) return value.trim() === "";
+  if (!value) return true; // handles null, undefined, false, "", 0, NaN
+  if (isArray(value)) return value.length === 0;
 
   if (typeof value === "object") {
     return (
@@ -232,7 +251,59 @@ export const isEmptyObject = (value: unknown): boolean => {
     );
   }
 
-  return false; // Numbers, booleans, functions, etc. are not "objects"
+  return false;
+};
+
+/** ----------------------------------------------------------
+ * * ***Recursively checks if a value is "deeply empty".***
+ * ----------------------------------------------------------
+ *
+ * - Returns `true` for:
+ *   - Empty objects: `{}`
+ *   - Empty arrays: `[]`
+ *   - Nested empty structures: `{ a: [], b: {} }`
+ *   - Falsy values (except numbers): `null`, `undefined`, `false`, `""`, `NaN`
+ *
+ * - Returns `false` for:
+ *   - Non-zero numbers
+ *   - Objects or arrays containing non-empty values
+ *   - Non-empty strings, `true`, functions, symbols, etc.
+ *
+ * @param {unknown} value - The value to deeply check.
+ * @returns {boolean} `true` if the value is deeply empty, otherwise `false`.
+ *
+ * @example
+ * isEmptyDeep({}); // true
+ * isEmptyDeep([]); // true
+ * isEmptyDeep({ a: {} }); // true
+ * isEmptyDeep([[], {}]); // true
+ * isEmptyDeep({ a: [1] }); // false
+ * isEmptyDeep([0]); // false
+ * isEmptyDeep("test"); // false
+ * isEmptyDeep(""); // true
+ * isEmptyDeep(0); // false
+ * isEmptyDeep(NaN); // true
+ */
+export const isEmptyDeep = (value: unknown): boolean => {
+  if (isString(value)) return value.trim() === "";
+  if (isNumber(value)) return false;
+  if (!value) return true;
+
+  if (Array.isArray(value)) {
+    return value.length === 0 || value.every(isEmptyDeep);
+  }
+
+  if (typeof value === "object") {
+    const keys = Object.keys(value);
+    const symbols = Object.getOwnPropertySymbols(value);
+    return (
+      [...keys, ...symbols].length === 0 ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [...keys, ...symbols].every((key) => isEmptyDeep((value as any)[key]))
+    );
+  }
+
+  return false;
 };
 
 /** ----------------------------------------------------------
@@ -246,12 +317,101 @@ export const isEmptyObject = (value: unknown): boolean => {
  * @returns {boolean} - Returns `true` if the value is an `Error`, otherwise `false`.
  *
  * @example
- * isInstanceOfError(new Error("Something went wrong")); // true
- * isInstanceOfError("Error message"); // false
- * isInstanceOfError(null); // false
+ * isError(new Error("Something went wrong")); // true
+ * isError("Error message"); // false
+ * isError(null); // false
  */
-export const isInstanceOfError = (error: unknown): error is Error => {
+export const isError = (error: unknown): error is Error => {
   return error instanceof Error;
+};
+
+/** ---------------------------------------------------------
+ * * ***Type guard: Checks if a value is `null`.***
+ * ---------------------------------------------------------
+ *
+ * @param {unknown} val - The value to check.
+ * @returns {val is null} Returns `true` if the value is `null`, otherwise `false`.
+ *
+ * @example
+ * isNull(null); // true
+ * isNull(0);    // false
+ */
+export const isNull = (val: unknown): val is null => val === null;
+
+/** ---------------------------------------------------------
+ * * ***Type guard: Checks if a value is of type `number`.***
+ * ---------------------------------------------------------
+ *
+ * Excludes `NaN` from being considered a valid number.
+ *
+ * @param {unknown} val - The value to check.
+ * @returns {val is number} Returns `true` if the value is a number (excluding NaN), otherwise `false`.
+ *
+ * @example
+ * isNumber(42);    // true
+ * isNumber(NaN);   // false
+ * isNumber("42");  // false
+ */
+export const isNumber = (val: unknown): val is number => {
+  return typeof val === "number" && !isNaN(val);
+};
+
+/** ---------------------------------------------------------
+ * * ***Type guard: Checks if a value is a plain object.***
+ * ---------------------------------------------------------
+ *
+ * Will return `false` for arrays and `null`.
+ *
+ * @param {unknown} val - The value to check.
+ * @returns {val is Record<string, unknown>} Returns `true` if the value is a plain object, otherwise `false`.
+ *
+ * @example
+ * isObject({ name: "Alice" }); // true
+ * isObject([1,2,3]);           // false
+ * isObject(null);              // false
+ */
+export const isObject = (val: unknown): val is Record<string, unknown> => {
+  return typeof val === "object" && val !== null && !isArray(val);
+};
+
+/** ---------------------------------------------------------
+ * * ***Type guard: Checks if a value is of type `string`.***
+ * ---------------------------------------------------------
+ *
+ * This function is a type guard that determines if the provided value
+ * is a `string`. It can be used to narrow types in TypeScript.
+ *
+ * @param {unknown} val - The value to check.
+ * @returns {val is string} `true` if the value is a string, otherwise `false`.
+ *
+ * @example
+ * isString("hello"); // true
+ * isString(123);     // false
+ *
+ * // Usage in type narrowing
+ * const value: unknown = getValue();
+ * if (isString(value)) {
+ *   // TypeScript now knows `value` is a string
+ *   console.log(value.toUpperCase());
+ * }
+ */
+export const isString = (val: unknown): val is string => {
+  return typeof val === "string";
+};
+
+/** ---------------------------------------------------------
+ * * ***Type guard: Checks if a value is `undefined`.***
+ * ---------------------------------------------------------
+ *
+ * @param {unknown} val - The value to check.
+ * @returns {val is undefined} Returns `true` if the value is `undefined`, otherwise `false`.
+ *
+ * @example
+ * isUndefined(undefined); // true
+ * isUndefined(null);      // false
+ */
+export const isUndefined = (val: unknown): val is undefined => {
+  return typeof val === "undefined";
 };
 
 /** ----------------------------------------------------------
@@ -283,7 +443,7 @@ export const textMatchesAllPatterns = <T extends string>(
     flags?: string;
   }
 ): boolean => {
-  if (typeof text !== "string" || !text.trim() || !Array.isArray(searchWords)) {
+  if (typeof text !== "string" || !text.trim() || !isArray(searchWords)) {
     return false;
   }
 
@@ -348,7 +508,7 @@ export const textMatchesAnyPattern = <T extends string>(
     flags?: string;
   }
 ): boolean => {
-  if (typeof text !== "string" || !text.trim() || !Array.isArray(searchWords)) {
+  if (typeof text !== "string" || !text.trim() || !isArray(searchWords)) {
     return false;
   }
 

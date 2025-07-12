@@ -190,29 +190,49 @@ function parseCustomDate(dateString: string, format: string): Date | null {
   return isNaN(date.getTime()) ? null : date;
 }
 
-/** --------------------------------------------------
+/**
+ * --------------------------------------------------
  * * ***Safely parses JSON while handling errors and applying transformations.***
  * --------------------------------------------------
  *
- * @template T - Expected output type.
+ * - Automatically converts valid JSON strings to objects, arrays, numbers, etc.
+ * - Can clean and transform data (e.g. convert strings to numbers, booleans, or dates)
+ *   based on the provided options.
+ * - Returns `undefined` if parsing fails, `null` if input is `null`.
+ *
+ * @template T - Expected output type after parsing and cleaning.
  * @param {string | null | undefined} value - The JSON string to parse.
- * @param {CleanParsedDataOptions} [options] - Parsing and cleaning options.
- * @returns {T | undefined | null} - The parsed and cleaned data.
+ * @param {CleanParsedDataOptions} [options] - Options for cleaning, converting values,
+ *   logging on failure, strict mode, custom date parsing, and error callbacks.
+ * @returns {T | undefined | null} The parsed and cleaned data.
+ *
+ * @throws {TypeError} If `options` is not an object.
  *
  * @example
- * // Parse and clean JSON with number conversion
+ * // Parse and clean JSON with number & boolean conversion
  * const result = safeJsonParse('{"age": "30", "isActive": "true"}', { convertNumbers: true, convertBooleans: true });
- * console.log(result); // Output: { age: 30, isActive: true }
+ * console.log(result);
+ * // → { age: 30, isActive: true }
  *
  * @example
  * // Parse with strict mode (removes invalid values)
  * const result = safeJsonParse('{"name": "   ", "score": "99abc"}', { convertNumbers: true, strictMode: true });
- * console.log(result); // Output: {} (empty object because all values are invalid)
+ * console.log(result);
+ * // → {} (empty object because all values are invalid)
  *
  * @example
  * // Parse JSON with custom date format
  * const result = safeJsonParse('{"birthday": "25/12/2000"}', { convertDates: true, customDateFormats: ["DD/MM/YYYY"] });
- * console.log(result); // Output: { birthday: Date("2000-12-25T00:00:00.000Z") }
+ * console.log(result);
+ * // → { birthday: new Date("2000-12-25T00:00:00.000Z") }
+ *
+ * @example
+ * // Handle parsing error with onError callback
+ * safeJsonParse("{not-valid-json}", {
+ *   loggingOnFail: true,
+ *   onError: (err) => console.log("Custom handler:", err.message)
+ * });
+ * // → Logs parsing error and calls custom handler
  */
 export const safeJsonParse = <T = unknown>(
   value: string | null | undefined,

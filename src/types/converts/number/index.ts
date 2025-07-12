@@ -1,15 +1,15 @@
 import type { OmitStrict } from "@/types";
 
+export type ValueFormatPhoneNumber = string | number | null;
+
 export type FormatPhoneNumberProps = {
-  /** @description If value is undefined or null will return "" */
-  value?: string | null;
   /** @default " " */
   separator?: string;
-  /** @default "+" */
+  /** @default "" */
   plusNumberCountry?: string;
-  /** @default "(" */
+  /** @default "" */
   openingNumberCountry?: string;
-  /** @default ")" */
+  /** @default "" */
   closingNumberCountry?: string;
   /** @default false */
   checkValidOnly?: boolean;

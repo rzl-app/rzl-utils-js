@@ -1,4 +1,4 @@
-import { removeAllSpaceString } from "../conversions/strings";
+import { removeAllSpaceString } from "@/strings/sanitize";
 import { NormalizePathnameError } from "./exceptions";
 
 /**

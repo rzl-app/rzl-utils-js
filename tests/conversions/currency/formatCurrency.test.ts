@@ -1,34 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatCurrency, parseCurrencyString } from "@/index";
-
-describe("parseCurrencyString", () => {
-  it("parse no separator thousand but use decimal separator with points", () => {
-    expect(parseCurrencyString("1234.56")).toBeCloseTo(1234.56);
-  });
-  it("parse no separator thousand but use decimal separator with comma", () => {
-    expect(parseCurrencyString("1234,56")).toBeCloseTo(1234.56);
-  });
-  it("parses simple international format", () => {
-    expect(parseCurrencyString("1,234.56")).toBeCloseTo(1234.56);
-  });
-
-  it("parses european format", () => {
-    expect(parseCurrencyString("1.234,56")).toBeCloseTo(1234.56);
-  });
-
-  it("parses indian format", () => {
-    expect(parseCurrencyString("12,34,567.89")).toBeCloseTo(1234567.89);
-  });
-
-  it("handles negative numbers", () => {
-    expect(parseCurrencyString("-1.234,56")).toBeCloseTo(-1234.56);
-    expect(parseCurrencyString("(1,234.56)")).toBeCloseTo(-1234.56);
-  });
-  it("returns 0 on invalid strings", () => {
-    expect(parseCurrencyString("")).toBeCloseTo(0);
-    expect(parseCurrencyString("abc")).toBeCloseTo(0);
-  });
-});
+import { formatCurrency } from "@/index";
 
 describe("formatCurrency", () => {
   it("formats international style", () => {

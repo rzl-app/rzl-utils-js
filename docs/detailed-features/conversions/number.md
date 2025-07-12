@@ -34,7 +34,7 @@
       </tr>
       <tr>
         <td>
-          <code><small>formatNumberWithSeparator()</small></code>
+          <code><small>formatNumber()</small></code>
         </td>
         <td>
           <small>
@@ -44,8 +44,8 @@
         </td>
         <td>
           <small>
-            <code>formatNumberWithSeparator(1000000)</code> → <code>"1,000,000"</code><br />
-            <code>formatNumberWithSeparator(1234567.89, " ")</code> →
+            <code>formatNumber(1000000)</code> → <code>"1,000,000"</code><br />
+            <code>formatNumber(1234567.89, " ")</code> →
             <code>"1 234 567.89"</code>
           </small>
         </td>
@@ -56,7 +56,7 @@
   #### ⚡ Quick Example TypeScript/JavaScript (with type support):
 
   ```ts
-  import { formatPhoneNumber,formatNumberWithSeparator } from "rzl-utils-js";
+  import { formatPhoneNumber,formatNumber } from "rzl-utils-js";
 
   // ✅ Example 1: Format phone number to string
   const ex1 = formatPhoneNumber({
@@ -92,7 +92,7 @@
   // Output: "[+62] 812-3456-789"
 
   // ✅ Example 5: Format large number with custom separator
-  const ex5 = formatNumberWithSeparator(987654321, " ");
+  const ex5 = formatNumber(987654321, " ");
   console.log(ex5);
   // Output: "987 654 321"
   ```

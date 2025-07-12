@@ -1,19 +1,39 @@
 /** ----------------------------------------------------------
  * * ***Removes `null` and `undefined` values from an array, including nested arrays.***
  * ----------------------------------------------------------
- * - ✅ Returns `undefined` if the input is not a valid array.
- * - ✅ Recursively filters out `null` and `undefined` from nested arrays.
- * - ✅ Maintains the original array structure after filtering.
- * - ✅ Ensures proper type inference to avoid type mismatches.
- * - ✅ Returns `undefined` if the filtered array is empty.
+ *
+ * - ✅ Returns `undefined` if the input is explicitly `undefined` or `null`.
+ * - ✅ Returns `[]` if input is empty or all elements are removed after filtering.
+ * - ✅ Recursively filters nested arrays while preserving structure.
+ * - ✅ Ensures proper type inference for safer downstream operations.
  *
  * @template T - The type of elements in the array.
  * @param {T[]} [input] - The array to be filtered.
  * @returns {T[] | undefined} A new array with `null` and `undefined` values removed,
- * or `undefined` if the input is invalid or results in an empty array.
+ * or `undefined` if the input is explicitly `undefined` or `null`.
+ *
+ * @example
+ * filterNullArray([1, null, 2, undefined, 3]);
+ * // => [1, 2, 3]
+ *
+ * @example
+ * filterNullArray([null, undefined]);
+ * // => []
+ *
+ * @example
+ * filterNullArray(undefined);
+ * // => undefined
+ * @example
+ * filterNullArray(null);
+ * // => undefined
+ *
+ * @example
+ * filterNullArray([1, [null, 2, [undefined, 3]]]);
+ * // => [1, [2, [3]]]
  */
-export const filterNullArray = <T>(input?: T[]): T[] | undefined => {
-  if (!Array.isArray(input)) return undefined; // Ensure input is a valid array
+export const filterNullArray = <T>(input?: T[] | null): T[] | undefined => {
+  if (input === undefined || input === null) return undefined; // explicit undefined input
+  if (!Array.isArray(input)) return [];
 
   const filtered = input.reduce<T[]>((output, element) => {
     if (element !== null && element !== undefined) {
@@ -29,7 +49,8 @@ export const filterNullArray = <T>(input?: T[]): T[] | undefined => {
     return output;
   }, []);
 
-  return filtered.length > 0 ? filtered : undefined;
+  // return filtered.length > 0 ? filtered : undefined;
+  return filtered;
 };
 
 /** ----------------------------------------------------------
