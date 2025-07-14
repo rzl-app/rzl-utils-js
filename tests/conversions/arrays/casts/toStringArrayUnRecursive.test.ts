@@ -41,7 +41,15 @@ describe("toStringArrayUnRecursive", () => {
     expect(toStringArrayUnRecursive(undefined)).toBeUndefined();
   });
 
-  it("should throw if options is not object", () => {
+  it("should throw if options is not object or options.removeInvalidValue is not a boolean", () => {
+    expect(() =>
+      // @ts-expect-error
+      toStringArrayUnRecursive([1, 2], { removeInvalidValue: "false" })
+    ).toThrow(TypeError);
+    expect(() =>
+      // @ts-expect-error
+      toStringArrayUnRecursive([1, 2], { removeInvalidValue: null })
+    ).toThrow(TypeError);
     // @ts-expect-error
     expect(() => toStringArrayUnRecursive([1, 2], "bad")).toThrow(TypeError);
   });

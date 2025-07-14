@@ -11,6 +11,7 @@
  * - `"undefined"` → `undefined`
  * - `"42"`        → `42` (number)
  * - `"3.14"`      → `3.14` (number)
+ * - `"3,567,890.14"`      → `3567890.14` (number)
  * - `"   "`       → `""` (trimmed)
  * - Other strings are returned trimmed & lowercased.
  * - Non-string inputs are returned unchanged.
@@ -44,8 +45,11 @@ export const convertType = (value: any): any => {
       return predefinedValues[normalized];
     }
 
-    if (!isNaN(Number(normalized)) && normalized !== "") {
-      return Number(normalized);
+    // Support numbers with thousand separators
+    const numericString = normalized.replace(/,/g, "");
+
+    if (!isNaN(Number(numericString)) && numericString !== "") {
+      return Number(numericString);
     }
 
     return normalized;

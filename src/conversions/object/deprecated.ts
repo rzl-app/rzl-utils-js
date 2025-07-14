@@ -85,13 +85,13 @@ type DeleteKeyConfig<T> =
  * // }
  */
 
-export function deleteObjMultipleDynamicDeprecated<
+export const deleteObjMultipleDynamicDeprecated = <
   T extends Record<string, unknown>
 >(
   object: T,
   keysToDelete: DeleteKeyConfig<T>[],
   deepClone: boolean = false
-): Partial<T> {
+): Partial<T> => {
   if (typeof object !== "object" || object === null) return {} as Partial<T>;
   if (
     !Array.isArray(keysToDelete) ||
@@ -133,4 +133,4 @@ export function deleteObjMultipleDynamicDeprecated<
 
   const target = deepClone ? structuredClone(object) : object;
   return process(target);
-}
+};

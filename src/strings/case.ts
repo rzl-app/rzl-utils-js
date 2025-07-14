@@ -1,265 +1,305 @@
 /** ----------------------------------------------------------
- * * ***Capitalizes the first letter of a string and optionally lowercases the rest of the string.*** ✅
+ * * Capitalizes the first letter of a string.
+ * * Optionally lowercases the rest and trims whitespace.
  * ----------------------------------------------------------
  *
  * @param string - The string to be processed.
- * @param options - The options object.
- * @returns The string with the first letter capitalized, and the rest lowercased or unchanged based on the option, if string is null or undefined will return "" as empty string.
+ * @param options - Options to control behavior.
+ * @param options.lowerCaseNextRest - If true, lowercases the rest (next first letter) (default: true).
+ * @param options.trim - If true, trims the string before processing (default: false).
+ * @returns The processed string. Returns "" if input is null, undefined, or not a valid string.
+ *
+ * @example
+ * capitalizeFirstLetter(" hello WORLD ") // " Hello world"
+ * capitalizeFirstLetter(" hello WORLD ", { trim: true }) // "Hello world"
+ * capitalizeFirstLetter("FOO", { lowerCaseNextRest: false }) // "FOO"
+ * capitalizeFirstLetter("   foo BAR   ", { trim: true, lowerCaseNextRest: false }) // "Foo BAR"
  */
 export const capitalizeFirstLetter = (
   string?: string | null,
-  options = {
+  options: {
     /**
      * @description If true, the rest of the string will be converted to lowercase after capitalizing the first letter.
-     *  @default true */
-    lowerCaseNextOtherFirstLetter: true,
+     *  @default true
+     */
+    lowerCaseNextRest?: boolean;
+    /**
+     * @description If true, the string will trimmed.
+     *  @default false
+     */
+    trim?: boolean;
+  } = {
+    lowerCaseNextRest: true,
+    trim: false,
   }
 ) => {
-  if (typeof string === "string" && string.trim().length > 0) {
-    if (typeof options !== "object" || options === null) {
-      options = {
-        lowerCaseNextOtherFirstLetter: true,
-      }; // fallback to default
-    }
-
-    string = string[0].toUpperCase() + string.slice(1);
-
-    if (options.lowerCaseNextOtherFirstLetter) {
-      return string.toLowerCase();
-    }
-    return string;
+  if (typeof string !== "string" || string.trim().length === 0) {
+    return "";
   }
 
-  return "";
+  if (typeof options !== "object" || options === null) {
+    options = {};
+  }
+
+  const lowerCaseNextRest = options.lowerCaseNextRest !== false;
+  const trim = options.trim === true;
+
+  if (trim) string = string.trim();
+
+  return (
+    string[0].toUpperCase() +
+    (lowerCaseNextRest ? string.slice(1).toLowerCase() : string.slice(1))
+  );
 };
 
 /** ----------------------------------------------------------
- * * Capitalizes each word in a name string while preserving punctuation and handling honorifics/titles correctly.
- * * Also ensures proper spacing if punctuation is stuck to words and automatically adds missing dots in known abbreviations.
+ * * ***Capitalizes the first letter of each word in a string
+ * while converting the rest to lowercase.***
  * ----------------------------------------------------------
  *
- * @param {string} name - The input name string.
- * @returns {string} - The formatted name with correct capitalization.
+ * @param str - The input string to be processed. If `null` or `undefined`, returns an empty string.
+ * @param options - Optional settings to control the output:
+ *   - `trim`: If `true`, removes leading and trailing spaces.
+ *   - `collapseSpaces`: If `true`, collapses multiple spaces **between words** into a single space (while preserving leading/trailing spaces).
+ *
+ * @returns A new string where each word starts with an uppercase letter
+ * and the remaining letters are lowercase. If `str` is empty, `null`, or `undefined`,
+ * returns an empty string.
  *
  * @example
- * console.log(capitalizeName("drs agus haryanto mpd"));       // "Drs. Agus Haryanto, M.Pd."
- * console.log(capitalizeName("mr smith jr"));                // "Mr. Smith, Jr."
- * console.log(capitalizeName("josé o'neill"));               // "José O'Neill"
- * console.log(capitalizeName("  prof emile zola "));         // "Prof. Émile Zola"
- * console.log(capitalizeName("sir isaac newton"));          // "Sir Isaac Newton"
- */
-export const capitalizeName = (name?: string | null): string => {
-  if (typeof name !== "string" || !name.trim()) return "";
-
-  const titles = new Map([
-    // **🔹 Indonesian Academic Titles**
-    ["dr", "Dr."],
-    ["drs", "Drs."],
-    ["dra", "Dra."],
-    ["ir", "Ir."],
-    ["sked", "S.Ked."],
-    ["skom", "S.Kom."],
-    ["st", "S.T."],
-    ["se", "S.E."],
-    ["sp", "S.Pd."],
-    ["sh", "S.H."],
-    ["ssi", "S.Si."],
-    ["sip", "S.IP."],
-    ["sag", "S.Ag."],
-    ["mked", "M.Ked."],
-    ["mkom", "M.Kom."],
-    ["mt", "M.T."],
-    ["mm", "M.M."],
-    ["me", "M.E."],
-    ["mpd", "M.Pd."],
-    ["mh", "M.H."],
-    ["msi", "M.Si."],
-    ["mip", "M.IP."],
-    ["phd", "Ph.D."],
-    ["md", "M.D."],
-
-    // **🔹 Indonesian Professional Titles**
-    ["ak", "Ak."],
-    ["cma", "CMA."],
-    ["cpa", "CPA."],
-    ["cfe", "CFE."],
-    ["cfp", "CFP."],
-    ["cissp", "CISSP."],
-    ["spa", "Sp.A."],
-    ["spb", "Sp.B."],
-    ["sppd", "Sp.PD."],
-    ["spkk", "Sp.KK."],
-    ["spm", "Sp.M."],
-    ["spog", "Sp.OG."],
-
-    // **🔹 Indonesian Military Titles**
-    ["jenderal", "Jenderal"],
-    ["letjen", "Letjen."],
-    ["mayjen", "Mayjen."],
-    ["brigjen", "Brigjen."],
-    ["kolonel", "Kolonel"],
-    ["letkol", "Letkol."],
-    ["mayor", "Mayor"],
-    ["kapten", "Kapten"],
-    ["lettu", "Lettu."],
-    ["letda", "Letda."],
-    ["serma", "Serma."],
-    ["serka", "Serka."],
-    ["sertu", "Sertu."],
-    ["kopda", "Kopda."],
-    ["praka", "Praka."],
-    ["pratu", "Pratu."],
-
-    // **🔹 Indonesian Honorific Titles**
-    ["h", "H."],
-    ["hj", "Hj."],
-    ["kh", "K.H."],
-    ["habib", "Habib"],
-    ["ust", "Ust."],
-    ["ustadz", "Ustadz"],
-    ["ustadzah", "Ustadzah"],
-    ["syekh", "Syekh"],
-    ["raden", "Raden"],
-    ["raden mas", "Raden Mas"],
-    ["raden ajeng", "Raden Ajeng"],
-    ["ki", "Ki."],
-    ["nyi", "Nyi."],
-    ["pdt", "Pdt."],
-    ["bp", "Bp."],
-    ["ibu", "Ibu."],
-    ["gus", "Gus."],
-    ["buya", "Buya."],
-
-    // **🔹 International Titles**
-    ["mr", "Mr."],
-    ["ms", "Ms."],
-    ["mrs", "Mrs."],
-    ["prof", "Prof."],
-    ["sir", "Sir"],
-    ["madam", "Madam"],
-    ["lord", "Lord"],
-    ["monsieur", "Monsieur"],
-    ["madame", "Madame"],
-    ["herr", "Herr"],
-    ["frau", "Frau"],
-    ["señor", "Señor"],
-    ["señora", "Señora"],
-    ["señorita", "Señorita"],
-    ["rev", "Rev."],
-    ["rabbi", "Rabbi"],
-    ["imam", "Imam"],
-    ["sheikh", "Sheikh"],
-    ["gen", "Gen."],
-    ["col", "Col."],
-    ["lt", "Lt."],
-    ["maj", "Maj."],
-    ["sgt", "Sgt."],
-    ["cpt", "Cpt."],
-
-    // **🔹 Common Name Suffixes**
-    ["jr", "Jr."],
-    ["sr", "Sr."],
-    ["ii", "II"],
-    ["iii", "III"],
-  ]);
-
-  return name
-    .trim()
-    .replace(/(\w)([.,])(?!\s)/g, "$1$2 ") // Ensure spacing only if missing
-    .split(/\s+/)
-    .map((word, index, words) => {
-      const lowerWord = word.toLowerCase();
-      if (titles.has(lowerWord)) {
-        return titles.get(lowerWord)!;
-      }
-      if (index > 0 && words[index - 1].endsWith(".")) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    })
-    .join(" ")
-    .replace(/\s+([.,])/g, "$1") // Remove unnecessary spaces before punctuation
-    .replace(/(\bS\.)\s+(?=[A-Z])/, "$1"); // Ensure no space inside abbreviations like S.Pd.
-};
-
-/** ----------------------------------------------------------
- * * ***Capitalizes the first letter of each word in a string while converting the rest to lowercase.*** ✅
- * ----------------------------------------------------------
+ * capitalizeString("  hello   world  ");
+ * // => "  Hello   World  "
  *
- * @param str - The string to be processed.
- * @returns The string with the first letter of each word capitalized and the rest in lowercase, if string is null or undefined will return "" as empty string.
+ * capitalizeString("  hello   world  ", { trim: true });
+ * // => "Hello   World"
+ *
+ * capitalizeString("  hello   world  ", { collapseSpaces: true });
+ * // => "  Hello World  "
+ *
+ * capitalizeString("  hello   world  ", { trim: true, collapseSpaces: true });
+ * // => "Hello World"
  */
-export const capitalizeString = (str?: string | null): string => {
-  // Check if the input is a non-empty string
+export const capitalizeString = (
+  str?: string | null,
+  options: {
+    /** If `true`, removes leading and trailing spaces, default `false`. */
+    trim?: boolean;
+    /** If `true`, collapses multiple spaces **between words** into a single space (while preserving leading/trailing spaces), default `false`. */
+    collapseSpaces?: boolean;
+  } = {
+    collapseSpaces: false,
+    trim: false,
+  }
+): string => {
   if (!str || typeof str !== "string" || !str.trim().length) return "";
 
-  return str
-    .toLowerCase() // Convert the entire string to lowercase to normalize casing
-    .split(" ") // Split the string into an array of words based on spaces
-    .map(
-      (word) => word.charAt(0).toUpperCase() + word.slice(1) // Capitalize the first letter & append the rest
-    )
-    .join(" "); // Join the modified words back into a single string
+  let result = str;
+
+  if (typeof options !== "object" || options === null) {
+    options = {};
+  }
+
+  const collapseSpaces = options.collapseSpaces === true;
+  const trim = options.trim === true;
+
+  if (trim) {
+    result = result.trim();
+  }
+
+  if (collapseSpaces) {
+    const leadingSpaces = result.match(/^\s*/)?.[0] ?? "";
+    const trailingSpaces = result.match(/\s*$/)?.[0] ?? "";
+    result = result.trim().replace(/\s+/g, " ");
+    result = `${leadingSpaces}${result}${trailingSpaces}`;
+  }
+
+  return result
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
 
 /** ----------------------------------------------------------
- * * ***Converts a string to camelCase.***
+ * * ***Converts a string to `camelCase`.***
  * ----------------------------------------------------------
  *
  * @description
- * - The first word starts with a lowercase letter.
- * - Subsequent words start with an uppercase letter.
- * - Removes spaces, hyphens (-), and underscores (_).
+ * - Splits the string by any sequence of non-alphanumeric characters
+ *   (including spaces, punctuation, symbols, hyphens, underscores, emojis, etc).
+ * - The first word is fully lowercase.
+ * - Each subsequent word starts with an uppercase letter and the rest is lowercase.
+ * - Joins all words without separators to form camelCase.
  * - If input is `null` or `undefined`, returns an empty string.
+ * - Ignores empty segments (multiple delimiters are collapsed).
  *
- * @param {string | null | undefined} str - The input string.
- * @returns {string} The formatted camelCase string.
+ * @param {string | null | undefined} str - The input string to convert.
+ * @returns {string} The camelCase formatted string.
  *
  * @example
- * toCamelCase("hello world"); // "helloWorld"
- * toCamelCase("convert_to-camel case"); // "convertToCamelCase"
- * toCamelCase(null); // ""
+ * toCamelCase("hello world");                  // "helloWorld"
+ * toCamelCase("convert_to-camel case");        // "convertToCamelCase"
+ * toCamelCase("___hello--world__ again!!");    // "helloWorldAgain"
+ * toCamelCase("🔥fire_and-ice❄️");             // "fireAndIce"
+ * toCamelCase(null);                           // ""
  */
 export const toCamelCase = (str?: string | null): string => {
   return str && typeof str === "string"
     ? str
-        .replace(/[^a-zA-Z0-9\s-_]/g, "") // Remove unwanted characters
-        .split(/[\s-_]+/) // Split by space, hyphen, or underscore
-        .map(
-          (word, index) =>
-            index === 0
-              ? word.toLowerCase() // First word stays lowercase
-              : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() // Capitalize subsequent words
+        .split(/[^a-zA-Z0-9]+/)
+        .filter(Boolean)
+        .map((word, index) =>
+          index === 0
+            ? word.toLowerCase()
+            : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         )
-        .join("") // Join without spaces
+        .join("")
     : "";
 };
 
 /** ----------------------------------------------------------
- * * ***Converts a string to PascalCase.***
+ * * ***Converts a string to `PascalCase`.***
  * ----------------------------------------------------------
  *
  * @description
- * - Each word starts with an uppercase letter.
- * - Removes spaces, hyphens (-), and underscores (_).
+ * - Splits the string by any sequence of non-alphanumeric characters
+ *   (including spaces, punctuation, symbols, hyphens, underscores, emojis, etc).
+ * - Each resulting word starts with an uppercase letter, followed by lowercase.
+ * - Joins all words without separators (PascalCase).
  * - If input is `null` or `undefined`, returns an empty string.
+ * - Ignores empty segments (multiple delimiters are collapsed).
  *
- * @param {string | null | undefined} str - The input string.
- * @returns {string} The formatted PascalCase string.
+ * @param {string | null | undefined} str - The input string to convert.
+ * @returns {string} The PascalCase formatted string.
  *
  * @example
- * toPascalCase("hello world"); // "HelloWorld"
- * toPascalCase("convert_to-pascal case"); // "ConvertToPascalCase"
- * toPascalCase(null); // ""
+ * toPascalCase("hello world");                  // "HelloWorld"
+ * toPascalCase("convert_to-pascal case");       // "ConvertToPascalCase"
+ * toPascalCase("___hello--world__ again!!");    // "HelloWorldAgain"
+ * toPascalCase("🔥fire_and-ice❄️");             // "FireAndIce"
+ * toPascalCase(null);                           // ""
  */
 export const toPascalCase = (str?: string | null): string => {
   return str && typeof str === "string"
     ? str
-        .replace(/[^a-zA-Z0-9\s-_]/g, "") // Remove unwanted characters
-        .split(/[\s-_]+/) // Split by space, hyphen, or underscore
+        .split(/[^a-zA-Z0-9]+/)
+        .filter(Boolean)
         .map(
           (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        ) // Capitalize words
-        .join("") // Join without spaces
+        )
+        .join("")
+    : "";
+};
+
+/** ----------------------------------------------------------
+ * * ***Converts a string to `kebab-case`.***
+ * ----------------------------------------------------------
+ *
+ * @description
+ * - Splits the string by any sequence of non-alphanumeric characters
+ *   (spaces, hyphens, underscores, symbols, emojis, etc).
+ * - Joins all words with hyphens (-).
+ * - Converts entire string to lowercase.
+ * - If input is `null` or `undefined`, returns an empty string.
+ * - Ignores empty segments (multiple delimiters are collapsed).
+ *
+ * @param {string | null | undefined} str - The input string to convert.
+ * @returns {string} The kebab-case formatted string.
+ *
+ * @example
+ * toKebabCase("Hello World");                 // "hello-world"
+ * toKebabCase("convert_to-kebab case");       // "convert-to-kebab-case"
+ * toKebabCase("🔥fire___and--ice❄️");         // "fire-and-ice"
+ * toKebabCase(null);                          // ""
+ */
+export const toKebabCase = (str?: string | null): string => {
+  return str && typeof str === "string"
+    ? str
+        .split(/[^a-zA-Z0-9]+/)
+        .filter(Boolean)
+        .map((word) => word.toLowerCase())
+        .join("-")
+    : "";
+};
+
+/** ----------------------------------------------------------
+ * * ***Converts a string to `snake_case`.***
+ * ----------------------------------------------------------
+ *
+ * @description
+ * - Lowercases all letters.
+ * - Joins words with `_`.
+ * - Removes special characters, treating them as word separators.
+ * - If input is `null` or `undefined`, returns "".
+ *
+ * @param {string | null | undefined} str
+ * @returns {string} snake_case string
+ *
+ * @example
+ * toSnakeCase("Hello World") => "hello_world"
+ * toSnakeCase("convert-to_snake case") => "convert_to_snake_case"
+ */
+export const toSnakeCase = (str?: string | null): string => {
+  return str && typeof str === "string"
+    ? str
+        .split(/[^a-zA-Z0-9]+/)
+        .filter(Boolean)
+        .map((w) => w.toLowerCase())
+        .join("_")
+    : "";
+};
+
+/** ----------------------------------------------------------
+ * * ***Converts a string to `dot.case`.***
+ * ----------------------------------------------------------
+ *
+ * @description
+ * - Lowercases all letters.
+ * - Joins words with `.`.
+ * - Removes special characters, treating them as word separators.
+ * - If input is `null` or `undefined`, returns "".
+ *
+ * @param {string | null | undefined} str
+ * @returns {string} dot.case string
+ *
+ * @example
+ * toDotCase("Hello World") => "hello.world"
+ * toDotCase("convert-to_dot case") => "convert.to.dot.case"
+ */
+export const toDotCase = (str?: string | null): string => {
+  return str && typeof str === "string"
+    ? str
+        .split(/[^a-zA-Z0-9]+/)
+        .filter(Boolean)
+        .map((w) => w.toLowerCase())
+        .join(".")
+    : "";
+};
+
+/** ----------------------------------------------------------
+ * * ***Slugifies a string for use in URLs.***
+ * ----------------------------------------------------------
+ *
+ * @description
+ * - Lowercases all letters.
+ * - Joins words with `-`.
+ * - Removes special characters and trims leading/trailing dashes.
+ * - If input is `null` or `undefined`, returns "".
+ *
+ * @param {string | null | undefined} str
+ * @returns {string} slug string
+ *
+ * @example
+ * slugify("Hello World!") => "hello-world"
+ * slugify(" --- Convert to Slug? --- ") => "convert-to-slug"
+ */
+export const slugify = (str?: string | null): string => {
+  return str && typeof str === "string"
+    ? str
+        .split(/[^a-zA-Z0-9]+/)
+        .filter(Boolean)
+        .map((w) => w.toLowerCase())
+        .join("-")
+        .replace(/^-+|-+$/g, "") // trim leading/trailing dashes
     : "";
 };

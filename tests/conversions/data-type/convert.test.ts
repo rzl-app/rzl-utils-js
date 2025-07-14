@@ -20,6 +20,8 @@ describe("convertType", () => {
   it("converts numeric strings to numbers", () => {
     expect(convertType("42")).toBe(42);
     expect(convertType(" 3.14 ")).toBeCloseTo(3.14);
+    expect(convertType(" 3,123.14 ")).toBeCloseTo(3123.14);
+    expect(convertType(" 3,567,890.14 ")).toBeCloseTo(3567890.14);
     expect(convertType("-10")).toBe(-10);
     expect(convertType("0")).toBe(0);
   });

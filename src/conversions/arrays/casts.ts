@@ -1,4 +1,4 @@
-import { isArray } from "@/predicates";
+import { isArray, isBoolean } from "@/predicates";
 import { filterNullArray } from "./transforms";
 
 //  ** ---- array number to array string ----
@@ -82,6 +82,15 @@ export function toStringArrayUnRecursive<T extends string | number>(
     throw new TypeError(`props 'options' must be \`object\` type!`);
   }
 
+  const riv =
+    options && "removeInvalidValue" in options
+      ? options.removeInvalidValue
+      : true;
+
+  if (!isBoolean(riv)) {
+    throw new TypeError(`props 'removeInvalidValue' must be \`boolean\` type!`);
+  }
+
   if (array && isArray(array)) {
     // Convert each item in the array to a string, or null/undefined if it's not a valid value.
     const result = Array.from(array, (x) => {
@@ -93,7 +102,7 @@ export function toStringArrayUnRecursive<T extends string | number>(
     });
 
     // Remove invalid values (null, undefined) if specified in options
-    if (options.removeInvalidValue) {
+    if (riv) {
       return filterNullArray(result);
     }
 
@@ -167,6 +176,16 @@ export function toNumberArrayUnRecursive<T>(
   if (!(typeof options === "object")) {
     throw new TypeError(`props 'options' must be \`object\` type!`);
   }
+  const riv =
+    options && "removeInvalidValueNumber" in options
+      ? options.removeInvalidValueNumber
+      : true;
+
+  if (!isBoolean(riv)) {
+    throw new TypeError(
+      `props 'removeInvalidValueNumber' must be \`boolean\` type!`
+    );
+  }
 
   if (array && isArray(array)) {
     // Convert each item in the array to a number, or undefined if it's not a valid number
@@ -182,7 +201,7 @@ export function toNumberArrayUnRecursive<T>(
     });
 
     // If `removeInvalidValueNumber` is false, return the result as-is, including invalid numbers (undefined)
-    if (!options.removeInvalidValueNumber) {
+    if (!riv) {
       return result;
     }
 

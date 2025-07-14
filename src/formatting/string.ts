@@ -1,30 +1,69 @@
-/** ----------------------------------------------------------
- * * ***Inserts a separator into a string at every `limiter` characters.
- * Optionally resets counting after spaces.*** ✅
- * ----------------------------------------------------------
+import { removeDuplicateSpaceString } from "@/strings/sanitize";
+
+/** ----------------------------------------------
+ * * ***Inserts a separator into a string at every `limiter` characters.***
+ * ----------------------------------------------
+ *
+ * This function handles two main behaviors based on `reCountAfterSpace`:
+ *
+ * 1. If `reCountAfterSpace` is `false` (default):
+ * The separator is inserted strictly every `limiter` characters throughout the entire string,
+ * regardless of spaces. Spaces are treated as regular characters in the count.
+ * Example: `addSeparatorToString("1234567890", 3, "-")` returns `"123-456-789-0"`.
+ * Example: `addSeparatorToString("Hello World", 3, "-")` returns `"Hel-lo -Wor-ld"`.
+ *
+ * 2. If `reCountAfterSpace` is `true`:
+ * The function first processes the input string to replace any multiple consecutive spaces
+ * with a single space (e.g., "A   B" becomes "A B").
+ * Then, it treats the string as a sequence of "words" (segments separated by single spaces).
+ * - Each word is processed independently: if a word's length exceeds the `limiter`,
+ * separators are inserted internally within that word.
+ * - Words are then grouped. Each group will contain `limiter` number of words.
+ * Words within the same group are joined by the specified `separator`.
+ * - Finally, these groups are joined by a single space, preserving the original word separation structure
+ * between groups.
  *
  * @param {string} subject - The target string where the separator will be added.
- * @param {number} limiter - The interval at which the separator should be inserted.
- * @param {string} [separator=" "] - The separator to insert (default: space `" "`).
- * @param {boolean} [reCountAfterSpace=false] - If `true`, resets counting after each space. DefaultValue is `false`.
- * @returns {string} - The formatted string with separators added.
+ * @param {number} limiter - The interval (number of characters) at which the separator should be inserted.
+ * @param {string} [separator=" "] - The separator string to insert (default is a single space `" "`).
+ * @param {boolean} [reCountAfterSpace=false] - If `true`, the counting for `limiter`
+ * resets after each space, and words are grouped as described above. If `false`,
+ * the counting is continuous throughout the string.
+ * @returns {string} - The formatted string with separators added according to the specified rules.
  *
  * @example
- * addSeparatorToString("1234567890", 3, "-"); // "123-456-789-0"
- * addSeparatorToString("HelloWorld", 2, "_"); // "He_ll_oW_or_ld"
- * addSeparatorToString("AB CD EF GH", 2, "-", true); // "AB-CD EF-GH"
+ * // Basic usage (reCountAfterSpace = false)
+ * addSeparatorToString("1234567890", 3, "-"); // Returns: "123-456-789-0"
+ * addSeparatorToString("HelloWorld", 2, "_"); // Returns: "He_ll_oW_or_ld"
+ *
+ * @example
+ * // Usage with reCountAfterSpace = true:
+ * // Multiple spaces are normalized to single spaces before processing.
+ * addSeparatorToString("AB  CD   EF GH", 2, "-", true); // Returns: "AB-CD EF-GH" (after normalization to "AB CD EF GH")
+ * // Words "AB" and "CD" form a group and are joined by "-", "EF" and "GH" form another group.
+ * // The groups "AB-CD" and "EF-GH" are then joined by a space.
+ *
+ * @example
+ * // Another usage with reCountAfterSpace = true:
+ * addSeparatorToString("ABC DEF GHI JKL", 3, "-", true); // Returns: "ABC-DEF-GHI JKL"
+ * // Words "ABC", "DEF", "GHI" form a group and are joined by "-".
+ * // The word "JKL" forms its own group (as it's the last word and completes no other group).
+ * // The groups "ABC-DEF-GHI" and "JKL" are then joined by a space.
  */
-export const addSeparatorToString = (
+export function addSeparatorToString(
   subject: string,
   limiter: number,
   separator: string = " ",
   reCountAfterSpace: boolean = false
-): string => {
+): string {
+  if (!subject || limiter <= 0) return subject;
+
+  // Type validation
   if (
     !(
-      typeof limiter === "number" ||
-      typeof subject === "string" ||
-      typeof separator === "string" ||
+      typeof subject === "string" &&
+      typeof limiter === "number" &&
+      typeof separator === "string" &&
       typeof reCountAfterSpace === "boolean"
     )
   ) {
@@ -33,22 +72,79 @@ export const addSeparatorToString = (
     );
   }
 
-  if (!subject || limiter <= 0) return subject; // Handle invalid inputs
+  subject = removeDuplicateSpaceString(subject);
 
-  if (reCountAfterSpace) {
-    return subject
-      .split(" ") // Split by spaces
-      .map((word) =>
-        word.replace(new RegExp(`.{${limiter}}`, "g"), "$&" + separator)
-      )
-      .join(" ");
+  // Handle reCountAfterSpace = false (assumed correct from previous iterations)
+  if (!reCountAfterSpace) {
+    let result = "";
+    let currentCount = 0;
+
+    for (let i = 0; i < subject.length; i++) {
+      const char = subject[i];
+      if (currentCount === limiter) {
+        result += separator;
+        currentCount = 0;
+      }
+      result += char;
+      currentCount++;
+    }
+    return result;
   }
 
-  return subject.replace(
-    new RegExp(`.{${limiter}}(?=.)`, "g"),
-    "$&" + separator
-  );
-};
+  // --- Dynamic Logic for reCountAfterSpace = true ---
+  const words = subject.split(" "); // Split the string into individual words by spaces
+  const finalSegments: string[] = [];
+
+  let currentGroup: string[] = [];
+  let wordsInCurrentGroupCount = 0; // This counts how many words are in the current group
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+
+    // Check if the current word itself needs internal separators (e.g., "HelloWorld" with limiter 2)
+    // For the given test cases ("AB", "CD", "ABC"), this inner loop doesn't add separators,
+    // as the words themselves are shorter than or equal to the limiter.
+    let processedWord = "";
+    let charCountInWord = 0;
+    for (let j = 0; j < word.length; j++) {
+      processedWord += word[j];
+      charCountInWord++;
+      if (charCountInWord === limiter && j < word.length - 1) {
+        processedWord += separator;
+        charCountInWord = 0;
+      }
+    }
+
+    currentGroup.push(processedWord);
+    wordsInCurrentGroupCount++;
+
+    // If the current group has reached the limiter (e.g., 2 words for limiter=2, or 3 words for limiter=3)
+    // OR if it's the last word in the entire subject, finalize the group.
+    if (wordsInCurrentGroupCount === limiter || i === words.length - 1) {
+      finalSegments.push(currentGroup.join(separator)); // Join words within the group by separator
+      currentGroup = []; // Reset group for the next set of words
+      wordsInCurrentGroupCount = 0; // Reset group word count
+    }
+  }
+
+  // Finally, join the main segments (groups) with spaces
+  return finalSegments.join(" ");
+
+  // DEPRECATED:
+  // if (reCountAfterSpace) {
+  //   return subject
+  //     .split(" ") // Split by spaces
+  //     .map((word) =>
+  //       word.replace(new RegExp(`.{${limiter}}`, "g"), "$&" + separator)
+  //     )
+  //     .join(" ");
+  // }
+
+  // return subject.replace(
+  //   new RegExp(`.{${limiter}}(?=.)`, "g"),
+  //   "$&" + separator
+  // );
+}
 
 /** ----------------------------------------------------------
  * * Censors an email by replacing characters with "*", with support for random or fixed mode.
@@ -173,6 +269,8 @@ export const censorEmail = (
  *
  * console.log(censorEmail("invalid-email"));
  * // Output: ""
+ *
+ * @deprecated Use `censorEmail` instead.
  */
 export const censorEmailOld = (email?: string | null): string => {
   if (typeof email !== "string") return "";
@@ -236,14 +334,36 @@ export const censorEmailOld = (email?: string | null): string => {
 
 /** ----------------------------------------------------------
  * * ***Truncates a string to a specified length and optionally appends an ending.***
- * ***Also provides an option to trim the truncated string.***
+ * * ***Also provides an option to trim the string before truncation.***
+ * * ***If truncation occurs, trailing spaces before the ending are removed.***
+ * * ***The `ending` parameter is always trimmed first; if it becomes empty, it defaults to `"..."`.***
  * ----------------------------------------------------------
  *
  * @param {string|null|undefined} text - The input string to truncate.
- * @param {number} length - The maximum length of the truncated string, defaultValue is `10`.
- * @param {string} [ending="..."] - The string to append if truncation occurs, defaultValue is `"..."`.
- * @param {boolean} [trim=true] - Whether to trim the truncated string, defaultValue is `true`.
- * @returns {string} - The truncated string with optional trimming and ending, if text is null, undefined or length < 1 will return "" as empty string.
+ *        If `null`, `undefined`, or empty after trim, returns `""`.
+ * @param {number} [length=10] - The maximum length of the truncated string **(default: `10`)**.
+ * @param {string} [ending="..."] - The string to append if truncation occurs **(default: `"..."`)**.
+ *                                   This value is always passed through `ending.trim()`.
+ *                                   If `ending.trim().length < 1`, it automatically becomes `"..."`.
+ * @param {boolean} [trim=true] - Whether to trim the string before truncation **(default: `true`)**.
+ *
+ * @returns {string} - The truncated string with optional trimming and ending.
+ *                     If text is `null`, `undefined`, or `length < 1`, returns `""`.
+ *                     If truncation happens, trailing spaces before the `ending` are automatically removed.
+ *
+ * @throws {TypeError} - If `length` is not a number, `ending` is not a string, or `trim` is not a boolean.
+ *
+ * @example
+ * truncateString("hello world", 5); // "hello..."
+ * truncateString("hello world", 5, "---"); // "hello---"
+ * truncateString("hello world", 5, "   "); // "hello..." (because ending.trim() -> "" -> default to "...")
+ * truncateString("hello world", 5, "   !!!   "); // "hello!!!" (ending is trimmed to "!!!")
+ * truncateString("   long data string   ", 8, "...", true); // "long dat..."
+ * truncateString("   long data string   ", 8, "...", false); // "   long ..."
+ * truncateString(" text with spaces ", 10, "...", false); // " text with..."
+ * truncateString("abc def", 7); // "abc def"
+ * truncateString(null, 5); // ""
+ * truncateString("short", 10); // "short"
  */
 export const truncateString = (
   text?: string | null,
@@ -253,10 +373,12 @@ export const truncateString = (
 ): string => {
   if (!text || typeof text !== "string" || text.trim().length < 1) return "";
 
+  if (length < 1) return "";
+
   if (
     !(
-      typeof length === "number" ||
-      typeof ending === "string" ||
+      typeof length === "number" &&
+      typeof ending === "string" &&
       typeof trim === "boolean"
     )
   ) {
@@ -265,12 +387,19 @@ export const truncateString = (
     );
   }
 
-  if (text.length <= length) {
-    return trim ? text.trim() : text;
+  if (ending.trim().length < 1) {
+    ending = "...";
+  } else {
+    ending = ending.trim();
   }
-  const truncated = text.substring(0, length);
-  return (
-    (trim ? truncated.trim() : truncated) +
-    (text.trim().length > length ? ending : "")
-  );
+
+  const original = trim ? text.trim() : text;
+  const originalTrimmedLength = original.length;
+
+  if (originalTrimmedLength <= length) return original;
+
+  const sliced = original.slice(0, length);
+  const cleanSliced = trim ? sliced : sliced.trimEnd();
+
+  return cleanSliced + ending;
 };

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type * from "type-samurai";
 
 import type { Prettify } from "@/types";
@@ -429,3 +431,14 @@ export type ChangeTypeOfValuesArray<Arr, Target, NewType> = Arr extends object
       [K in keyof Arr]: ChangeTypeOfValuesArray<Arr[K], Target, NewType>;
     }
   : NewType;
+
+/**
+ * * ***A generic type representing any function with any arguments and any return type.***
+ *
+ * @typedef {(...args: any[]) => any} AnyFunction
+ *
+ * @example
+ * const fn: AnyFunction = (a, b) => a + b;
+ * console.log(fn(1, 2)); // 3
+ */
+export type AnyFunction = (...args: any[]) => any;

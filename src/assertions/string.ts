@@ -1,7 +1,6 @@
 import { isString } from "lodash";
 
-/**
- * -------------------------------------------------------
+/** -------------------------------------------------------
  * * ***Asserts that a value is of type `string`.***
  * -------------------------------------------------------
  *
@@ -27,12 +26,12 @@ import { isString } from "lodash";
  * @example
  * assertIsString(42, (type) => `Expected string but got ${type}`); // ❌ throws: Expected string but got number
  */
-export function assertIsString(
-  val: unknown,
-  message?: string | ((typeVal: string) => string)
-): asserts val is string {
-  if (!isString(val)) {
-    const actualType = typeof val;
+export const assertIsString: (
+  value: unknown,
+  message?: string | ((typeValue: string) => string)
+) => asserts value is string = (value, message) => {
+  if (!isString(value)) {
+    const actualType = typeof value;
     throw new TypeError(
       typeof message === "function"
         ? message(actualType)
@@ -40,4 +39,4 @@ export function assertIsString(
           `Expected value to be 'string', but got '${actualType}'`
     );
   }
-}
+};

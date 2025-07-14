@@ -1,3 +1,7 @@
+import { isDeepEqual, isObject } from "@/predicates";
+import type { DedupeResult } from "./transforms.types";
+import { convertForceToStringDeep } from "../strings/convertForceToStringDeep";
+
 /** ----------------------------------------------------------
  * * ***Removes `null` and `undefined` values from an array, including nested arrays.***
  * ----------------------------------------------------------
@@ -56,84 +60,176 @@ export const filterNullArray = <T>(input?: T[] | null): T[] | undefined => {
 /** ----------------------------------------------------------
  * * ***Flattens a nested array and removes duplicate values while maintaining the original order.***
  * ----------------------------------------------------------
- * Supports an option to force all elements to be strings.
  *
+ * Supports options to force values into string representation at various levels:
+ * - `"stringOrNumber"`: Converts all numbers and strings to strings.
+ * - `"primitives"`: Converts all primitive types (number, string, boolean, bigint, undefined, NaN) to strings.
+ * - `"all"`: Converts everything (including functions, Dates, RegExp, Symbols, Maps, Sets, Errors, Promises) to strings,
+ *   and deeply converts object property values to strings.
  *
- * @param {Array<any>} inputArray - The input array, which may contain nested arrays.
- * @param {boolean} [forceToString=false] - Whether to convert all elements to strings before deduplication.
- * @returns {T extends true ? string[] : Array<string | number>} - A new flattened array with duplicates removed.
- * @throws {TypeError} If the input is not an array.
- * @throws {TypeError} If the array contains unsupported types (other than string, number, or nested arrays).
+ * @param {unknown[]} inputArray - The array to deduplicate. Can be deeply nested and contain any mix of types.
+ * @param {{ forceToString?: false | "stringOrNumber" | "primitives" | "all" }} [options] - Options to control string conversion.
+ * @returns {unknown[]} A new deduplicated array with the structure preserved, and values possibly stringified depending on `forceToString`.
  *
- * @example
- * // Removing duplicates from a flat array
- * const result1 = dedupeArray(["apple", "banana", "apple", "orange"]);
- * console.log(result1); // ["apple", "banana", "orange"]
- *
- * @example
- * // Removing duplicates from a number array
- * const result2 = dedupeArray([1, 2, 2, 3, 4, 1]);
- * console.log(result2); // [1, 2, 3, 4]
+ * @throws {TypeError} If the input is not an array, or options is not an object, or if `forceToString` is invalid.
  *
  * @example
- * // Removing duplicates from a nested array
- * const result3 = dedupeArray(["apple", [1, 2, "apple"], 2, 1]);
- * console.log(result3); // ["apple", 1, 2]
+ * dedupeArray(["apple", "banana", "apple"]);
+ * // => ["apple", "banana"]
  *
  * @example
- * // Removing duplicates from a nested array with forceToString = true
- * const result4 = dedupeArray(["apple", [1, 2, "apple"], 2, 1], true);
- * console.log(result4); // ["apple", "1", "2"]
+ * dedupeArray([1, "1", 2, "2"], { forceToString: "stringOrNumber" });
+ * // => ["1", "2"]
  *
  * @example
- * // Handling deeply nested arrays
- * const result5 = dedupeArray([["apple", "banana"], ["apple", "orange"], "banana"]);
- * console.log(result5); // ["apple", "banana", "orange"]
+ * dedupeArray([true, "true", false, undefined], { forceToString: "primitives" });
+ * // => ["true", "false", "undefined"]
  *
  * @example
- * // Handling empty array
- * const result6 = dedupeArray([]);
- * console.log(result6); // []
+ * dedupeArray([1, "1", { a: 1 }], { forceToString: "all" });
+ * // => ["1", { a: "1" }]
  *
  * @example
- * // Handling invalid input
- * try {
- *   dedupeArray("not an array"); // Throws TypeError
- * } catch (error) {
- *   console.error(error.message);
- * }
+ * dedupeArray([1, 1, [2, 2, [3, 3]]]);
+ * // => [1, [2, [3]]]
+ *
+ * @example
+ * dedupeArray([null, undefined, null]);
+ * // => [null, undefined]
+ *
+ * @example
+ * dedupeArray([[], [[]], [[[]]], [[]], [[[]]]]);
+ * // => [[], [[]], [[[]]]]
+ *
+ * @example
+ * const fn = () => 1;
+ * dedupeArray([fn, fn, () => 1]);
+ * // => [fn, () => 1] cause: ref () => 1 and fn is different but ref const `fn` and `fn` is same ref.
+ *
+ * @example
+ * dedupeArray([Symbol("x"), Symbol("x")]);
+ * // => [Symbol("x")] (symbols are same by identity, so dedupe
+ *
+ * @example
+ * dedupeArray([NaN, NaN, 1, "1"]);
+ * // => [NaN, 1, "1"]
+ *
+ * @example
+ * dedupeArray([NaN, NaN, 1, "1"], { forceToString: "primitives" });
+ * // => ["NaN", "1"]
+ *
+ * @example
+ * dedupeArray([new Date("2025-01-01"), new Date("2025-01-01")]);
+ * // => [Date("2025-01-01")] (same time, deduped)
+ *
+ * @example
+ * dedupeArray([new Date("2025-01-01"), new Date("2025-01-01")], { forceToString: "all" });
+ * // => ["2025-01-01T00:00:00.000Z"]
+ *
+ * @example
+ * dedupeArray([/abc/, /abc/], { forceToString: "all" });
+ * // => ["/abc/"]
+ *
+ * @example
+ * dedupeArray([new Map(), new Set(), new Error("err")], { forceToString: "all" });
+ * // => ["[object Map]", "[object Set]", "Error: err"]
+ *
+ * @example
+ * dedupeArray([Promise.resolve(1), Promise.resolve(1)], { forceToString: "all" });
+ * // => ["[object Promise]"]
+ *
+ * @example
+ * dedupeArray([{ a: 1 }, { a: 1 }, { a: 2 }], { forceToString: "primitives" });
+ * // => [{ a: "1" }, { a: "2" }]
+ *
+ * @example
+ * dedupeArray([{ a: { b: 1 } }, { a: { b: 1 } }], { forceToString: "all" });
+ * // => [{ a: { b: "1" } }]
+ *
+ * @example
+ * dedupeArray("not an array");
+ * // Throws TypeError
+ *
+ * @example
+ * dedupeArray([1, 2, 3], { forceToString: "invalid" });
+ * // Throws TypeError
  */
-export const dedupeArray = <T extends boolean>(
+export const dedupeArray = <
+  F extends false | "stringOrNumber" | "primitives" | "all" = false
+>(
   inputArray: unknown[],
-  forceToString: T = false as T
-): T extends true ? string[] : Array<string | number> => {
+  options?: { forceToString?: F }
+): DedupeResult<F> => {
   if (!Array.isArray(inputArray)) {
-    throw new TypeError(`props 'inputArray' must be \`array\` type!`);
+    throw new TypeError(`'inputArray' must be an array`);
+  }
+  if (!isObject(options)) {
+    throw new TypeError(`'options' must be an object`);
   }
 
-  if (!(typeof forceToString === "boolean")) {
-    throw new TypeError(`props 'forceToString' must be \`boolean\` type!`);
+  const { forceToString = false } = options ?? {};
+  if (
+    !(
+      forceToString === false ||
+      forceToString === "stringOrNumber" ||
+      forceToString === "primitives" ||
+      forceToString === "all"
+    )
+  ) {
+    throw new TypeError(
+      `'forceToString' must be false | "stringOrNumber" | "primitives" | "all"`
+    );
   }
 
-  // Recursive function to flatten nested arrays
-  const flattenArray = (input: unknown[]): Array<string | number> => {
-    return input.reduce<Array<string | number>>((acc, item) => {
-      if (Array.isArray(item)) {
-        acc.push(...flattenArray(item));
-      } else if (typeof item === "string" || typeof item === "number") {
-        acc.push(forceToString ? String(item) : item);
-      } else {
-        throw new TypeError(
-          "Array must contain only strings, numbers, or nested arrays."
-        );
+  const process = (arr: unknown[]): unknown[] => {
+    const seen: unknown[] = [];
+    return arr.reduce<unknown[]>((acc, item) => {
+      const value = Array.isArray(item)
+        ? process(item)
+        : convertForceToStringDeep(item, forceToString);
+
+      if (!seen.some((s) => isDeepEqual(s, value))) {
+        seen.push(value);
+        acc.push(value);
       }
       return acc;
     }, []);
   };
 
-  // Flatten the input array and remove duplicates while preserving order
-  const flatArray = flattenArray(inputArray);
-  return [
-    ...new Map(flatArray.map((item) => [item, item])).values(),
-  ] as T extends true ? string[] : Array<string | number>;
+  return process(inputArray) as DedupeResult<F>;
 };
+
+// export const dedupeArray = <T extends boolean>(
+//   inputArray: unknown[],
+//   forceToString: T = false as T
+// ): T extends true ? string[] : Array<string | number> => {
+//   if (!Array.isArray(inputArray)) {
+//     throw new TypeError(`props 'inputArray' must be \`array\` type!`);
+//   }
+
+//   if (!(typeof forceToString === "boolean")) {
+//     throw new TypeError(`props 'forceToString' must be \`boolean\` type!`);
+//   }
+
+//   // Recursive function to flatten nested arrays
+//   const flattenArray = (input: unknown[]): Array<string | number> => {
+//     return input.reduce<Array<string | number>>((acc, item) => {
+//       if (Array.isArray(item)) {
+//         acc.push(...flattenArray(item));
+//       } else if (typeof item === "string" || typeof item === "number") {
+//         acc.push(forceToString ? String(item) : item);
+//       } else {
+//         throw new TypeError(
+//           "Array must contain only strings, numbers, or nested arrays."
+//         );
+//       }
+//       return acc;
+//     }, []);
+//   };
+
+//   // Flatten the input array and remove duplicates while preserving order
+//   const flatArray = flattenArray(inputArray);
+//   return [
+//     ...new Map(flatArray.map((item) => [item, item])).values(),
+//   ] as T extends true ? string[] : Array<string | number>;
+// };

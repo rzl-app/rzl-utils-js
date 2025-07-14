@@ -1,21 +1,91 @@
+import { isEqual } from "lodash";
 import { parseCurrencyString } from "@/conversions/currency/parsing";
 import { safeStableStringify } from "@/conversions/stringify";
+
+/** ---------------------------------
+ * * ***Compares two objects for deep equality.***
+ * ---------------------------------
+ *  * This Function using `lodash` library.
+ *
+ * @template T1 The type of the first object.
+ * @template T2 The type of the second object.
+ * @param {T1} object1 - The first object to compare.
+ * @param {T2} object2 - The second object to compare.
+ * @returns {boolean} `true` if both objects are deeply equal, otherwise `false`.
+ *
+ * @example
+ * areObjectsEqual({ a: 1, b: 2 }, { a: 1, b: 2 }); // Returns true
+ * areObjectsEqual({ a: 1 }, { a: 1, b: undefined }); // Returns false
+ * areObjectsEqual([1, 2, 3], [1, 2, 3]); // Returns true
+ */
+export const areObjectsEqual = (
+  object1: unknown,
+  object2: unknown
+): boolean => {
+  return isEqual(object1, object2);
+};
 
 /** ----------------------------------------------------------
  * * ***Compares two arrays deeply to check if they are equal.***
  * ----------------------------------------------------------
  *
- * @param {unknown[]} arr1 - First array.
- * @param {unknown[]} arr2 - Second array.
- * @param {boolean} [ignoreOrder=false] - Whether to ignore order when comparing, defaultValue is `false`.
- * @returns {boolean} True if both arrays are equal, otherwise false.
+ * Supports deep comparison of arrays containing nested arrays or objects.
+ * Can also ignore the order of elements at all levels by recursively sorting.
+ *
+ * ----------------------------------------------------------
+ *
+ * @param {unknown[]} arr1
+ *    The first array to compare. Can contain nested arrays or objects.
+ *
+ * @param {unknown[]} arr2
+ *    The second array to compare against. Should match structure of `arr1`.
+ *
+ * @param {boolean} [ignoreOrder=false]
+ *    Whether to ignore the order of elements when comparing.
+ *    If `true`, will sort both arrays recursively before comparing.
+ *    Default is `false`.
+ *
+ * @returns {boolean}
+ *    Returns `true` if both arrays are deeply equal, otherwise `false`.
+ *
+ * @throws {TypeError}
+ *    Throws if `arr1` or `arr2` are not arrays, or if `ignoreOrder` is not a boolean.
+ *
+ * @example
+ * areArraysEqual([1, 2, 3], [1, 2, 3]);
+ * // → true
+ *
+ * @example
+ * areArraysEqual([1, 2, 3], [3, 2, 1]);
+ * // → false
+ *
+ * @example
+ * areArraysEqual([1, 2, 3], [3, 2, 1], true);
+ * // → true (order ignored)
+ *
+ * @example
+ * areArraysEqual([{ x: 1 }, { y: 2 }], [{ y: 2 }, { x: 1 }], true);
+ * // → true
+ *
+ * ----------------------------------------------------------
+ *
+ * @internal
+ * @function deepIgnoreOrder
+ * Recursively sorts an array and its nested arrays so deep comparison
+ * can ignore element order at all levels.
+ *
+ * @param {unknown[]} arr
+ *    The array to deep sort.
+ *
+ * @returns {unknown[]}
+ *    A new deeply sorted array.
  */
 export const areArraysEqual = (
   arr1: unknown[],
   arr2: unknown[],
   ignoreOrder: boolean = false
 ): boolean => {
-  if (!(isArray(arr1) || isArray(arr2))) {
+  if (!(isArray(arr1) && isArray(arr2))) {
     throw new TypeError(`props 'arr1' and 'arr2' must be \`array\` type!`);
   }
   if (!(typeof ignoreOrder === "boolean")) {
@@ -24,12 +94,40 @@ export const areArraysEqual = (
 
   if (arr1.length !== arr2.length) return false;
 
-  const sortedArr1 = ignoreOrder ? [...arr1].sort() : arr1;
-  const sortedArr2 = ignoreOrder ? [...arr2].sort() : arr2;
+  /**
+   * Recursively sorts an array (and nested arrays) so that
+   * deep equality checks can ignore order at all levels.
+   *
+   * @param {unknown[]} arr - The array to deep sort.
+   * @returns {unknown[]} A new deeply sorted array.
+   */
+  const deepIgnoreOrder = (arr: unknown[]): unknown[] => {
+    if (!isArray(arr)) return arr;
 
-  return sortedArr1.every(
+    // Recursively sort nested arrays
+    const sorted = arr.map((item) => {
+      if (isArray(item)) {
+        return deepIgnoreOrder(item);
+      }
+      return item;
+    });
+
+    // Sort current array level
+    return sorted.sort((a, b) => {
+      const sa = safeStableStringify(a);
+      const sb = safeStableStringify(b);
+      return sa < sb ? -1 : sa > sb ? 1 : 0;
+    });
+  };
+
+  const normalizedArr1 = ignoreOrder ? deepIgnoreOrder(arr1) : arr1;
+  const normalizedArr2 = ignoreOrder ? deepIgnoreOrder(arr2) : arr2;
+
+  if (normalizedArr1.length !== normalizedArr2.length) return false;
+
+  return normalizedArr1.every(
     (item, index) =>
-      safeStableStringify(item) === safeStableStringify(sortedArr2[index])
+      safeStableStringify(item) === safeStableStringify(normalizedArr2[index])
   );
 };
 
@@ -38,20 +136,45 @@ export const areArraysEqual = (
  * ----------------------------------------------------------
  *
  * - ✅ Uses `Set` for **faster lookup** compared to `Array.prototype.includes()`.
- * - ✅ Supports **any data type**, not just `string[]` (generic type support).
+ * - ✅ Supports **any data type** (`number`, `string`, `boolean`, `object`, `array`, `function`, etc.).
+ * - ✅ Uses **reference equality** for non-primitive values (object, array, function).
  * - ✅ Returns `false` if either array is missing, empty, or not an array.
  *
  * @template T - The expected type of array elements.
- * @param {T[]} sourceArray - The array to search within.
- * @param {T[]} targetArray - The array containing elements to match.
- * @returns {boolean} `true` if at least one element from `targetArray` exists in `sourceArray`, otherwise `false`.
+ *
+ * @param {T[]} [sourceArray] - The array to search within.
+ * @param {T[]} [targetArray] - The array containing elements to match.
+ *
+ * @returns {boolean}
+ *    - `true` if **at least one element from `targetArray` is strictly found in `sourceArray`**.
+ *    - Comparison uses:
+ *       - **Value equality** for primitives (`number`, `string`, `boolean`, `null`, `undefined`).
+ *       - **Reference equality** for objects, arrays, and functions.
+ *    - `false` if:
+ *       - No matching elements exist,
+ *       - Either array is not provided, not an actual array, or is empty.
  *
  * @example
- * arrayHasAnyMatch(["apple", "banana", "cherry"], ["banana", "grape"]); // true
- * arrayHasAnyMatch(["red", "blue"], ["green", "yellow"]); // false
- * arrayHasAnyMatch([1, 2, 3], [3, 4, 5]); // true
- * arrayHasAnyMatch([], ["test"]); // false
- * arrayHasAnyMatch(["A", "B", "C"], []); // false
+ * arrayHasAnyMatch(["apple", "banana", "cherry"], ["banana", "grape"]); // → true
+ * arrayHasAnyMatch(["red", "blue"], ["green", "yellow"]); // → false
+ * arrayHasAnyMatch([1, 2, 3], [3, 4, 5]); // → true
+ * arrayHasAnyMatch([], ["test"]); // → false
+ * arrayHasAnyMatch(["A", "B", "C"], []); // → false
+ *
+ * @example
+ * const obj = { x: 1 };
+ * arrayHasAnyMatch([obj], [obj]); // → true (same reference)
+ * arrayHasAnyMatch([{ x: 1 }], [{ x: 1 }]); // → false (different reference)
+ *
+ * @example
+ * const fn = () => "hello";
+ * arrayHasAnyMatch([fn], [fn]); // → true
+ * arrayHasAnyMatch([() => "hello"], [() => "hello"]); // → false (different function reference)
+ *
+ * @example
+ * const arr = [1, 2];
+ * arrayHasAnyMatch([arr], [arr]); // → true
+ * arrayHasAnyMatch([[1, 2]], [[1, 2]]); // → false (different array object)
  */
 export const arrayHasAnyMatch = <T>(
   sourceArray?: T[],
@@ -75,15 +198,22 @@ export const arrayHasAnyMatch = <T>(
  * * ***Recursively checks if a given key exists in an object or array.***
  * ----------------------------------------------------------
  *
- * - ✅ **Supports both objects and arrays**, searching deeply through nested structures.
- * - ✅ **Uses `Object.prototype.hasOwnProperty.call()`** to safely check properties.
- * - ✅ **Optimized for performance** by immediately returning `true` when a match is found.
- * - ✅ **Handles edge cases** (e.g., `null`, `undefined`, non-object inputs).
+ * - ✅ **Supports deeply nested objects and arrays**, searching recursively.
+ * - ✅ Uses `Object.prototype.hasOwnProperty.call()` to safely check if the key exists at each level,
+ *      even if its value is `null` or `undefined`.
+ * - ✅ Optimized to return `true` immediately when the key is found (short-circuits).
+ * - ✅ Handles edge cases gracefully:
+ *      - Returns `false` for `null`, `undefined`, or non-object inputs.
+ *      - Returns `false` if key is not found anywhere, even in deeply nested structures.
+ *
+ * ⚠️ Note: This function only checks for **the existence of the key itself**,
+ * not whether its value is non-null or non-undefined.
+ * If you need to check for both existence and meaningful value, write a stricter function.
  *
  * @template T - The type of the input object or array.
- * @param {T | Record<string, unknown> | unknown[]} obj - The object or array to search.
- * @param {PropertyKey} key - The key to check for existence.
- * @returns {boolean} Returns `true` if the key exists, otherwise `false`.
+ * @param {T | Record<string, unknown> | unknown[]} object - The object or array to search.
+ * @param {PropertyKey} key - The key to look for (string, number, or symbol).
+ * @returns {boolean} Returns `true` if the key exists anywhere in the object or array (even with `null` / `undefined` value), otherwise `false`.
  *
  * @example
  * doesKeyExist({ name: "John", age: 30 }, "age"); // true
@@ -92,12 +222,22 @@ export const arrayHasAnyMatch = <T>(
  * doesKeyExist({ a: { b: { c: 10 } } }, "d"); // false
  * doesKeyExist(null, "name"); // false
  * doesKeyExist(undefined, "test"); // false
+ *
+ * @example
+ * // Key exists even if value is null or undefined:
+ * doesKeyExist({ a: null, b: undefined, c: { d: null } }, "a"); // true
+ * doesKeyExist({ a: null, b: undefined, c: { d: null } }, "b"); // true
+ * doesKeyExist({ a: null, b: undefined, c: { d: null } }, "d"); // true
+ *
+ * @example
+ * doesKeyExist({ a: 1 }, true); // ❌ Throws TypeError
+ * doesKeyExist({ a: 1 }, ["not", "valid"]); // ❌ Throws TypeError
  */
 export const doesKeyExist = <T>(
-  obj: T | Record<string, unknown> | unknown[],
+  object: T | Record<string, unknown> | unknown[],
   key: PropertyKey
 ): boolean => {
-  if (!obj || typeof obj !== "object") return false; // Handle null, undefined, and non-objects
+  if (!object || typeof object !== "object") return false; // Handle null, undefined, and non-objects
 
   if (
     !(
@@ -111,13 +251,15 @@ export const doesKeyExist = <T>(
     );
   }
 
-  if (Object.prototype.hasOwnProperty.call(obj, key)) return true; // Direct match found
+  // Direct match found
+  if (Object.prototype.hasOwnProperty.call(object, key)) return true;
 
-  if (isArray(obj)) {
-    return obj.some((item) => doesKeyExist(item, key)); // Check each array item recursively
+  if (isArray(object)) {
+    // Check each array item recursively
+    return object.some((item) => doesKeyExist(item, key));
   }
 
-  return Object.values(obj).some(
+  return Object.values(object).some(
     (value) => typeof value === "object" && doesKeyExist(value, key)
   );
 };
@@ -158,8 +300,8 @@ export const isArray = <T>(value: unknown): value is T[] => {
  * isBoolean(false);  // true
  * isBoolean("true"); // false
  */
-export const isBoolean = (val: unknown): val is boolean => {
-  return typeof val === "boolean";
+export const isBoolean = (value: unknown): value is boolean => {
+  return typeof value === "boolean";
 };
 
 /** -----------------------------------------------------------
@@ -237,11 +379,14 @@ export const isCurrencyLike = (input: string | number): boolean => {
  * isEmptyValue(""); // true
  * isEmptyValue("   "); // true
  * isEmptyValue(0); // false
+ * isEmptyValue(-1); // false
+ * isEmptyValue(2); // false
  * isEmptyValue(() => {}); // false
  */
 export const isEmptyValue = (value: unknown): boolean => {
+  if (value === null || value === undefined || value === false) return true;
+  if (typeof value === "number" && Number.isNaN(value)) return true;
   if (isString(value)) return value.trim() === "";
-  if (!value) return true; // handles null, undefined, false, "", 0, NaN
   if (isArray(value)) return value.length === 0;
 
   if (typeof value === "object") {
@@ -289,7 +434,7 @@ export const isEmptyDeep = (value: unknown): boolean => {
   if (isNumber(value)) return false;
   if (!value) return true;
 
-  if (Array.isArray(value)) {
+  if (isArray(value)) {
     return value.length === 0 || value.every(isEmptyDeep);
   }
 
@@ -360,7 +505,7 @@ export const isNumber = (val: unknown): val is number => {
  * * ***Type guard: Checks if a value is a plain object.***
  * ---------------------------------------------------------
  *
- * Will return `false` for arrays and `null`.
+ * Will return `false` for arrays, undefined and `null`.
  *
  * @param {unknown} val - The value to check.
  * @returns {val is Record<string, unknown>} Returns `true` if the value is a plain object, otherwise `false`.
@@ -369,6 +514,7 @@ export const isNumber = (val: unknown): val is number => {
  * isObject({ name: "Alice" }); // true
  * isObject([1,2,3]);           // false
  * isObject(null);              // false
+ * isObject(undefined);         // false
  */
 export const isObject = (val: unknown): val is Record<string, unknown> => {
   return typeof val === "object" && val !== null && !isArray(val);
@@ -439,7 +585,9 @@ export const textMatchesAllPatterns = <T extends string>(
   text: T,
   searchWords: T[] | string[],
   options?: {
+    /** If `true`, matches whole words only, defaultValue is `false`. */
     exactMatch?: boolean;
+    /** Optional regex flags (default: `"i"` for case-insensitive). */
     flags?: string;
   }
 ): boolean => {
@@ -447,15 +595,15 @@ export const textMatchesAllPatterns = <T extends string>(
     return false;
   }
 
-  if (typeof options !== "object") {
+  if (options == null || typeof options !== "object") {
     throw new TypeError(`props 'options' must be \`object\` type!`);
   }
 
   // fallback to default
-  const { exactMatch = false, flags = "i" } = options || {};
+  const { exactMatch = false, flags = "i" } = options;
 
   if (typeof exactMatch !== "boolean") {
-    throw new TypeError(`props 'exactMath' must be \`boolean\` type!`);
+    throw new TypeError(`props 'exactMatch' must be \`boolean\` type!`);
   }
   if (typeof flags !== "string") {
     throw new TypeError(`props 'flags' must be \`string\` type!`);
@@ -472,10 +620,12 @@ export const textMatchesAllPatterns = <T extends string>(
 
   if (validSearchWords.length === 0) return false;
 
-  // Create regex pattern: Whole word match (`\bword\b`) if `exactMatch` is true
+  // Create regex pattern: Whole word match (`\bword\b`) <- is deprecated. if `exactMatch` is true
   return validSearchWords.every((word) => {
-    const pattern = exactMatch ? `\\b${word}\\b` : word;
-    return new RegExp(pattern, flags).test(text);
+    const pattern = exactMatch ? `(?<!\\S)${word}(?!\\S)` : word;
+    return new RegExp(pattern, flags.includes("u") ? flags : flags + "u").test(
+      text
+    );
   });
 };
 
@@ -495,12 +645,12 @@ export const textMatchesAllPatterns = <T extends string>(
  * @returns {boolean} - `true` if at least one `searchWord` is found in `text`, otherwise `false`.
  *
  * @example
- * textMatchesAnyPattern("Hello world", ["hello", "test"]); // true
- * textMatchesAnyPattern("withAI APP", ["chat", "ai"]); // false
- * textMatchesAnyPattern("TypeScript is great!", ["script", "java"]); // true
- * textMatchesAnyPattern("open-source", ["open"], { exactMatch: true }); // false (because options `exactMatch=true`)
+ * textMatchesAnyPatterns("Hello world", ["hello", "test"]); // true
+ * textMatchesAnyPatterns("withAI APP", ["chat", "ai"]); // false
+ * textMatchesAnyPatterns("TypeScript is great!", ["script", "java"]); // true
+ * textMatchesAnyPatterns("open-source", ["open"], { exactMatch: true }); // false (because options `exactMatch=true`)
  */
-export const textMatchesAnyPattern = <T extends string>(
+export const textMatchesAnyPatterns = <T extends string>(
   text: T,
   searchWords: T[] | string[],
   options?: {
@@ -538,9 +688,112 @@ export const textMatchesAnyPattern = <T extends string>(
   if (validSearchWords.length === 0) return false;
 
   // Create regex pattern: Whole word match (`\bword\b`) if `exactMatch` is true
+  // const pattern = exactMatch
+  //   ? `\\b(${validSearchWords.join("|")})\\b`
+  //   : `(${validSearchWords.join("|")})`;
+  // return new RegExp(pattern, flags).test(text);
+
   const pattern = exactMatch
-    ? `\\b(${validSearchWords.join("|")})\\b`
+    ? `(?<!\\S)(${validSearchWords.join("|")})(?!\\S)`
     : `(${validSearchWords.join("|")})`;
 
-  return new RegExp(pattern, flags).test(text);
+  return new RegExp(pattern, flags.includes("u") ? flags : flags + "u").test(
+    text
+  );
+};
+
+/** ----------------------------------------------------------
+ * * ***Performs a deep equality check between two values.***
+ * ----------------------------------------------------------
+ *
+ * - Compares nested arrays, objects, Dates, RegExp, NaN, and primitive values.
+ * - Handles special cases:
+ *   - `NaN` is considered equal to `NaN`.
+ *   - `Date` objects are equal if their `.getTime()` is equal.
+ *   - `RegExp` objects are equal if their `.toString()` is equal.
+ *   - `Symbol("x")` and `Symbol("x")` are treated equal if their `.toString()` matches,
+ *     even though by JavaScript identity they are different.
+ * - Does not detect circular references.
+ *
+ * @param {unknown} a - The first value to compare.
+ * @param {unknown} b - The second value to compare.
+ * @returns {boolean} `true` if both values are deeply equal, otherwise `false`.
+ *
+ * @example
+ * deepEqual(1, 1);
+ * // => true
+ *
+ * @example
+ * deepEqual({ a: [1, 2, 3] }, { a: [1, 2, 3] });
+ * // => true
+ *
+ * @example
+ * deepEqual(new Date("2025-01-01"), new Date("2025-01-01"));
+ * // => true
+ *
+ * @example
+ * deepEqual(/abc/, /abc/);
+ * // => true
+ *
+ * @example
+ * deepEqual(NaN, NaN);
+ * // => true
+ *
+ * @example
+ * deepEqual(Symbol("x"), Symbol("x"));
+ * // => true
+ *
+ * @example
+ * deepEqual({ a: 1 }, { a: 2 });
+ * // => false
+ *
+ * @example
+ * deepEqual([1, 2], [1, 2, 3]);
+ * // => false
+ */
+export const isDeepEqual = (a: unknown, b: unknown): boolean => {
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+  if (a instanceof RegExp && b instanceof RegExp) {
+    return a.toString() === b.toString();
+  }
+
+  if (
+    typeof a === "number" &&
+    typeof b === "number" &&
+    Number.isNaN(a) &&
+    Number.isNaN(b)
+  ) {
+    return true;
+  }
+
+  if (typeof a === "symbol" && typeof b === "symbol") {
+    return a.toString() === b.toString();
+  }
+
+  if (a === b) return true;
+  if (typeof a !== typeof b) return false;
+
+  if (isArray(a) && isArray(b)) {
+    if (a.length !== b.length) return false;
+    return a.every((v, i) => isDeepEqual(v, b[i]));
+  }
+
+  if (typeof a === "object" && typeof b === "object" && a && b) {
+    if (isArray(a) !== isArray(b)) {
+      return false;
+    }
+    const aKeys = Object.keys(a as object);
+    const bKeys = Object.keys(b as object);
+    if (aKeys.length !== bKeys.length) return false;
+    return aKeys.every((key) =>
+      isDeepEqual(
+        (a as Record<string, unknown>)[key],
+        (b as Record<string, unknown>)[key]
+      )
+    );
+  }
+
+  return false;
 };

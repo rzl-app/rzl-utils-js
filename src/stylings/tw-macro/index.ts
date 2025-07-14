@@ -1,15 +1,41 @@
 import { isArray } from "@/predicates";
 import { UnionToTupleStrict } from "./types";
 
-/** ----------------------------------------
- * * ***Creates a helper function for `shouldForwardProp` in styled-components.***
- * * ***This function filters out specified props from being passed to the DOM.***
- * ----------------------------------------
+/** ----------------------------------------------------------
+ * * ***Creates a helper for styled-components `shouldForwardProp`.***
+ * ----------------------------------------------------------
  *
- * @template CustomProps - The type of custom component props.
- * @param {Array<keyof CustomProps>} props - List of prop keys to be excluded.
- * @returns A function that determines whether a prop should be forwarded.
- * @throws {Error} If the provided `props` is not an array.
+ * @description
+ * This utility returns a predicate function that determines
+ * whether a given prop should be forwarded to the DOM.
+ * Useful for filtering out internal props (e.g., `$size`, `$active`)
+ * so they don't end up as invalid HTML attributes.
+ *
+ * - Accepts a tuple (strict) of prop keys to exclude from forwarding.
+ * - Automatically coerces prop names to string for consistent checking.
+ * - Supports string, number, or symbol keys (via PropertyKey).
+ * - Will throw an error if the provided `props` argument is not an array.
+ *
+ * @template CustomProps - The type of the component's props.
+ * @param {UnionToTupleStrict<keyof CustomProps>} props
+ *   The list of prop names (keys of `CustomProps`) to exclude from forwarding.
+ *
+ * @returns {(propName: PropertyKey) => boolean}
+ *   A function that takes a prop name and returns `true` if it should be forwarded, `false` if it should be blocked.
+ *
+ * @throws {Error} If `props` is not an array.
+ *
+ * @example
+ * type Props = { $size: string; color: string; visible: boolean };
+ * const filter = shouldForwardProp<Props>(["$size"]);
+ * filter("$size"); // false (blocked)
+ * filter("color"); // true (forwarded)
+ *
+ * @example
+ * // Using with styled-components:
+ * styled.div.withConfig({
+ *   shouldForwardProp: shouldForwardProp<CustomProps>(["$internal"])
+ * })
  */
 export const shouldForwardProp = <CustomProps>(
   props: UnionToTupleStrict<keyof CustomProps>

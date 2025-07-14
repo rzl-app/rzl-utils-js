@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { removeAllSpaceString } from "@/strings/sanitize";
-import { normalizePathname } from "@/url/pathname";
-import { formatEnvPort } from "@/url/utils";
+import { normalizePathname } from "@/urls/pathname";
+import { formatEnvPort } from "@/urls/utils";
 
 /**
  * Extracts dynamic route parameters from a given route string.

@@ -7,7 +7,7 @@
   | <small>Function / Type</small>          | <small>What it does</small>                                                             | <small>Highlights</small>                                   |
   | --------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
   | <small>`textMatchesAllPatterns`</small> | <small>Checks if all `searchWords` exist in `text` using regex.</small>                 | <small>✅ Escapes regex<br>✅ Exact match optional</small>  |
-  | <small>`textMatchesAnyPattern`</small>  | <small>Checks if at least one `searchWord` exists in `text` using regex.</small>        | <small>✅ Escapes regex<br>✅ Exact match optional</small>  |
+  | <small>`textMatchesAnyPatterns`</small>  | <small>Checks if at least one `searchWord` exists in `text` using regex.</small>        | <small>✅ Escapes regex<br>✅ Exact match optional</small>  |
   | <small>`isEmptyValue`</small>          | <small>Checks if a value is an empty object `{}`, empty array `[]`, or falsy.</small>   | <small>✅ Safe on `null` & `undefined`</small>              |
   | <small>`arrayHasAnyMatch`</small>       | <small>Checks if at least one element in `targetArray` exists in `sourceArray`.</small> | <small>✅ Uses `Set` for fast lookup</small>                |
   | <small>`isArray`</small>                | <small>Checks if a value is an array with TS type narrowing.</small>                    | <small>✅ Generic safe type guard</small>                   |
@@ -20,7 +20,7 @@
   ```ts
   import {
     textMatchesAllPatterns,
-    textMatchesAnyPattern,
+    textMatchesAnyPatterns,
     isEmptyValue,
     arrayHasAnyMatch,
     isArray,
@@ -33,7 +33,7 @@
   // => true
 
   console.log(
-    textMatchesAnyPattern("JavaScript and TypeScript", ["Java", "Python"])
+    textMatchesAnyPatterns("JavaScript and TypeScript", ["Java", "Python"])
   );
   // => true
 

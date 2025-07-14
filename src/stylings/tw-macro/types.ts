@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 /**
  * Converts a union type into an intersection type.
  *

@@ -34,10 +34,10 @@ import {
  * toStrictBoolean("off") // false
  */
 export const toStrictBoolean = (
-  val?: unknown,
+  value?: unknown,
   options?: { caseInsensitive?: boolean; trimString?: boolean }
 ): boolean => {
-  if (val == null) return false;
+  if (value == null) return false;
 
   const ci =
     options && "caseInsensitive" in options ? options.caseInsensitive : true;
@@ -50,15 +50,15 @@ export const toStrictBoolean = (
     throw new TypeError(`props 'trimString' must be \`boolean\` type!`);
   }
 
-  if (isString(val)) {
-    let normalized = val;
+  if (isString(value)) {
+    let normalized = value;
     if (ts) normalized = normalized.trim();
     if (ci) normalized = normalized.toLowerCase();
     return ["true", "on", "yes", "1", "indeterminate"].includes(normalized);
   }
 
-  if (isNumber(val)) return val === 1;
-  if (isBoolean(val)) return val;
+  if (isNumber(value)) return value === 1;
+  if (isBoolean(value)) return value;
 
   return false;
 };

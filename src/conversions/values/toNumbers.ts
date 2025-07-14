@@ -34,51 +34,107 @@ type ConvertedDeepNumbers<
   : never; // Remove unsupported types
 
 /** --------------------------------------------------
- * * ***Converts an array or object of values into numbers (including decimals) while maintaining structure.***
+ * * ***Converts deeply nested arrays or objects into numbers while preserving structure.***
  * --------------------------------------------------
  *
- * - ✅ Removes `null`, `undefined`, and non-numeric values.
- * - ✅ Recursively processes nested objects and arrays.
- * - ✅ Supports valid numbers, including decimals (`"3.5"` → `3.5`).
- * - ✅ If an object or array is empty, it can be removed based on the provided options.
+ * Features:
+ * - ✅ Removes `null`, `undefined`, NaN, Infinity, and non-numeric values.
+ * - 🔄 Recursively processes nested objects and arrays.
+ * - 🔢 Converts valid numbers, including decimals (e.g. `"3.5"` → `3.5`).
+ * - 🧹 Can remove empty objects `{}` or arrays `[]` based on flags.
  *
- * @template T - The input data type (Array or Object).
- * @template RemoveEmptyObjects - Whether to remove empty objects `{}`.
- * @template RemoveEmptyArrays - Whether to remove empty arrays `[]`.
+ * @template T - The input data type (Array, Object, etc)
+ * @template RemoveEmptyObjects - Whether to remove empty objects
+ * @template RemoveEmptyArrays - Whether to remove empty arrays
  *
- * @param {T} input - The data to be converted.
- * @param {boolean} [removeEmptyObjects=false] - Whether to remove empty objects `{}`.
- * @param {boolean} [removeEmptyArrays=false] - Whether to remove empty arrays `[]`.
+ * @param {T} input - The data to convert
+ * @param {boolean} [removeEmptyObjects=false] - Remove empty objects `{}` if `true`
+ * @param {boolean} [removeEmptyArrays=false] - Remove empty arrays `[]` if `true`
  *
  * @returns {ConvertedDeepNumbers<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined}
- *          The converted data with numbers or `undefined` if empty.
+ *          The transformed data, or `undefined` if entirely empty after processing.
  *
  * @example
- * // Convert an array with numbers and decimals
- * console.log(deepNumbers(["1", "2.5", "hello", "3.5", 4, null]));
- * // Output: [1, 2.5, 3.5, 4]
+ * deepNumbers("123") // → 123
+ * deepNumbers("12.34") // → 12.34
+ * deepNumbers("not number") // → undefined
  *
  * @example
- * // Convert a nested array
- * console.log(deepNumbers(["1", ["2.5", "invalid", "3.5"], 4]));
- * // Output: [1, [2.5, 3.5], 4]
+ * deepNumbers([NaN, Infinity, -Infinity, "10"])
+ * // → [10]
  *
  * @example
- * // Convert an object with number strings and remove invalid values
- * console.log(deepNumbers({ a: "5", b: "10.2", c: "xyz" }));
- * // Output: { a: 5, b: 10.2 }
+ * deepNumbers({ a: {}, b: [] }, false, false)
+ * // → { a: {}, b: [] }
  *
  * @example
- * // Convert a nested object with arrays and numbers
- * console.log(deepNumbers({ a: "5", b: ["6.5", { c: "7.2", d: null }] }));
- * // Output: { a: 5, b: [6.5, { c: 7.2 }] }
+ * deepNumbers({ a: {}, b: [] }, true, false)
+ * // → { b: [] }
  *
  * @example
- * // Removing empty objects and arrays
- * console.log(deepNumbers({ a: {}, b: [], c: { d: null } }, true, true));
- * // Output: {}
+ * deepNumbers({ a: {}, b: [] }, false, true)
+ * // → { a: {} }
+ *
+ * @example
+ * deepNumbers({ a: {}, b: [], c: { d: null } }, true, true)
+ * // → {}
+ *
+ * @example
+ * deepNumbers({
+ *   a: "1",
+ *   b: {
+ *     c: "not num",
+ *     d: ["2", "3.5", null, { e: "4.4", f: "invalid" }],
+ *   },
+ *   g: [],
+ * })
+ * // → { a: 1, b: { d: [2, 3.5, { e: 4.4 }] }, g: [] }
+ *
+ * @example
+ * deepNumbers({ x: {}, y: [], z: [{ a: {}, b: [] }] }, false, true)
+ * // → { x: {}, z: [{ a: {} }] }
+ *
+ * @example
+ * deepNumbers({ x: {}, y: [], z: [{ a: {}, b: [] }] }, true, false)
+ * // → { y: [], z: [{ b: [] }] }
+ *
+ * @example
+ * deepNumbers({
+ *   x: {},
+ *   y: [],
+ *   z: [{ a: {}, b: [], c: "3" }, { d: "4.5" }]
+ * }, true, true)
+ * // → { z: [{ c: 3 }, { d: 4.5 }] }
+ *
+ * @example
+ * deepNumbers([[[[[["1"]]], null]], "2", "abc"], false, true)
+ * // → [[[[[[1]]]]], 2]
+ *
+ * @example
+ * deepNumbers(["1", {}, [], ["2", {}, []]], true, true)
+ * // → [1, [2]]
+ *
+ * @example
+ * deepNumbers(["1", () => {}, Symbol("wow"), "2"])
+ * // → [1, 2]
+ *
+ * @example
+ * deepNumbers({ a: { b: {} } }, false, true)
+ * // → { a: { b: {} } }
+ *
+ * @example
+ * deepNumbers(["1", { a: {} }], true)
+ * // → [1]
+ *
+ * @example
+ * deepNumbers(["1", { a: {} }], false)
+ * // → [1, { a: {} }]
+ *
+ * @example
+ * deepNumbers(["1", [], { a: [] }], false, false)
+ * // → [1, [], { a: [] }]
  */
-export function deepNumbers<
+export const deepNumbers = <
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
   T extends unknown,
   RemoveEmptyObjects extends boolean = false,
@@ -87,67 +143,105 @@ export function deepNumbers<
   input: T,
   removeEmptyObjects: RemoveEmptyObjects = false as RemoveEmptyObjects,
   removeEmptyArrays: RemoveEmptyArrays = false as RemoveEmptyArrays
-): ConvertedDeepNumbers<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined {
-  if (input === null || input === undefined) return undefined;
+):
+  | ConvertedDeepNumbers<T, RemoveEmptyObjects, RemoveEmptyArrays>
+  | undefined => {
+  function _deepNumbersInternal<
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
+    T extends unknown,
+    RemoveEmptyObjects extends boolean,
+    RemoveEmptyArrays extends boolean
+  >(
+    input: T,
+    removeEmptyObjects: RemoveEmptyObjects,
+    removeEmptyArrays: RemoveEmptyArrays,
+    isRoot: boolean
+  ):
+    | ConvertedDeepNumbers<T, RemoveEmptyObjects, RemoveEmptyArrays>
+    | undefined {
+    if (input === null || input === undefined) return undefined;
 
-  if (
-    typeof removeEmptyObjects !== "boolean" ||
-    typeof removeEmptyArrays !== "boolean"
-  ) {
-    throw new TypeError(
-      `props 'removeEmptyObjects' and 'removeEmptyArrays' must be \`boolean\` type!`
-    );
-  }
-
-  if (
-    typeof input === "number" ||
-    (typeof input === "string" && !isNaN(Number(input)))
-  ) {
-    return Number(input) as ConvertedDeepNumbers<
-      T,
-      RemoveEmptyObjects,
-      RemoveEmptyArrays
-    >;
-  }
-
-  if (Array.isArray(input)) {
-    const newArray = input
-      .map((item) => deepNumbers(item, removeEmptyObjects, removeEmptyArrays))
-      .filter((item) => item !== undefined);
-
-    if (removeEmptyArrays && newArray.length === 0) return undefined;
-
-    return newArray as ConvertedDeepNumbers<
-      T,
-      RemoveEmptyObjects,
-      RemoveEmptyArrays
-    >;
-  }
-
-  if (typeof input === "object") {
-    const newObject: Record<string, unknown> = {};
-
-    for (const [key, value] of Object.entries(input)) {
-      const convertedValue = deepNumbers(
-        value,
-        removeEmptyObjects,
-        removeEmptyArrays
+    if (
+      typeof removeEmptyObjects !== "boolean" ||
+      typeof removeEmptyArrays !== "boolean"
+    ) {
+      throw new TypeError(
+        `props 'removeEmptyObjects' and 'removeEmptyArrays' must be \`boolean\` type!`
       );
-
-      if (convertedValue !== undefined) {
-        newObject[key] = convertedValue;
-      }
     }
 
-    if (removeEmptyObjects && Object.keys(newObject).length === 0)
-      return undefined;
+    if (
+      typeof input === "number" ||
+      (typeof input === "string" && !isNaN(Number(input)))
+    ) {
+      const num = Number(input);
+      return (Number.isFinite(num) ? num : undefined) as ConvertedDeepNumbers<
+        T,
+        RemoveEmptyObjects,
+        RemoveEmptyArrays
+      >;
+    }
 
-    return newObject as ConvertedDeepNumbers<
-      T,
-      RemoveEmptyObjects,
-      RemoveEmptyArrays
-    >;
+    if (Array.isArray(input)) {
+      const newArray = input
+        .map((item) =>
+          _deepNumbersInternal(
+            item,
+            removeEmptyObjects,
+            removeEmptyArrays,
+            false
+          )
+        )
+        .filter((item) => item !== undefined);
+
+      if (removeEmptyArrays && newArray.length === 0) return undefined;
+
+      return newArray as ConvertedDeepNumbers<
+        T,
+        RemoveEmptyObjects,
+        RemoveEmptyArrays
+      >;
+    }
+
+    if (typeof input === "object") {
+      const newObject: Record<string, unknown> = {};
+
+      for (const [key, value] of Object.entries(input)) {
+        const convertedValue = _deepNumbersInternal(
+          value,
+          removeEmptyObjects,
+          removeEmptyArrays,
+          false
+        );
+        if (convertedValue !== undefined) {
+          newObject[key] = convertedValue;
+        }
+      }
+
+      if (removeEmptyObjects && Object.keys(newObject).length === 0) {
+        return isRoot
+          ? ({} as ConvertedDeepNumbers<
+              T,
+              RemoveEmptyObjects,
+              RemoveEmptyArrays
+            >)
+          : undefined;
+      }
+
+      return newObject as ConvertedDeepNumbers<
+        T,
+        RemoveEmptyObjects,
+        RemoveEmptyArrays
+      >;
+    }
+
+    return undefined;
   }
 
-  return undefined;
-}
+  return _deepNumbersInternal(
+    input,
+    removeEmptyObjects,
+    removeEmptyArrays,
+    true
+  );
+};

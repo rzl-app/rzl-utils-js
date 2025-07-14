@@ -4,6 +4,7 @@ export default defineConfig([
   //todo: bundle global utils
   {
     entry: ["src/index.ts"],
+    external: [],
     format: ["cjs", "esm"],
     dts: true,
     splitting: false,

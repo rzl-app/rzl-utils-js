@@ -89,10 +89,10 @@ interface CleanParsedDataOptions {
  * const result = cleanParsedData({ isActive: "true" }, { convertBooleans: true });
  * console.log(result); // Output: { isActive: true }
  */
-function cleanParsedData<T = unknown>(
+export const cleanParsedData = <T = unknown>(
   data: unknown,
   options: CleanParsedDataOptions = {}
-): T | undefined | null {
+): T | undefined | null => {
   if (typeof options !== "object") {
     throw new TypeError(
       `props 'options' must be \`object\` or empty as \`undefined\` type!`
@@ -160,7 +160,7 @@ function cleanParsedData<T = unknown>(
   }
 
   return options.strictMode ? undefined : (data as T);
-}
+};
 
 /** --------------------------------------------------
  * * ***Parses custom date formats like "DD/MM/YYYY" or "MM/DD/YYYY".***
@@ -170,7 +170,10 @@ function cleanParsedData<T = unknown>(
  * @param {string} format - Date format to match.
  * @returns {Date | null} - Returns a Date object if valid, otherwise null.
  */
-function parseCustomDate(dateString: string, format: string): Date | null {
+export const parseCustomDate = (
+  dateString: string,
+  format: string
+): Date | null => {
   if (typeof dateString !== "string" && typeof format !== "string") {
     throw new TypeError(
       `props 'dateString' and 'format' must be \`string\` type!`
@@ -188,7 +191,7 @@ function parseCustomDate(dateString: string, format: string): Date | null {
 
   const date = new Date(year, month, day);
   return isNaN(date.getTime()) ? null : date;
-}
+};
 
 /**
  * --------------------------------------------------

@@ -1,12 +1,14 @@
 import { id, enUS, type Locale } from "date-fns/locale";
 import { format as formatDns, type FormatOptions, parse } from "date-fns";
 import type { OmitStrict } from "../types";
+import { SupportedLocales } from "./intlLocal.types";
 
 /** ----------------------------------------------------------
- * * ***Formats a date into a custom string format.***
+ * * ***Formats a date and time into a custom string format.***
  * ----------------------------------------------------------
  *
  * - Supports only `YYYY`, `MM`, `DD`, `hh`, `mm`, and `ss` as placeholders.
+ * - Uses a simple string replace (no locale).
  * - Returns `null` if the date is invalid or not provided.
  * - Defaults to `"YYYY-MM-DD hh:mm:ss"` format if none is specified.
  *
@@ -15,30 +17,58 @@ import type { OmitStrict } from "../types";
  * @returns {string | null} The formatted date string or `null` if invalid.
  *
  * @example
- * formatCustomDateTime(new Date());
- * // output: "2024-02-09 14:30:45"
- * formatCustomDateTime("2024-01-01", "DD/MM/YYYY");
- * // output: "01/01/2024"
- * formatCustomDateTime(null | undefined);
- * // output: null
+ * formatDateTime(new Date());
+ * // => "2024-02-09 14:30:45" (example output with current time)
+ *
+ * formatDateTime("2023-07-01T14:30:45");
+ * // => "2023-07-01 14:30:45"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "DD/MM/YYYY");
+ * // => "01/07/2023"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "YYYY/MM/DD hh-mm-ss");
+ * // => "2023/07/01 14-30-45"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "hh:mm");
+ * // => "14:30"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "DATE: YYYY.MM.DD");
+ * // => "DATE: 2023.07.01"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "Year: YYYY, Time: hh:mm:ss");
+ * // => "Year: 2023, Time: 14:30:45"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "YYYY-MM");
+ * // => "2023-07"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "YYYYYYYY");
+ * // => "20232023"
+ *
+ * formatDateTime("2023-07-01T14:30:45", "hh:mm:ss:ss");
+ * // => "14:30:45:45"
+ *
+ * formatDateTime("invalid-date");
+ * // => null
+ *
+ * formatDateTime(null);
+ * // => null
+ *
+ * formatDateTime(undefined);
+ * // => null
  */
-export const formatDateTimeCustoms = (
+export const formatDateTime = (
   date?: string | Date | null,
   /** @default "YYYY-MM-DD hh:mm:ss" */
   format: string = "YYYY-MM-DD hh:mm:ss"
 ): string | null => {
-  try {
-    if (
-      !date ||
-      !(
-        date instanceof Date ||
-        typeof date === "string" ||
-        typeof format === "string"
-      )
-    ) {
-      return null;
-    }
+  if (typeof format !== "string") return null;
 
+  // Handle missing or invalid date input type
+  if (!date || !(date instanceof Date || typeof date === "string")) {
+    return null;
+  }
+
+  try {
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) return null; // Handle invalid dates
 
@@ -54,7 +84,7 @@ export const formatDateTimeCustoms = (
     };
 
     const result = Object.entries(map).reduce(
-      (prev, [key, value]) => prev.replace(key, value),
+      (prev, [key, value]) => prev.split(key).join(value),
       format
     );
 
@@ -68,26 +98,39 @@ export const formatDateTimeCustoms = (
  * * ***Formats a date using the `Intl.DateTimeFormat` API.***
  * ----------------------------------------------------------
  *
- * - Supports custom locales and formatting options.
- * - Returns `null` if the date is invalid or not provided.
- * - Defaults to `"en-US"` locale if none is specified.
+ * - Supports custom locales (type-safe `SupportedLocales`).
+ * - Accepts additional `Intl.DateTimeFormatOptions` like `timeZone`, `hour12`, etc.
+ * - Defaults to `"en-US"` if `locale` is not provided or is an empty string.
+ * - Returns `null` if the date is invalid, not provided, or options are invalid.
  *
- * @param {string | Date | null} [date] - The date to format.
- * @param {Intl.DateTimeFormatOptions & { locale?: string }} [options] - Formatting options.
- * @returns {string | null} The formatted date string or `null` if invalid.
+ * @param {string | Date | null | undefined} [date] - The date to format.
+ *   Can be a `Date` object or an ISO string. If invalid or not provided, returns `null`.
+ *
+ * @param {Intl.DateTimeFormatOptions & { locale?: SupportedLocales | SupportedLocales[] }} [options]
+ *   - Optional formatting options for `Intl.DateTimeFormat`.
+ *   - Use `locale` to specify the language & region format.
+ *
+ * @returns {string | null}
+ *   - Formatted date string.
+ *   - Returns `null` if date is invalid or options are of wrong type.
  *
  * @example
- * formatDateWithIntl(new Date());
- * // output: "1/1/2024"
- * formatDateWithIntl("2024-01-01", { locale: "fr-FR", dateStyle: "long" });
- * // output: "1 janvier 2024"
- * formatDateWithIntl(null | undefined);
- * // output: null
+ * formatDateIntl(new Date());
+ * // => "7/14/2025"
+ *
+ * formatDateIntl("2025-07-14T00:00:00Z", { locale: "fr-FR", dateStyle: "long" });
+ * // => "14 juillet 2025"
+ *
+ * formatDateIntl(null);
+ * // => null
+ *
+ * formatDateIntl(new Date(), { timeZone: "UTC", hour: "2-digit", minute: "2-digit" });
+ * // => "01:30 AM"
  */
-export const formatDateWithIntl = (
+export const formatDateIntl = (
   date?: string | Date | null,
   options?: Intl.DateTimeFormatOptions & {
-    locale?: Intl.LocalesArgument;
+    locale?: SupportedLocales | SupportedLocales[];
   }
 ): string | null => {
   if (!date || !(date instanceof Date || typeof date === "string")) return null;
@@ -112,25 +155,65 @@ export const formatDateWithIntl = (
  * * ***Formats a date into a human-readable string using `date-fns`.***
  * ----------------------------------------------------------
  *
- * - Supports custom formats and locales (`"id"` for Indonesian, `"en"` for English).
- * - Returns `null` if the date is invalid or not provided.
- * - Default format: `"dd MMM yyyy - HH:mm:ss"` (e.g., `"01 Jan 2024 - 14:30:00"`).
+ * - Supports custom output formats using `date-fns/format`.
+ * - Can parse localized non-ISO strings via `inputFormat` & `inputLocale`.
+ * - Supports `locale` as `"id"`, `"en"` or `date-fns` `Locale` objects (like `id` or `enUS`).
+ * - Returns `null` if the date is invalid, not provided, or parsing fails.
  *
- * @param {string | Date | null} [date] - The date to format.
- * @param {object} [options] - Options for formatting and parsing a date using `date-fns`.
- * @param {string} [options.format="dd MMM yyyy - HH:mm:ss"] - The date format.
- * @param {"id" | "en" | string} [options.locale="en"] - The locale for formatting.
- * @returns {string | null} The formatted date string or `null` if invalid.
+ * @param {string | Date | null} [date] - The date input to format. Can be:
+ *   - A `Date` object
+ *   - An ISO string (e.g. `"2024-01-01T12:00:00Z"`)
+ *   - A localized string (requires `inputFormat` + `inputLocale`)
+ *
+ * @param {object} [options] - Options for formatting and parsing.
+ *
+ * @param {string} [options.format="dd MMM yyyy - HH:mm:ss"]
+ *   The output format string (passed to `date-fns/format`).
+ *   E.g. `"dd MMMM yyyy, HH:mm:ss" => "14 Juli 2025, 17:25:42"`
+ *
+ * @param {"id" | "en" | (string & {}) | Locale} [options.locale="id"]
+ *   The output locale. If string, only `"id"` (Indonesian) or `"en"` (English)
+ *   is recognized. Or you can pass a `date-fns` `Locale` object.
+ *   Example:
+ *   ```ts
+ *     import { ar } from "date-fns/locale";
+ *     formatDateFns(new Date(), { locale: ar, format: "PPPppp" });
+ *   ```
+ *
+ * @param {"id" | "en" | (string & {}) | Locale} [options.inputLocale]
+ *   Required if `date` is a localized non-ISO string. Used with `inputFormat`.
+ *   Example for Indonesian string:
+ *   ```ts
+ *     formatDateFns("14 Juli 2025 10:25:42", {
+ *       inputFormat: "dd MMMM yyyy HH:mm:ss",
+ *       inputLocale: "id",
+ *     });
+ *   ```
+ *
+ * @param {string} [options.inputFormat]
+ *   The format string to parse `date` if it is a non-ISO string.
+ *   Required together with `inputLocale`.
+ *
+ * @returns {string | null} A formatted date string or `null` if input is invalid.
  *
  * @example
- * formatDate(new Date());
- * // output: "01 Jan 2024 - 14:30:00"
- * formatDate("2024-01-01T12:00:00Z", { format: "dd/MM/yyyy", locale: "id" });
- * // output: "01/01/2024"
- * formatDate(null | undefined);
- * // output: null
+ * formatDateFns(new Date());
+ * // "14 Jul 2025 - 17:25:42"
+ *
+ * formatDateFns("2025-07-14T10:25:42Z", { format: "dd/MM/yyyy", locale: "en" });
+ * // "14/07/2025"
+ *
+ * formatDateFns("14 Juli 2025 10:25:42", {
+ *   inputFormat: "dd MMMM yyyy HH:mm:ss",
+ *   inputLocale: "id",
+ *   format: "yyyy-MM-dd"
+ * });
+ * // "2025-07-14"
+ *
+ * formatDateFns(null);
+ * // null
  */
-export const formatDateWithFns = (
+export const formatDateFns = (
   date?: string | Date | null,
   /**
    * Options for formatting and parsing a date using `date-fns`.
@@ -152,7 +235,7 @@ export const formatDateWithFns = (
      *    import { ar } from "date-fns/locale";
      *
      *    // then passing `ar` to this props.
-     *    formatDateWithFns(
+     *    formatDateFns(
      *    // your date input...,
      *    {
      *       locale: ar,
@@ -175,7 +258,7 @@ export const formatDateWithFns = (
      *    import { ar } from "date-fns/locale";
      *
      *    // then passing `ar` to this props.
-     *    formatDateWithFns(
+     *    formatDateFns(
      *    // your date input...,
      *    {
      *        inputLocale: ar,
@@ -247,26 +330,36 @@ export const formatDateWithFns = (
  * * ***Returns the formatted GMT offset (e.g., `+0700`, `-0500`) for a given date.***
  * ----------------------------------------------------------
  *
- * - If `date` is **not provided**, it defaults to the current date.
- * - If `date` is **invalid**, it returns `"0"`.
- * - The returned string follows the **GMT offset format** (`±HHMM`).
+ * - If `date` is **not provided** or empty string, it defaults to the current date/time.
+ * - If `date` is **invalid** or of wrong type (like object or number), it returns `"0"`.
+ * - The returned string follows the **GMT offset format** (`±HHMM`), where:
+ *   - `±` is `+` if ahead of UTC, `-` if behind.
+ *   - `HH` is two-digit hours.
+ *   - `MM` is two-digit minutes.
  *
  * @param {string | Date | null} [date] - The date to get the GMT offset from.
- * @returns {string} The GMT offset (e.g., `"+0700"`, `"-0500"`, or `"0"` if invalid).
+ *   - Accepts `Date` object or ISO date string (e.g., `"2024-01-01T12:00:00Z"`).
+ *   - If `null`, `undefined`, or empty string, uses current system date.
+ *   - If invalid date or wrong type (like `123` or `{}`), returns `"0"`.
+ *
+ * @returns {string} The GMT offset string in format `±HHMM`,
+ *   e.g. `"+0700"`, `"-0530"`, or `"0"` if invalid.
  *
  * @example
  * getGMTOffset();
- * // output: Returns the current GMT offset (e.g., "+0700")
- * getGMTOffset(null);
- * // output: Returns offset for current date.
- * getGMTOffset(new Date());
- * // output: Returns the current GMT offset
+ * // => "+0700" (depends on system timezone)
+ *
+ * getGMTOffset(new Date("2024-02-09T12:00:00Z"));
+ * // => "+0000"
+ *
  * getGMTOffset("2024-02-09");
- * // output: "+0700" (depends your system/server GMT offset)
- * getGMTOffset("2024-01-01T12:00:00Z");
- * // output: Returns "+0000"
+ * // => "+0700" (depends on your timezone)
+ *
  * getGMTOffset("invalid-date");
- * // output: "0"
+ * // => "0"
+ *
+ * getGMTOffset(123);
+ * // => "0"
  */
 export const getGMTOffset = (date?: string | Date | null): string => {
   try {
