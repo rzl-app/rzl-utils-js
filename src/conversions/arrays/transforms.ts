@@ -199,37 +199,40 @@ export const dedupeArray = <
   return process(inputArray) as DedupeResult<F>;
 };
 
-// export const dedupeArray = <T extends boolean>(
-//   inputArray: unknown[],
-//   forceToString: T = false as T
-// ): T extends true ? string[] : Array<string | number> => {
-//   if (!Array.isArray(inputArray)) {
-//     throw new TypeError(`props 'inputArray' must be \`array\` type!`);
-//   }
+/**
+ * @deprecated Use `dedupeArray` Instead.
+ */
+export const dedupeArrayDeprecated = <T extends boolean>(
+  inputArray: unknown[],
+  forceToString: T = false as T
+): T extends true ? string[] : Array<string | number> => {
+  if (!Array.isArray(inputArray)) {
+    throw new TypeError(`props 'inputArray' must be \`array\` type!`);
+  }
 
-//   if (!(typeof forceToString === "boolean")) {
-//     throw new TypeError(`props 'forceToString' must be \`boolean\` type!`);
-//   }
+  if (!(typeof forceToString === "boolean")) {
+    throw new TypeError(`props 'forceToString' must be \`boolean\` type!`);
+  }
 
-//   // Recursive function to flatten nested arrays
-//   const flattenArray = (input: unknown[]): Array<string | number> => {
-//     return input.reduce<Array<string | number>>((acc, item) => {
-//       if (Array.isArray(item)) {
-//         acc.push(...flattenArray(item));
-//       } else if (typeof item === "string" || typeof item === "number") {
-//         acc.push(forceToString ? String(item) : item);
-//       } else {
-//         throw new TypeError(
-//           "Array must contain only strings, numbers, or nested arrays."
-//         );
-//       }
-//       return acc;
-//     }, []);
-//   };
+  // Recursive function to flatten nested arrays
+  const flattenArray = (input: unknown[]): Array<string | number> => {
+    return input.reduce<Array<string | number>>((acc, item) => {
+      if (Array.isArray(item)) {
+        acc.push(...flattenArray(item));
+      } else if (typeof item === "string" || typeof item === "number") {
+        acc.push(forceToString ? String(item) : item);
+      } else {
+        throw new TypeError(
+          "Array must contain only strings, numbers, or nested arrays."
+        );
+      }
+      return acc;
+    }, []);
+  };
 
-//   // Flatten the input array and remove duplicates while preserving order
-//   const flatArray = flattenArray(inputArray);
-//   return [
-//     ...new Map(flatArray.map((item) => [item, item])).values(),
-//   ] as T extends true ? string[] : Array<string | number>;
-// };
+  // Flatten the input array and remove duplicates while preserving order
+  const flatArray = flattenArray(inputArray);
+  return [
+    ...new Map(flatArray.map((item) => [item, item])).values(),
+  ] as T extends true ? string[] : Array<string | number>;
+};
