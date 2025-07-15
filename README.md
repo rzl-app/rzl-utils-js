@@ -1,5 +1,5 @@
 <div align="center">
-  <h1><strong>⚡️ Packages <code>rzl-utils-js</code> 🚀</strong></h1>
+  <h1><strong>⚡️ <code>rzl-utils-js</code> 🚀</strong></h1>
 </div>
 
 <p align="center">
@@ -30,17 +30,6 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 - ✨ [Features](#features)
 - 🧬 [NextJS Support](#nextjs-support)
 - 💎 [Detailed Features](#detailed-features)
-  - [Assertions](#detailed-features--assertions)
-  - [Checkers](#detailed-features--checkers)
-  - [Conversions](#detailed-features--conversions)
-    - [Array](/docs/detailed-features/conversions/array.md#docs-sub-main--title)
-    - [Currency](/docs/detailed-features/conversions/currency.md#docs-sub-main--title)
-    - [Json](/docs/detailed-features/conversions/json.md#docs-sub-main--title)
-    - [Number](/docs/detailed-features/conversions/number.md#docs-sub-main--title)
-    - [Object](/docs/detailed-features/conversions/object.md#docs-sub-main--title)
-    - [Stringify](/docs/detailed-features/conversions/stringify.md#docs-sub-main--title)
-    - [Strings](/docs/detailed-features/conversions/strings.md#docs-sub-main--title)
-    - [Boolean](/docs/detailed-features/conversions/boolean.md#docs-sub-main--title)
 - 🔥 [Usage](#usage)
 - ❤️ [Sponsor](#sponsor-this-package)
 - 📜 [Changelog](#changelog)
@@ -53,7 +42,7 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 
 <h2 id="requirements">💻 Requirements</h2>
 
-- **Node.js >= 16.0.0 || 18.17.0**  
+- **Node.js >= 16.0.0 or >=18.17.0**  
   This package leverages modern JavaScript & TypeScript features that require Node.js version 16.0.0 if not using nextjs and 18.17.0 or higher for nextjs.
 
 - Works with:
@@ -117,8 +106,21 @@ This package also provides utilities specially built for Next.js environments, n
 ---
 
 <h2 id="detailed-features">💎 Detailed Features</h2>
+  - Docs is coming soon.
 
-  - <h4 id="detailed-features--assertions">
+    - For the time being, you can use the feature manually: 
+
+        ```ts
+        import { | } from "rzl-utils-js";
+        import { | } from "rzl-utils-js\types";
+        import { | } from "rzl-utils-js\next";
+        import { | } from "rzl-utils-js\next\server";
+
+        // Just place your cursor right inside { } like the pipe ("|") above then ctrl + space, there are many functions and hover to each function is complete because I have added jsDoc.
+
+        ```
+
+  <!-- - <h4 id="detailed-features--assertions">
       Assertions - 
       <a href="/docs/detailed-features/assertions.md#docs-sub-main--title">
         Read More Docs.
@@ -138,7 +140,7 @@ This package also provides utilities specially built for Next.js environments, n
         Read More Docs.
       </a> 
     </h4>
-      
+       -->
 ---
 
 <h2 id="usage">🔥 Usage</h2>
