@@ -116,8 +116,8 @@ This package also provides utilities specially built for Next.js environments, n
   import { | } from "rzl-utils-js\next\server";
 
   // Just place your cursor right inside { } like the pipe ("|") above then
-  // ctrl + space, there are many functions and hover to each function is 
-  // complete because I have added jsDoc.
+  // ctrl + space, there are many functions or types and then hover to each
+  // function is complete with how to use it because I have added jsDoc.
   ```
 
   <!-- - <h4 id="detailed-features--assertions">
