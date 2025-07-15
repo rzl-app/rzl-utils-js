@@ -22,8 +22,6 @@
   "include": [
     "src",
     "tests",
-    "deprecated/types/utils",
-    "deprecated/types/index.ts"
   ],
   "exclude": [
     "node_modules",

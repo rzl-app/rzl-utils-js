@@ -2,29 +2,6 @@ import { isEqual } from "lodash";
 import { parseCurrencyString } from "@/conversions/currency/parsing";
 import { safeStableStringify } from "@/conversions/stringify";
 
-/** ---------------------------------
- * * ***Compares two objects for deep equality.***
- * ---------------------------------
- *  * This Function using `lodash` library.
- *
- * @template T1 The type of the first object.
- * @template T2 The type of the second object.
- * @param {T1} object1 - The first object to compare.
- * @param {T2} object2 - The second object to compare.
- * @returns {boolean} `true` if both objects are deeply equal, otherwise `false`.
- *
- * @example
- * areObjectsEqual({ a: 1, b: 2 }, { a: 1, b: 2 }); // Returns true
- * areObjectsEqual({ a: 1 }, { a: 1, b: undefined }); // Returns false
- * areObjectsEqual([1, 2, 3], [1, 2, 3]); // Returns true
- */
-export const areObjectsEqual = (
-  object1: unknown,
-  object2: unknown
-): boolean => {
-  return isEqual(object1, object2);
-};
-
 /** ----------------------------------------------------------
  * * ***Compares two arrays deeply to check if they are equal.***
  * ----------------------------------------------------------
@@ -128,6 +105,73 @@ export const areArraysEqual = (
   return normalizedArr1.every(
     (item, index) =>
       safeStableStringify(item) === safeStableStringify(normalizedArr2[index])
+  );
+};
+
+/** ---------------------------------
+ * * ***Compares two objects for deep equality.***
+ * ---------------------------------
+ *  * This Function using `lodash` library.
+ *
+ * @template T1 The type of the first object.
+ * @template T2 The type of the second object.
+ * @param {T1} object1 - The first object to compare.
+ * @param {T2} object2 - The second object to compare.
+ * @returns {boolean} `true` if both objects are deeply equal, otherwise `false`.
+ *
+ * @example
+ * areObjectsEqual({ a: 1, b: 2 }, { a: 1, b: 2 }); // Returns true
+ * areObjectsEqual({ a: 1 }, { a: 1, b: undefined }); // Returns false
+ * areObjectsEqual([1, 2, 3], [1, 2, 3]); // Returns true
+ */
+export const areObjectsEqual = (
+  object1: unknown,
+  object2: unknown
+): boolean => {
+  return isEqual(object1, object2);
+};
+
+/** ---------------------------------
+ * * ***Checks if two URLs are the same, ignoring query parameters.***
+ * ---------------------------------
+ *
+ * This function compares only the protocol, host, and pathname.
+ *
+ * @param {URL} urlA - The first URL to compare.
+ * @param {URL} urlB - The second URL to compare.
+ * @returns {boolean} Returns `true` if both URLs are the same (ignoring search parameters), otherwise `false`.
+ */
+export const areURLsEqualIgnoringQuery = (urlA: URL, urlB: URL): boolean => {
+  if (!(urlA instanceof URL) || !(urlB instanceof URL)) {
+    throw new TypeError(
+      "Both arguments to 'areURLsEqualIgnoringQuery' must be instances of URL."
+    );
+  }
+
+  return (
+    urlA.protocol + "//" + urlA.host + urlA.pathname ===
+    urlB.protocol + "//" + urlB.host + urlB.pathname
+  );
+};
+
+/** ---------------------------------
+ * * ***Checks if two URLs are exactly the same, including protocol, host, pathname, and query parameters.***
+ * ---------------------------------
+ *
+ * @param {URL} urlA - The first URL to compare.
+ * @param {URL} urlB - The second URL to compare.
+ * @returns {boolean} Returns `true` if both URLs are identical, otherwise `false`.
+ */
+export const areURLsIdentical = (urlA: URL, urlB: URL): boolean => {
+  if (!(urlA instanceof URL) || !(urlB instanceof URL)) {
+    throw new TypeError(
+      "Both arguments to 'areURLsIdentical' must be instances of URL."
+    );
+  }
+
+  return (
+    urlA.protocol + "//" + urlA.host + urlA.pathname + urlA.search ===
+    urlB.protocol + "//" + urlB.host + urlB.pathname + urlB.search
   );
 };
 
@@ -264,6 +308,90 @@ export const doesKeyExist = <T>(
   );
 };
 
+/** ---------------------------------
+ * * ***Extracts all valid URLs from a given string.***
+ * ---------------------------------
+ *
+ * This function scans the input url and returns an array of URLs
+ * that match a valid `http` or `https` format.
+ *
+ * Supports:
+ * - Internationalized domain names (IDN), e.g. `https://münich.de`
+ * - Unicode & emoji paths, e.g. `https://example.com/🎉/page`
+ * - Long URLs with multiple queries & fragments, e.g. `https://example.com/path?foo=1#hash`
+ *
+ * Ignores:
+ * - Non-string inputs
+ * - Empty or whitespace-only strings
+ * - Non-HTTP(S) protocols (ftp, mailto, etc)
+ *
+ * @example
+ * extractURLs("Visit https://example.com and https://例子.公司");
+ * // => ["https://example.com", "https://例子.公司"]
+ *
+ * @example
+ * extractURLs("Here: https://example.com/🎉/page");
+ * // => ["https://example.com/🎉/page"]
+ *
+ * @example
+ * extractURLs("ftp://example.com http://example.com");
+ * // => ["http://example.com"]
+ *
+ *
+ * @param {string} [url] - The input string containing potential URLs.
+ * @returns {string[] | null} An array of extracted URLs or `null` if no URLs are found.
+ */
+export const extractURLs = (url: string): string[] | null => {
+  if (typeof url !== "string" || !url.trim()) return null;
+
+  let decoded;
+  try {
+    decoded = decodeURIComponent(url);
+  } catch {
+    return null;
+  }
+
+  // Core regex dengan lookahead
+  const urlPattern = /https?:\/\/.*?(?=https?:\/\/|\s|$)/g;
+  const matches = decoded.match(urlPattern);
+  if (!matches) return null;
+
+  // Cleanup trailing punctuation dan validasi protokol
+  const cleaned = matches
+    .map((url) => url.replace(/[.,;:!?)]*$/, ""))
+    .filter((url) => {
+      try {
+        const u = new URL(url);
+        return u.protocol === "http:" || u.protocol === "https:";
+      } catch {
+        return false;
+      }
+    });
+
+  return cleaned.length ? cleaned : null;
+
+  // if (typeof url !== "string" || !isValidURL(url)) {
+  //   return null;
+  // }
+
+  // const urlPattern =
+  //   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)/g;
+
+  // // Attempt to decode the entire URL, including domain and query parameters
+  // let decodedUrl: string;
+
+  // try {
+  //   // Decode the URL (to handle cases like https%3A%2F%2F becoming https://)
+  //   decodedUrl = decodeURIComponent(url);
+  // } catch {
+  //   // If decoding fails, return false as it indicates an invalid encoded URL
+  //   return null;
+  // }
+
+  // const matches = decodedUrl.match(urlPattern);
+  // return matches && matches.length > 0 ? matches : null;
+};
+
 /** ----------------------------------------------------------
  * * ***Type guard: Checks if a value is an array.***
  * ----------------------------------------------------------
@@ -359,40 +487,95 @@ export const isCurrencyLike = (input: string | number): boolean => {
 };
 
 /** ----------------------------------------------------------
- * * ***Determines if a value is an empty object (`{}`), empty array (`[]`), or generally falsy.***
+ * * ***Performs a deep equality check between two values.***
  * ----------------------------------------------------------
  *
- * - Returns `true` for `{}`, `[]`, `null`, `undefined`, `""`, `false`, and `NaN`.
- * - Returns `false` for objects with properties, non-empty arrays, numbers, functions, and other non-empty values.
- * - Safely handles `null`, `undefined`, and non-object types without throwing.
+ * - Compares nested arrays, objects, Dates, RegExp, NaN, and primitive values.
+ * - Handles special cases:
+ *   - `NaN` is considered equal to `NaN`.
+ *   - `Date` objects are equal if their `.getTime()` is equal.
+ *   - `RegExp` objects are equal if their `.toString()` is equal.
+ *   - `Symbol("x")` and `Symbol("x")` are treated equal if their `.toString()` matches,
+ *     even though by JavaScript identity they are different.
+ * - Does not detect circular references.
  *
- * @param {unknown} value - The value to evaluate.
- * @returns {boolean} `true` if the value is considered empty, otherwise `false`.
+ * @param {unknown} a - The first value to compare.
+ * @param {unknown} b - The second value to compare.
+ * @returns {boolean} `true` if both values are deeply equal, otherwise `false`.
  *
  * @example
- * isEmptyValue({}); // true
- * isEmptyValue([]); // true
- * isEmptyValue({ key: "value" }); // false
- * isEmptyValue([1, 2, 3]); // false
- * isEmptyValue(null); // true
- * isEmptyValue(undefined); // true
- * isEmptyValue(""); // true
- * isEmptyValue("   "); // true
- * isEmptyValue(0); // false
- * isEmptyValue(-1); // false
- * isEmptyValue(2); // false
- * isEmptyValue(() => {}); // false
+ * deepEqual(1, 1);
+ * // => true
+ *
+ * @example
+ * deepEqual({ a: [1, 2, 3] }, { a: [1, 2, 3] });
+ * // => true
+ *
+ * @example
+ * deepEqual(new Date("2025-01-01"), new Date("2025-01-01"));
+ * // => true
+ *
+ * @example
+ * deepEqual(/abc/, /abc/);
+ * // => true
+ *
+ * @example
+ * deepEqual(NaN, NaN);
+ * // => true
+ *
+ * @example
+ * deepEqual(Symbol("x"), Symbol("x"));
+ * // => true
+ *
+ * @example
+ * deepEqual({ a: 1 }, { a: 2 });
+ * // => false
+ *
+ * @example
+ * deepEqual([1, 2], [1, 2, 3]);
+ * // => false
  */
-export const isEmptyValue = (value: unknown): boolean => {
-  if (value === null || value === undefined || value === false) return true;
-  if (typeof value === "number" && Number.isNaN(value)) return true;
-  if (isString(value)) return value.trim() === "";
-  if (isArray(value)) return value.length === 0;
+export const isDeepEqual = (a: unknown, b: unknown): boolean => {
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+  if (a instanceof RegExp && b instanceof RegExp) {
+    return a.toString() === b.toString();
+  }
 
-  if (typeof value === "object") {
-    return (
-      Object.keys(value).length === 0 &&
-      Object.getOwnPropertySymbols(value).length === 0
+  if (
+    typeof a === "number" &&
+    typeof b === "number" &&
+    Number.isNaN(a) &&
+    Number.isNaN(b)
+  ) {
+    return true;
+  }
+
+  if (typeof a === "symbol" && typeof b === "symbol") {
+    return a.toString() === b.toString();
+  }
+
+  if (a === b) return true;
+  if (typeof a !== typeof b) return false;
+
+  if (isArray(a) && isArray(b)) {
+    if (a.length !== b.length) return false;
+    return a.every((v, i) => isDeepEqual(v, b[i]));
+  }
+
+  if (typeof a === "object" && typeof b === "object" && a && b) {
+    if (isArray(a) !== isArray(b)) {
+      return false;
+    }
+    const aKeys = Object.keys(a as object);
+    const bKeys = Object.keys(b as object);
+    if (aKeys.length !== bKeys.length) return false;
+    return aKeys.every((key) =>
+      isDeepEqual(
+        (a as Record<string, unknown>)[key],
+        (b as Record<string, unknown>)[key]
+      )
     );
   }
 
@@ -445,6 +628,47 @@ export const isEmptyDeep = (value: unknown): boolean => {
       [...keys, ...symbols].length === 0 ||
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [...keys, ...symbols].every((key) => isEmptyDeep((value as any)[key]))
+    );
+  }
+
+  return false;
+};
+
+/** ----------------------------------------------------------
+ * * ***Determines if a value is an empty object (`{}`), empty array (`[]`), or generally falsy.***
+ * ----------------------------------------------------------
+ *
+ * - Returns `true` for `{}`, `[]`, `null`, `undefined`, `""`, `false`, and `NaN`.
+ * - Returns `false` for objects with properties, non-empty arrays, numbers, functions, and other non-empty values.
+ * - Safely handles `null`, `undefined`, and non-object types without throwing.
+ *
+ * @param {unknown} value - The value to evaluate.
+ * @returns {boolean} `true` if the value is considered empty, otherwise `false`.
+ *
+ * @example
+ * isEmptyValue({}); // true
+ * isEmptyValue([]); // true
+ * isEmptyValue({ key: "value" }); // false
+ * isEmptyValue([1, 2, 3]); // false
+ * isEmptyValue(null); // true
+ * isEmptyValue(undefined); // true
+ * isEmptyValue(""); // true
+ * isEmptyValue("   "); // true
+ * isEmptyValue(0); // false
+ * isEmptyValue(-1); // false
+ * isEmptyValue(2); // false
+ * isEmptyValue(() => {}); // false
+ */
+export const isEmptyValue = (value: unknown): boolean => {
+  if (value === null || value === undefined || value === false) return true;
+  if (typeof value === "number" && Number.isNaN(value)) return true;
+  if (isString(value)) return value.trim() === "";
+  if (isArray(value)) return value.length === 0;
+
+  if (typeof value === "object") {
+    return (
+      Object.keys(value).length === 0 &&
+      Object.getOwnPropertySymbols(value).length === 0
     );
   }
 
@@ -558,6 +782,53 @@ export const isString = (val: unknown): val is string => {
  */
 export const isUndefined = (val: unknown): val is undefined => {
   return typeof val === "undefined";
+};
+
+/** ---------------------------------
+ * * ***Validates whether a given string is a properly formatted URL.***
+ * ---------------------------------
+ *
+ * This function checks if the input string follows a valid URL format,
+ * including `http` or `https` protocols.
+ *
+ * @param {string} [url] - The URL string to validate.
+ * @returns {boolean} `true` if the URL is valid, otherwise `false`.
+ */
+export const isValidURL = (url?: string | null): boolean => {
+  if (typeof url !== "string" || !url.trim().length) return false;
+
+  // Regular expression to validate the structure of the URL (after decoding),
+  // and it now supports subdomains as well.
+  // const urlPattern = new RegExp(
+  //   /^(https?:\/\/(?:[a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.[a-zA-Z0-9]{2,6})(?:\/[^\s]*)?(?:\?[^\s]*)?(?:#[^\s]*)?$/i
+  // );
+
+  // Attempt to decode the entire URL, including domain and query parameters
+  let decodedUrl: string;
+
+  try {
+    // Decode the URL (to handle cases like https%3A%2F%2F becoming https://)
+    decodedUrl = decodeURIComponent(url);
+  } catch {
+    // If decoding fails, return false as it indicates an invalid encoded URL
+    return false;
+  }
+
+  // Check if the decoded URL starts with http:// or https://
+  if (!decodedUrl.startsWith("http://") && !decodedUrl.startsWith("https://")) {
+    return false;
+  }
+
+  // the original more extra
+  const urlPattern = new RegExp(
+    // /^https?:\/\/(?:localhost(?::\d+)?(?:[/?#][^\s]*)?|(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6})(?:[/?#][^\s]*)?$/
+    // eslint-disable-next-line no-useless-escape
+    /^https?:\/\/(?:localhost(?::\d+)?(?:[\/?#][^\s]*)?|(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}(?::\d+)?(?:[\/?#][^\s]*)?)$/
+    // /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/
+  );
+
+  // Test the decoded URL against the regex pattern
+  return urlPattern.test(decodedUrl);
 };
 
 /** ----------------------------------------------------------
@@ -700,100 +971,4 @@ export const textMatchesAnyPatterns = <T extends string>(
   return new RegExp(pattern, flags.includes("u") ? flags : flags + "u").test(
     text
   );
-};
-
-/** ----------------------------------------------------------
- * * ***Performs a deep equality check between two values.***
- * ----------------------------------------------------------
- *
- * - Compares nested arrays, objects, Dates, RegExp, NaN, and primitive values.
- * - Handles special cases:
- *   - `NaN` is considered equal to `NaN`.
- *   - `Date` objects are equal if their `.getTime()` is equal.
- *   - `RegExp` objects are equal if their `.toString()` is equal.
- *   - `Symbol("x")` and `Symbol("x")` are treated equal if their `.toString()` matches,
- *     even though by JavaScript identity they are different.
- * - Does not detect circular references.
- *
- * @param {unknown} a - The first value to compare.
- * @param {unknown} b - The second value to compare.
- * @returns {boolean} `true` if both values are deeply equal, otherwise `false`.
- *
- * @example
- * deepEqual(1, 1);
- * // => true
- *
- * @example
- * deepEqual({ a: [1, 2, 3] }, { a: [1, 2, 3] });
- * // => true
- *
- * @example
- * deepEqual(new Date("2025-01-01"), new Date("2025-01-01"));
- * // => true
- *
- * @example
- * deepEqual(/abc/, /abc/);
- * // => true
- *
- * @example
- * deepEqual(NaN, NaN);
- * // => true
- *
- * @example
- * deepEqual(Symbol("x"), Symbol("x"));
- * // => true
- *
- * @example
- * deepEqual({ a: 1 }, { a: 2 });
- * // => false
- *
- * @example
- * deepEqual([1, 2], [1, 2, 3]);
- * // => false
- */
-export const isDeepEqual = (a: unknown, b: unknown): boolean => {
-  if (a instanceof Date && b instanceof Date) {
-    return a.getTime() === b.getTime();
-  }
-  if (a instanceof RegExp && b instanceof RegExp) {
-    return a.toString() === b.toString();
-  }
-
-  if (
-    typeof a === "number" &&
-    typeof b === "number" &&
-    Number.isNaN(a) &&
-    Number.isNaN(b)
-  ) {
-    return true;
-  }
-
-  if (typeof a === "symbol" && typeof b === "symbol") {
-    return a.toString() === b.toString();
-  }
-
-  if (a === b) return true;
-  if (typeof a !== typeof b) return false;
-
-  if (isArray(a) && isArray(b)) {
-    if (a.length !== b.length) return false;
-    return a.every((v, i) => isDeepEqual(v, b[i]));
-  }
-
-  if (typeof a === "object" && typeof b === "object" && a && b) {
-    if (isArray(a) !== isArray(b)) {
-      return false;
-    }
-    const aKeys = Object.keys(a as object);
-    const bKeys = Object.keys(b as object);
-    if (aKeys.length !== bKeys.length) return false;
-    return aKeys.every((key) =>
-      isDeepEqual(
-        (a as Record<string, unknown>)[key],
-        (b as Record<string, unknown>)[key]
-      )
-    );
-  }
-
-  return false;
 };

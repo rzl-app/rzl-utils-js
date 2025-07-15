@@ -38,7 +38,6 @@ export * from "src/strings/sanitize";
 export * from "src/strings/utils";
 export * from "src/stylings/tw-macro/index";
 export * from "@/urls/build-url";
-export * from "@/urls/checkers";
 export * from "@/urls/pathname";
 export * from "@/urls/utils";
 export * from "@/urls/exceptions/index";

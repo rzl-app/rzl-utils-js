@@ -30,6 +30,7 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 - ✨ [Features](#features)
 - 🧬 [NextJS Support](#nextjs-support)
 - 💎 [Detailed Features](#detailed-features)
+  - [Assertions](#detailed-features--assertions)
   - [Checkers](#detailed-features--checkers)
   - [Conversions](#detailed-features--conversions)
     - [Array](/docs/detailed-features/conversions/array.md#docs-sub-main--title)
@@ -52,11 +53,12 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 
 <h2 id="requirements">💻 Requirements</h2>
 
-- **Node.js >=18.17.0**  
-  This package leverages modern JavaScript & TypeScript features that require Node.js version 18.17.0 or higher.
+- **Node.js >= 16.0.0 || 18.17.0**  
+  This package leverages modern JavaScript & TypeScript features that require Node.js version 16.0.0 if not using nextjs and 18.17.0 or higher for nextjs.
 
 - Works with:
-  - ✅ Node.js (18.17.0+)
+  - ✅ Node.js (16.0.0+) - Without NextJS
+  - ✅ Node.js (18.17.0+) - With NextJS
   - ✅ Modern browsers (via bundlers like Webpack / Vite)
 
 ---
@@ -116,6 +118,13 @@ This package also provides utilities specially built for Next.js environments, n
 
 <h2 id="detailed-features">💎 Detailed Features</h2>
 
+  - <h4 id="detailed-features--assertions">
+      Assertions - 
+      <a href="/docs/detailed-features/assertions.md#docs-sub-main--title">
+        Read More Docs.
+      </a> 
+    </h4> 
+  
   - <h4 id="detailed-features--checkers">
       Checkers - 
       <a href="/docs/detailed-features/checkers.md#docs-sub-main--title">

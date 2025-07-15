@@ -60,7 +60,7 @@ export const getClientIpOrUrl = (
     throw new TypeError("Expected `includeFullUrl` to be a boolean.");
   }
 
-  let forwardedIps = (request.headers.get("x-forwarded-for") ?? "127.0.0.1")
+  const forwardedIps = (request.headers.get("x-forwarded-for") ?? "127.0.0.1")
     .trim()
     .split(",");
 
