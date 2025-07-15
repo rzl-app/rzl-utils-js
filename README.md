@@ -106,18 +106,17 @@ This package also provides utilities specially built for Next.js environments, n
 ---
 
 <h2 id="detailed-features">💎 Detailed Features</h2>
-  - Docs is coming soon.
 
-    - For the time being, you can use the feature manually: 
+  ### Docs is coming soon.
+  #### For the time being, you can use the feature manually: 
+  ```ts
+  import { | } from "rzl-utils-js";
+  import { | } from "rzl-utils-js\types";
+  import { | } from "rzl-utils-js\next";
+  import { | } from "rzl-utils-js\next\server";
 
-    ```ts
-    import { | } from "rzl-utils-js";
-    import { | } from "rzl-utils-js\types";
-    import { | } from "rzl-utils-js\next";
-    import { | } from "rzl-utils-js\next\server";
-
-    // Just place your cursor right inside { } like the pipe ("|") above then ctrl + space, there are many functions and hover to each function is complete because I have added jsDoc.
-    ```
+  // Just place your cursor right inside { } like the pipe ("|") above then ctrl + space, there are many functions and hover to each function is complete because I have added jsDoc.
+  ```
 
   <!-- - <h4 id="detailed-features--assertions">
       Assertions - 
