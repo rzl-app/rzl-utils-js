@@ -1,6 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // rollup.config.js
 import dts from "rollup-plugin-dts";
 import tsconfigPaths from "rollup-plugin-tsconfig-paths";
+
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
+import typescript from "rollup-plugin-typescript2";
 
 /**
  * @type {import('rollup').RollupOptions[]}
@@ -13,9 +18,31 @@ const config = [
       file: "./dist/index.d.ts",
       format: "es",
     },
-    external: ["date-fns/locale", "date-fns"],
+    // external: ["date-fns/locale", "date-fns"],
     plugins: [tsconfigPaths(), dts()],
   },
+
+  //todo: bundle roll-up umd (disable)
+  // {
+  //   input: "./src/index.ts",
+  //   output: {
+  //     // sourcemap: true,
+  //     file: "./dist/rzl-utils.umd.js",
+  //     format: "umd",
+  //     name: "RzlUtilsJs",
+  //   },
+  //   // external: ["date-fns/locale", "date-fns"],
+  //   plugins: [
+  //     resolve(),
+  //     commonjs(),
+  //     tsconfigPaths(),
+  //     typescript({
+  //       tsconfig: "./tsconfig.json",
+  //       useTsconfigDeclarationDir: true,
+  //       clean: true,
+  //     }),
+  //   ],
+  // },
 
   //todo: re-bundle roll-up nextjs-client
   {

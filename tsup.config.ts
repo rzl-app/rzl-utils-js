@@ -16,6 +16,24 @@ export default defineConfig([
       options.legalComments = "none";
     },
   },
+  //todo: bundle umd/global for browser
+  {
+    entry: { "rzl-utils": "src/index.ts" },
+    format: ["iife"],
+    globalName: "RzlUtilsJs",
+    minify: true,
+    clean: false,
+    bundle: true,
+    // outExtension({ format }) {
+    //   return {
+    //     js: format === "iife" ? ".js" : `.${format}.js`,
+    //   };
+    // },
+    esbuildOptions(options) {
+      options.legalComments = "none";
+    },
+  },
+
   //todo: bundle nextjs-client
   {
     entry: ["src/next/index.ts"],

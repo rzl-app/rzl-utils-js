@@ -31,6 +31,7 @@ module.exports = {
         exportReferencedTypes: false,
       },
       libraries: {
+        // inlinedLibraries: ["type-samurai", "date-fns/locale", "date-fns"],
         inlinedLibraries: ["type-samurai"],
         importedLibraries: ["date-fns/locale", "date-fns"],
       },
