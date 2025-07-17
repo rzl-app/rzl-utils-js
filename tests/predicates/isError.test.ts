@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isError } from "@/predicates";
+import { isError } from "@/index";
 
 describe("isError", () => {
   it("should return true for Error instance", () => {

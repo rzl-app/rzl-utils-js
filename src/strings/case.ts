@@ -1,3 +1,5 @@
+import { isNonEmptyString, isObject } from "@/predicates";
+
 /** ----------------------------------------------------------
  * * Capitalizes the first letter of a string.
  * * Optionally lowercases the rest and trims whitespace.
@@ -10,12 +12,12 @@
  * @returns The processed string. Returns "" if input is null, undefined, or not a valid string.
  *
  * @example
- * capitalizeFirstLetter(" hello WORLD ") // " Hello world"
- * capitalizeFirstLetter(" hello WORLD ", { trim: true }) // "Hello world"
- * capitalizeFirstLetter("FOO", { lowerCaseNextRest: false }) // "FOO"
- * capitalizeFirstLetter("   foo BAR   ", { trim: true, lowerCaseNextRest: false }) // "Foo BAR"
+ * capitalizeFirst(" hello WORLD ") // " Hello world"
+ * capitalizeFirst(" hello WORLD ", { trim: true }) // "Hello world"
+ * capitalizeFirst("FOO", { lowerCaseNextRest: false }) // "FOO"
+ * capitalizeFirst("   foo BAR   ", { trim: true, lowerCaseNextRest: false }) // "Foo BAR"
  */
-export const capitalizeFirstLetter = (
+export const capitalizeFirst = (
   string?: string | null,
   options: {
     /**
@@ -33,11 +35,9 @@ export const capitalizeFirstLetter = (
     trim: false,
   }
 ) => {
-  if (typeof string !== "string" || string.trim().length === 0) {
-    return "";
-  }
+  if (!isNonEmptyString(string)) return "";
 
-  if (typeof options !== "object" || options === null) {
+  if (!isObject(options)) {
     options = {};
   }
 
@@ -57,30 +57,30 @@ export const capitalizeFirstLetter = (
  * while converting the rest to lowercase.***
  * ----------------------------------------------------------
  *
- * @param str - The input string to be processed. If `null` or `undefined`, returns an empty string.
+ * @param value - The input string to be processed. If `null` or `undefined`, returns an empty string.
  * @param options - Optional settings to control the output:
  *   - `trim`: If `true`, removes leading and trailing spaces.
  *   - `collapseSpaces`: If `true`, collapses multiple spaces **between words** into a single space (while preserving leading/trailing spaces).
  *
  * @returns A new string where each word starts with an uppercase letter
- * and the remaining letters are lowercase. If `str` is empty, `null`, or `undefined`,
+ * and the remaining letters are lowercase. If `value` is empty, `null`, or `undefined`,
  * returns an empty string.
  *
  * @example
- * capitalizeString("  hello   world  ");
+ * capitalizeWords("  hello   world  ");
  * // => "  Hello   World  "
  *
- * capitalizeString("  hello   world  ", { trim: true });
+ * capitalizeWords("  hello   world  ", { trim: true });
  * // => "Hello   World"
  *
- * capitalizeString("  hello   world  ", { collapseSpaces: true });
+ * capitalizeWords("  hello   world  ", { collapseSpaces: true });
  * // => "  Hello World  "
  *
- * capitalizeString("  hello   world  ", { trim: true, collapseSpaces: true });
+ * capitalizeWords("  hello   world  ", { trim: true, collapseSpaces: true });
  * // => "Hello World"
  */
-export const capitalizeString = (
-  str?: string | null,
+export const capitalizeWords = (
+  value?: string | null,
   options: {
     /** If `true`, removes leading and trailing spaces, default `false`. */
     trim?: boolean;
@@ -91,11 +91,11 @@ export const capitalizeString = (
     trim: false,
   }
 ): string => {
-  if (!str || typeof str !== "string" || !str.trim().length) return "";
+  if (!isNonEmptyString(value)) return "";
 
-  let result = str;
+  let result = value;
 
-  if (typeof options !== "object" || options === null) {
+  if (!isObject(options)) {
     options = {};
   }
 
@@ -133,7 +133,7 @@ export const capitalizeString = (
  * - If input is `null` or `undefined`, returns an empty string.
  * - Ignores empty segments (multiple delimiters are collapsed).
  *
- * @param {string | null | undefined} str - The input string to convert.
+ * @param {string | null | undefined} value - The input string to be convert. If `null` or `undefined`, returns an empty string.
  * @returns {string} The camelCase formatted string.
  *
  * @example
@@ -143,9 +143,9 @@ export const capitalizeString = (
  * toCamelCase("🔥fire_and-ice❄️");             // "fireAndIce"
  * toCamelCase(null);                           // ""
  */
-export const toCamelCase = (str?: string | null): string => {
-  return str && typeof str === "string"
-    ? str
+export const toCamelCase = (value?: string | null): string => {
+  return isNonEmptyString(value)
+    ? value
         .split(/[^a-zA-Z0-9]+/)
         .filter(Boolean)
         .map((word, index) =>
@@ -169,7 +169,7 @@ export const toCamelCase = (str?: string | null): string => {
  * - If input is `null` or `undefined`, returns an empty string.
  * - Ignores empty segments (multiple delimiters are collapsed).
  *
- * @param {string | null | undefined} str - The input string to convert.
+ * @param {string | null | undefined} value - The input string to be convert. If `null` or `undefined`, returns an empty string.
  * @returns {string} The PascalCase formatted string.
  *
  * @example
@@ -179,9 +179,9 @@ export const toCamelCase = (str?: string | null): string => {
  * toPascalCase("🔥fire_and-ice❄️");             // "FireAndIce"
  * toPascalCase(null);                           // ""
  */
-export const toPascalCase = (str?: string | null): string => {
-  return str && typeof str === "string"
-    ? str
+export const toPascalCase = (value?: string | null): string => {
+  return isNonEmptyString(value)
+    ? value
         .split(/[^a-zA-Z0-9]+/)
         .filter(Boolean)
         .map(
@@ -203,7 +203,7 @@ export const toPascalCase = (str?: string | null): string => {
  * - If input is `null` or `undefined`, returns an empty string.
  * - Ignores empty segments (multiple delimiters are collapsed).
  *
- * @param {string | null | undefined} str - The input string to convert.
+ * @param {string | null | undefined} value - The input string to be convert. If `null` or `undefined`, returns an empty string.
  * @returns {string} The kebab-case formatted string.
  *
  * @example
@@ -212,9 +212,9 @@ export const toPascalCase = (str?: string | null): string => {
  * toKebabCase("🔥fire___and--ice❄️");         // "fire-and-ice"
  * toKebabCase(null);                          // ""
  */
-export const toKebabCase = (str?: string | null): string => {
-  return str && typeof str === "string"
-    ? str
+export const toKebabCase = (value?: string | null): string => {
+  return isNonEmptyString(value)
+    ? value
         .split(/[^a-zA-Z0-9]+/)
         .filter(Boolean)
         .map((word) => word.toLowerCase())
@@ -232,16 +232,16 @@ export const toKebabCase = (str?: string | null): string => {
  * - Removes special characters, treating them as word separators.
  * - If input is `null` or `undefined`, returns "".
  *
- * @param {string | null | undefined} str
+ * @param {string | null | undefined} value - The input string to be convert. If `null` or `undefined`, returns an empty string.
  * @returns {string} snake_case string
  *
  * @example
  * toSnakeCase("Hello World") => "hello_world"
  * toSnakeCase("convert-to_snake case") => "convert_to_snake_case"
  */
-export const toSnakeCase = (str?: string | null): string => {
-  return str && typeof str === "string"
-    ? str
+export const toSnakeCase = (value?: string | null): string => {
+  return isNonEmptyString(value)
+    ? value
         .split(/[^a-zA-Z0-9]+/)
         .filter(Boolean)
         .map((w) => w.toLowerCase())
@@ -259,16 +259,16 @@ export const toSnakeCase = (str?: string | null): string => {
  * - Removes special characters, treating them as word separators.
  * - If input is `null` or `undefined`, returns "".
  *
- * @param {string | null | undefined} str
+ * @param {string | null | undefined} value - The input string to be convert. If `null` or `undefined`, returns an empty string.
  * @returns {string} dot.case string
  *
  * @example
  * toDotCase("Hello World") => "hello.world"
  * toDotCase("convert-to_dot case") => "convert.to.dot.case"
  */
-export const toDotCase = (str?: string | null): string => {
-  return str && typeof str === "string"
-    ? str
+export const toDotCase = (value?: string | null): string => {
+  return isNonEmptyString(value)
+    ? value
         .split(/[^a-zA-Z0-9]+/)
         .filter(Boolean)
         .map((w) => w.toLowerCase())
@@ -286,16 +286,16 @@ export const toDotCase = (str?: string | null): string => {
  * - Removes special characters and trims leading/trailing dashes.
  * - If input is `null` or `undefined`, returns "".
  *
- * @param {string | null | undefined} str
+ * @param {string | null | undefined} value - The input string to be convert. If `null` or `undefined`, returns an empty string.
  * @returns {string} slug string
  *
  * @example
  * slugify("Hello World!") => "hello-world"
  * slugify(" --- Convert to Slug? --- ") => "convert-to-slug"
  */
-export const slugify = (str?: string | null): string => {
-  return str && typeof str === "string"
-    ? str
+export const slugify = (value?: string | null): string => {
+  return isNonEmptyString(value)
+    ? value
         .split(/[^a-zA-Z0-9]+/)
         .filter(Boolean)
         .map((w) => w.toLowerCase())

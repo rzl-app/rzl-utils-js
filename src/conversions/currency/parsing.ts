@@ -1,3 +1,5 @@
+import { isNonEmptyString } from "@/predicates";
+
 /** -------------------------------------------------------------
  * * Parses a human-friendly currency string into a JavaScript number.
  * -------------------------------------------------------------
@@ -83,8 +85,8 @@
  *     before storing into database or doing math.
  *   - Always pair this with your formatter for consistent output display.
  */
-export const parseCurrencyString = (input: string): number => {
-  if (!input || typeof input !== "string" || input.trim() === "") return 0;
+export const parseCurrencyString = (input?: string | null): number => {
+  if (!isNonEmptyString(input)) return 0;
 
   let trimmed = input
     .trim()
@@ -154,26 +156,6 @@ export const parseCurrencyString = (input: string): number => {
         } else if (lastDot !== -1) {
           cleanedNoSpace = cleanedNoSpace.replace(/\./g, "");
         }
-
-        //! deprecated:
-        // // only one present
-        // if (lastComma !== -1) {
-        //   const decimalCandidate = cleanedNoSpace.length - lastComma - 1;
-        //   if (decimalCandidate === 2) {
-        //     cleanedNoSpace = cleanedNoSpace
-        //       .replace(/\./g, "")
-        //       .replace(",", ".");
-        //   } else {
-        //     cleanedNoSpace = cleanedNoSpace.replace(/,/g, "");
-        //   }
-        // } else if (lastDot !== -1) {
-        //   const decimalCandidate = cleanedNoSpace.length - lastDot - 1;
-        //   if (decimalCandidate === 2) {
-        //     cleanedNoSpace = cleanedNoSpace.replace(/,/g, "").replace(".", ".");
-        //   } else {
-        //     cleanedNoSpace = cleanedNoSpace.replace(/\./g, "");
-        //   }
-        // }
       }
     }
   }

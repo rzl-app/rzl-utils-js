@@ -1,5 +1,12 @@
-import { isArray, isBoolean } from "@/predicates";
-import { filterNullArray } from "./transforms";
+import {
+  isArray,
+  isBoolean,
+  filterNullArray,
+  isObject,
+  isString,
+  isNumber,
+  isNull,
+} from "@/index";
 
 //  ** ---- array number to array string ----
 
@@ -78,7 +85,7 @@ export function toStringArrayUnRecursive<T extends string | number>(
     removeInvalidValue: true,
   }
 ): Array<string | null | undefined> | undefined {
-  if (!(typeof options === "object")) {
+  if (!isObject(options)) {
     throw new TypeError(`props 'options' must be \`object\` type!`);
   }
 
@@ -91,14 +98,14 @@ export function toStringArrayUnRecursive<T extends string | number>(
     throw new TypeError(`props 'removeInvalidValue' must be \`boolean\` type!`);
   }
 
-  if (array && isArray(array)) {
+  if (isArray(array)) {
     // Convert each item in the array to a string, or null/undefined if it's not a valid value.
     const result = Array.from(array, (x) => {
-      if (typeof x === "string" || typeof x === "number") {
+      if (isString(x) || isNumber(x)) {
         return String(x); // Convert number or string to string
       }
 
-      return x === null ? null : undefined; // Handle null or undefined values
+      return isNull(x) ? null : undefined; // Handle null or undefined values
     });
 
     // Remove invalid values (null, undefined) if specified in options
@@ -173,9 +180,10 @@ export function toNumberArrayUnRecursive<T>(
     removeInvalidValueNumber: true,
   }
 ) {
-  if (!(typeof options === "object")) {
+  if (!isObject(options)) {
     throw new TypeError(`props 'options' must be \`object\` type!`);
   }
+
   const riv =
     options && "removeInvalidValueNumber" in options
       ? options.removeInvalidValueNumber
@@ -187,7 +195,7 @@ export function toNumberArrayUnRecursive<T>(
     );
   }
 
-  if (array && isArray(array)) {
+  if (isArray(array)) {
     // Convert each item in the array to a number, or undefined if it's not a valid number
     // const result = Array.from(array, (x) => {
     //   const numberValue = parseInt(String(x)); // Try converting value to a number

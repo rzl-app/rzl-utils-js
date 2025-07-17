@@ -1,4 +1,4 @@
-import { findDuplicates, isArray } from "@/index";
+import { findDuplicates, isArray, isNonEmptyArray } from "@/index";
 
 /** --------------------------------
  * * Removes Property from PROPS Collection
@@ -22,7 +22,7 @@ export const omitProps = <
   }
 
   const duplicates = findDuplicates(arrayExcept);
-  if (duplicates.length > 0) {
+  if (isNonEmptyArray(duplicates)) {
     throw new Error(
       `Function omitProps Error, cause Duplicate of arrayExcept: ${String(
         duplicates

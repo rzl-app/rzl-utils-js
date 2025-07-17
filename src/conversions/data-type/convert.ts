@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { isString } from "@/predicates";
+
 /** ----------------------------------------------------------
  * * ***Converts a value from a string to its natural JavaScript type.***
  * ----------------------------------------------------------
@@ -38,7 +40,7 @@ export const convertType = (value: any): any => {
     no: false,
   };
 
-  if (typeof value === "string") {
+  if (isString(value)) {
     const normalized = value.trim().toLowerCase();
 
     if (Object.prototype.hasOwnProperty.call(predefinedValues, normalized)) {

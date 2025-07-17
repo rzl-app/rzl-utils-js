@@ -1,5 +1,7 @@
+import { isEmptyString } from "@/predicates";
+
 const KNOWN_EXTENSIONS = new Set([
-  // 📄 Text & Dokumen
+  // 📄 Text & Document
   "txt",
   "md",
   "rtf",
@@ -28,7 +30,7 @@ const KNOWN_EXTENSIONS = new Set([
   "tex",
   "log",
 
-  // 🖼️ Gambar
+  // 🖼️ Image
   "jpg",
   "jpeg",
   "png",
@@ -101,7 +103,7 @@ const KNOWN_EXTENSIONS = new Set([
   "mod",
   "dav",
 
-  // 🗃️ Arsip & Kompresi
+  // 🗃️ Archive & Compression
   "zip",
   "rar",
   "7z",
@@ -163,7 +165,7 @@ const KNOWN_EXTENSIONS = new Set([
   "dbx",
   "sdf",
 
-  // 💻 Kode & Skrip
+  // 💻 Code & Script
   "js",
   "jsx",
   "ts",
@@ -199,7 +201,7 @@ const KNOWN_EXTENSIONS = new Set([
   "pri",
   "Makefile",
 
-  // 🌐 Web & Konfigurasi
+  // 🌐 Web & Config
   "html",
   "htm",
   "xhtml",
@@ -267,7 +269,7 @@ const KNOWN_EXTENSIONS = new Set([
   "fbx",
   "obj",
 
-  // 🔧 Sistem / Biner / Eksekusi
+  // 🔧 System / Binary / Execution
   "exe",
   "msi",
   "bin",
@@ -284,7 +286,7 @@ const KNOWN_EXTENSIONS = new Set([
   "dylib",
   "sys",
 
-  // 🔐 Sertifikat / Kripto
+  // 🔐 Certificates / Crypto
   "pem",
   "crt",
   "cer",
@@ -295,7 +297,7 @@ const KNOWN_EXTENSIONS = new Set([
   "pfx",
   "jks",
 
-  // 🎮 Game & Proyek
+  // 🎮 Games & Projects
   "iso",
   "cue",
   "bin",
@@ -310,7 +312,7 @@ const KNOWN_EXTENSIONS = new Set([
   "vpk",
   "bik",
 
-  // 📚 E‑book & Komik
+  // 📚 E-books and Comics
   "epub",
   "mobi",
   "azw",
@@ -342,7 +344,7 @@ const KNOWN_EXTENSIONS = new Set([
   "gff",
   "bed",
 
-  // 📝 Lain‑lain
+  // 📝 Etc
   "log",
   "bak",
   "tmp",
@@ -364,7 +366,7 @@ const KNOWN_EXTENSIONS = new Set([
   "idx",
   "cue",
 
-  // 🧠 Lainnya luas (ekstensi teknis & ilmiah)
+  // 🧠 Other broad (technical & scientific extensions)
   "cdf",
   "hdf",
   "h5",
@@ -377,7 +379,7 @@ const KNOWN_EXTENSIONS = new Set([
   "xmind",
   "drawio",
 
-  // ⚙️ Paket & Plugin
+  // ⚙️ Packages & Plugins
   "jar",
   "war",
   "ear",
@@ -435,7 +437,7 @@ const DOUBLE_EXTENSIONS = new Set([
  * extractFileName("");                                 // undefined
  */
 export const extractFileName = (url: string): string | undefined => {
-  if (typeof url !== "string" || !url.trim()) return undefined; // Handle invalid inputs
+  if (isEmptyString(url)) return undefined; // Handle invalid inputs
 
   let fileName = url.split("/").pop();
   if (fileName === "") return "";
@@ -463,9 +465,4 @@ export const extractFileName = (url: string): string | undefined => {
   }
 
   return fileName;
-
-  // return fileName?.replace(/(\.[a-zA-Z0-9]+)+$/, "");
-  // const fileName = url.split("/").pop(); // Extract last part of path
-  // return fileName?.replace(/(\.[^.]+)+$/, "");
-  // return fileName?.replace(/\.[^.]+$/, ""); // Remove the last extension
 };

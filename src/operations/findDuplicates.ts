@@ -1,5 +1,6 @@
-import { isArray } from "@/predicates";
 import { isEqual } from "lodash";
+
+import { isArray } from "@/index";
 
 /** ----------------------------------------------------------------------
  * * ***Finds duplicate values in an array by deep equality comparison.***

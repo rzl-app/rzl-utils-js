@@ -1,6 +1,16 @@
-import { removeAllSpaceString } from "@/strings/sanitize";
-import { NormalizePathnameError } from "./exceptions";
-import { isObject } from "@/predicates";
+import {
+  isArray,
+  isBoolean,
+  isError,
+  isNonEmptyArray,
+  isNonEmptyString,
+  isNull,
+  isNumber,
+  isObject,
+  isString,
+  NormalizePathnameError,
+  removeSpaces,
+} from "@/index";
 
 /** --------------------------------------------------------
  * * ***Get Prefix from URL with Optional Base or Auto-detection (Supports String or Array of URLs).***
@@ -135,12 +145,12 @@ export const getPrefixPathname = (
 ): string | string[] | null => {
   const errors: string[] = [];
 
-  if (typeof url !== "string" && !Array.isArray(url)) {
+  if (!isString(url) && !isArray(url)) {
     errors.push(
       `'url' must be a string or an array of strings. Received: ${typeof url}`
     );
   }
-  if (typeof base !== "string" && !Array.isArray(base) && base !== null) {
+  if (!isString(base) && !isArray(base) && !isNull(base)) {
     errors.push(
       `'base' must be a string, array of strings, or null. Received: ${typeof base}`
     );
@@ -151,15 +161,15 @@ export const getPrefixPathname = (
 
   const { levels = 1, removeDuplicates = true } = options;
 
-  if (typeof levels !== "number") {
+  if (!isNumber(levels)) {
     errors.push(`'levels' must be a number. Received: ${typeof levels}`);
   }
-  if (typeof removeDuplicates !== "boolean") {
+  if (!isBoolean(removeDuplicates)) {
     errors.push(
       `'removeDuplicates' must be a boolean. Received: ${typeof removeDuplicates}`
     );
   }
-  if (errors.length > 0) {
+  if (isNonEmptyArray(errors)) {
     throw new TypeError(
       `Invalid parameter(s) in getPrefixPathname:\n- ${errors.join("\n- ")}`
     );
@@ -171,7 +181,7 @@ export const getPrefixPathname = (
     if (base) {
       singleUrl = normalizePathname(singleUrl);
 
-      if (Array.isArray(base)) {
+      if (isArray(base)) {
         // Check if the URL starts with any of the base values in the array
         for (const b of base) {
           if (singleUrl.startsWith(normalizePathname(b))) {
@@ -193,8 +203,8 @@ export const getPrefixPathname = (
   }
 
   // If url is an array, process each URL and return an array of results
-  if (Array.isArray(url)) {
-    const result = url.map(processUrl).filter((r): r is string => r !== null);
+  if (isArray(url)) {
+    const result = url.map(processUrl).filter((r): r is string => !isNull(r));
 
     // Remove duplicates if required
     const uniqueResult = removeDuplicates ? [...new Set(result)] : result;
@@ -314,17 +324,17 @@ export const getPrefixPathname = (
  *    If `result` is not a valid type, or `defaultValue` is not a non-empty string.
  */
 export const getFirstPrefixPathname = (
-  result: string | string[] | null,
+  result?: string | string[] | null,
   defaultValue: string = "/"
 ): string => {
-  if (typeof defaultValue !== "string" || !defaultValue.trim()) {
+  if (!isNonEmptyString(defaultValue)) {
     throw new TypeError(
-      `Invalid parameter: 'defaultValue' must be a non-empty string. Received: ${typeof defaultValue} (${defaultValue})`
+      `Invalid parameter: 'defaultValue' must be a string and string is non-empty string. Received: ${typeof defaultValue} (${defaultValue})`
     );
   }
 
-  if (Array.isArray(result)) {
-    if (!result.every((item) => typeof item === "string")) {
+  if (isArray(result)) {
+    if (!result.every((item) => isString(item))) {
       throw new TypeError(
         `Invalid parameter: 'result' array must only contain strings. Received: ${JSON.stringify(
           result
@@ -341,12 +351,12 @@ export const getFirstPrefixPathname = (
     return normalizePathname(defaultValue);
   }
 
-  if (typeof result === "string") {
+  if (isString(result)) {
     const normalized = normalizePathname(result);
     return normalized !== "/" ? normalized : normalizePathname(defaultValue);
   }
 
-  if (result !== null) {
+  if (!isNull(result)) {
     throw new TypeError(
       `Invalid parameter: 'result' must be a string, array of strings, or null. Received: ${JSON.stringify(
         result
@@ -403,20 +413,18 @@ export const normalizePathname = (
   defaultPath: string = "/"
 ): string => {
   // Validate defaultPath
-  if (typeof defaultPath !== "string" || !defaultPath.trim()) {
+  if (!isNonEmptyString(defaultPath)) {
     throw new TypeError(
-      `Invalid parameter: 'defaultPath' must be a non-empty string. Received: ${typeof defaultPath} (${defaultPath})`
+      `Invalid parameter: 'defaultPath' must be a string and string is non-empty string. Received: ${typeof defaultPath} (${defaultPath})`
     );
   }
 
   // If the pathname is invalid (null, undefined, or an empty string), return the default value
-  if (typeof pathname !== "string" || pathname.trim() === "") {
-    return defaultPath;
-  }
+  if (!isNonEmptyString(pathname)) return defaultPath;
 
   try {
     // Trim spaces from the string (only trim leading and trailing spaces)
-    pathname = removeAllSpaceString(pathname, { trimOnly: true });
+    pathname = removeSpaces(pathname, { trimOnly: true });
     pathname = pathname.replace(/\s+/g, ""); // remove all space
 
     // If the pathname is a full URL, extract the pathname, search parameters, and hash
@@ -429,10 +437,9 @@ export const normalizePathname = (
     return "/" + pathname.replace(/^\/+/, "").replace(/\/{2,}/g, "/");
   } catch (error) {
     // Handle any errors that occur during processing
-    const err =
-      error instanceof Error
-        ? error
-        : new Error("Unknown error from function `normalizePathname()`");
+    const err = isError(error)
+      ? error
+      : new Error("Unknown error from function `normalizePathname()`");
 
     throw new NormalizePathnameError(
       `Failed to normalize pathname in function \`normalizePathname()\`: ${err.message}`,

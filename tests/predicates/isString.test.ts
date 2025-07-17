@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isString } from "@/predicates";
+import { isString } from "@/index";
 
 describe("isString", () => {
   it("should return true for string literals", () => {

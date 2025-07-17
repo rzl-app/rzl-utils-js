@@ -1,4 +1,4 @@
-import { isValidURL } from "@/predicates";
+import { isValidURL } from "@/index";
 import { describe, it, expect } from "vitest";
 
 describe("isValidURL", () => {

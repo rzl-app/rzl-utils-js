@@ -1,6 +1,14 @@
-import { isEmptyValue } from "@/predicates";
-import { removeAllSpaceString } from "@/strings/sanitize";
-import { toStringArrayUnRecursive } from "@/conversions/arrays/casts";
+import {
+  isArray,
+  isEmptyString,
+  isEmptyValue,
+  isFunction,
+  isString,
+  isUndefined,
+  isURL,
+  removeSpaces,
+  toStringArrayUnRecursive,
+} from "@/index";
 
 /** ---------------------------------
  * * ***Constructs a valid URL with optional query parameters and allows selective removal of duplicate parameters.***
@@ -42,41 +50,42 @@ export const constructURL = (
   queryParams?: URLSearchParamsIterator<[string, string]>,
   removeParams?: string[]
 ): URL => {
-  if (typeof baseUrl === "string") {
-    if (!baseUrl.trim()) {
+  if (isString(baseUrl)) {
+    if (isEmptyString(baseUrl)) {
       throw new TypeError("`baseUrl` cannot be an empty string.");
     }
-    baseUrl = removeAllSpaceString(baseUrl, { trimOnly: true });
-  } else if (!(baseUrl instanceof URL)) {
+    baseUrl = removeSpaces(baseUrl, { trimOnly: true });
+  } else if (!isURL(baseUrl)) {
     throw new TypeError(
       `Invalid 'baseUrl'. Expected a non-empty string or a URL instance, received: ${typeof baseUrl}`
     );
   }
 
   // 🔍 Check removeParams
-  if (removeParams !== undefined) {
-    if (!Array.isArray(removeParams)) {
+  if (!isUndefined(removeParams)) {
+    if (!isArray(removeParams)) {
       throw new TypeError("`removeParams` must be an array of strings.");
     }
-    if (!removeParams.every((param) => typeof param === "string")) {
+    if (!removeParams.every((param) => isString(param))) {
       throw new TypeError("`removeParams` must only contain strings.");
     }
   }
 
   try {
     // 🔍 Check queryParams
-    if (queryParams !== undefined) {
-      if (typeof queryParams[Symbol.iterator] !== "function") {
-        throw new TypeError(
-          "`queryParams` must be iterable (like URLSearchParams.entries() or an array of [string, string])"
-        );
-      }
+    if (
+      !isUndefined(queryParams) &&
+      !isFunction(queryParams[Symbol.iterator])
+    ) {
+      throw new TypeError(
+        "`queryParams` must be iterable (like URLSearchParams.entries() or an array of [string, string])"
+      );
     }
 
     const urlInstance = new URL(baseUrl);
 
     // Add query parameters if provided
-    if (queryParams) {
+    if (!isUndefined(queryParams)) {
       const paramObject = Object.fromEntries(queryParams);
 
       if (!isEmptyValue(paramObject)) {

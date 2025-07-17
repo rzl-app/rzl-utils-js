@@ -1,3 +1,5 @@
+import { isBoolean, isNull, isString } from "@/predicates";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 type StringOrNull = string | null;
 type NullOrUndefined = null | undefined;
@@ -5,12 +7,15 @@ type NullOrUndefined = null | undefined;
 type UnknownObject = Record<string, unknown>;
 
 /**
+ * @deprecated Use `safeJsonParse` instead.
+ *
  * Safe JSON parsing with error handling.
  *
  * - ✅ Returns `null` if input is `null`.
  * - ✅ Returns `undefined` if input is not a valid JSON string.
  * - ✅ Supports strict type inference using generics.
  * - ✅ Allows custom error logging via callback.
+ *
  *
  * @template T - Expected output type.
  * @param {string | null | undefined} value - The JSON string to parse.
@@ -46,7 +51,6 @@ type UnknownObject = Record<string, unknown>;
  * // Logs: Custom error: <error>
  * // Output: undefined
  *
- * @deprecated Use `safeJsonParse` instead.
  */
 export function safeJsonParseDeprecated<AsType>(
   value: null,
@@ -89,10 +93,10 @@ export function safeJsonParseDeprecated<AsType = unknown>(
   loggingOnFail: boolean = false,
   onError?: (error: unknown) => void
 ): AsType | NullOrUndefined {
-  if (value === null) return null;
-  if (typeof value !== "string") return undefined;
+  if (isNull(value)) return null;
+  if (!isString(value)) return undefined;
 
-  if (typeof loggingOnFail !== "boolean") {
+  if (!isBoolean(loggingOnFail)) {
     throw new TypeError(
       `props 'loggingOnFail' must be \`boolean\` or empty as \`undefined\` type!`
     );

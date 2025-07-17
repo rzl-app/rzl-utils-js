@@ -1,5 +1,12 @@
-import { isArray } from "@/index";
-import { findDuplicates } from "@/index";
+import {
+  findDuplicates,
+  isArray,
+  isEmptyArray,
+  isNonEmptyArray,
+  isNull,
+  isObject,
+  isUndefined,
+} from "@/index";
 
 type DotPath<T, Prev extends string = ""> = T extends Array<infer U>
   ? DotPath<U, `${Prev}${Prev extends "" ? "" : "."}${number}`>
@@ -11,8 +18,7 @@ type DotPath<T, Prev extends string = ""> = T extends Array<infer U>
     }[keyof T & string]
   : never;
 
-/**
- * ------------------------------------------------------
+/** ------------------------------------------------------
  * * Recursively omits properties from an object using dot notation paths.
  * * Also removes resulting empty objects (`{}`) and arrays (`[]`),
  * * cascading upwards to remove empty parents until root if needed.
@@ -114,19 +120,18 @@ type DotPath<T, Prev extends string = ""> = T extends Array<infer U>
  * omitKeysDeep({ mixed: { a: [1, 2, 3], b: { c: 4 } } }, ["mixed.b.c"]);
  * // → { mixed: { a: [1, 2, 3] } }
  */
-
 export const omitKeysDeep = <I extends Record<string, unknown>>(
   object: I,
   keysToOmit: DotPath<I>[]
 ): Partial<I> => {
-  if (!object || typeof object !== "object") return {} as Partial<I>;
+  if (!isObject(object)) return {} as Partial<I>;
 
   if (!isArray(keysToOmit)) {
     throw new TypeError("Expected 'keysToOmit' to be a 'array' type");
   }
 
   const duplicates = findDuplicates(keysToOmit);
-  if (duplicates.length > 0) {
+  if (isNonEmptyArray(duplicates)) {
     throw new Error(
       `Function "omitKeysDeep" Error: Duplicate keys detected - ${duplicates}`
     );
@@ -138,8 +143,8 @@ export const omitKeysDeep = <I extends Record<string, unknown>>(
 
     const [current, ...rest] = pathParts;
 
-    if (rest.length === 0) {
-      if (Array.isArray(obj)) {
+    if (isEmptyArray(rest)) {
+      if (isArray(obj)) {
         // Support numeric index
         const index = parseInt(current);
         if (!isNaN(index) && index in obj) {
@@ -150,7 +155,7 @@ export const omitKeysDeep = <I extends Record<string, unknown>>(
       }
     } else {
       const next = obj[current];
-      if (Array.isArray(next) || (typeof next === "object" && next !== null)) {
+      if (isArray(next) || (typeof next === "object" && !isNull(next))) {
         obj[current] = omitAtPath(next, rest);
       }
     }
@@ -158,14 +163,14 @@ export const omitKeysDeep = <I extends Record<string, unknown>>(
   };
 
   const deepRemoveEmptyObjects = (obj: unknown): Partial<I> => {
-    if (Array.isArray(obj)) {
+    if (isArray(obj)) {
       return obj
         .map<unknown>(deepRemoveEmptyObjects)
         .filter(
           (item) =>
             !(
               typeof item === "object" &&
-              item !== null &&
+              !isNull(item) &&
               Object.keys(item).length === 0
             )
         ) as unknown as Partial<I>;
@@ -176,10 +181,10 @@ export const omitKeysDeep = <I extends Record<string, unknown>>(
           .map(([k, v]) => [k, deepRemoveEmptyObjects(v)])
           .filter(
             ([, v]) =>
-              v !== undefined &&
+              !isUndefined(v) &&
               !(
                 typeof v === "object" &&
-                v !== null &&
+                !isNull(v) &&
                 Object.keys(v).length === 0
               )
           )

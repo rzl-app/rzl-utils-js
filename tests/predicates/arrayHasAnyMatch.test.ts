@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { arrayHasAnyMatch } from "@/predicates";
+import { arrayHasAnyMatch } from "@/index";
 
 describe("arrayHasAnyMatch", () => {
   it("should return true if at least one element matches (strings)", () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { doesKeyExist } from "@/predicates";
+import { doesKeyExist } from "@/index";
 
 describe("doesKeyExist (additional tests)", () => {
   it("should return true if key exists in object directly inside array", () => {

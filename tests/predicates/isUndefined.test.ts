@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isUndefined } from "@/predicates";
+import { isUndefined } from "@/index";
 
 describe("isUndefined", () => {
   it("should return true for undefined", () => {

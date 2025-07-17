@@ -1,3 +1,12 @@
+import {
+  isArray,
+  isEmptyArray,
+  isNull,
+  isObject,
+  isString,
+  isUndefined,
+} from "@/predicates";
+
 /** --------------------------------------------------
  * * ***Options for cleaning and transforming parsed JSON data.***
  * --------------------------------------------------
@@ -79,6 +88,8 @@ interface CleanParsedDataOptions {
  * @param {CleanParsedDataOptions} options - Cleaning options.
  * @returns {T | undefined} - The cleaned data.
  *
+ * **Note: If using `convertDates`, result may contain Date objects. You may need type assertions in strict TypeScript settings.**
+ *
  * @example
  * // Convert numbers and remove nulls
  * const result = cleanParsedData({ age: "25", name: null }, { convertNumbers: true, removeNulls: true });
@@ -90,37 +101,36 @@ interface CleanParsedDataOptions {
  * console.log(result); // Output: { isActive: true }
  */
 export const cleanParsedData = <T = unknown>(
-  data: unknown,
+  data: T,
   options: CleanParsedDataOptions = {}
 ): T | undefined | null => {
-  if (typeof options !== "object") {
+  if (!isObject(options)) {
     throw new TypeError(
       `props 'options' must be \`object\` or empty as \`undefined\` type!`
     );
   }
 
-  if (data === null) return options.removeNulls ? undefined : null;
-  if (data === undefined)
-    return options.removeUndefined ? undefined : undefined;
+  if (isNull(data)) return options.removeNulls ? undefined : null;
+  if (isUndefined(data)) return options.removeUndefined ? undefined : undefined;
 
-  if (Array.isArray(data)) {
+  if (isArray(data)) {
     const cleanedArray = data
       .map((item) => cleanParsedData(item, options))
-      .filter((item) => item !== undefined);
+      .filter((item) => !isUndefined(item));
 
-    return options.removeEmptyArrays && cleanedArray.length === 0
+    return options.removeEmptyArrays && isEmptyArray(cleanedArray)
       ? undefined
       : (cleanedArray as T);
   }
 
-  if (typeof data === "object" && data !== null) {
+  if (isObject(data)) {
     const cleanedObject: Record<string, unknown> = {};
     const obj = data as Record<string, unknown>;
 
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
         const cleanedValue = cleanParsedData(obj[key], options);
-        if (cleanedValue !== undefined) {
+        if (!isUndefined(cleanedValue) && !isNull(cleanedValue)) {
           cleanedObject[key] = cleanedValue;
         }
       }
@@ -131,7 +141,7 @@ export const cleanParsedData = <T = unknown>(
       : (cleanedObject as T);
   }
 
-  if (typeof data === "string") {
+  if (isString(data)) {
     const trimmed = data.trim();
 
     if (options.convertNumbers && !isNaN(Number(trimmed))) {
@@ -159,7 +169,7 @@ export const cleanParsedData = <T = unknown>(
     return options.strictMode ? undefined : (trimmed as T);
   }
 
-  return options.strictMode ? undefined : (data as T);
+  return options.strictMode ? undefined : data;
 };
 
 /** --------------------------------------------------
@@ -174,27 +184,54 @@ export const parseCustomDate = (
   dateString: string,
   format: string
 ): Date | null => {
-  if (typeof dateString !== "string" && typeof format !== "string") {
+  if (!isString(dateString) || !isString(format)) {
     throw new TypeError(
       `props 'dateString' and 'format' must be \`string\` type!`
     );
   }
 
   const dateParts = dateString.split(/[-/]/).map(Number);
-  if (dateParts.length !== 3) return null;
+  if (dateParts.length !== 3 || dateParts.some(isNaN)) return null;
 
-  const [part1, part2, part3] = dateParts;
-  const isDMY = format === "DD/MM/YYYY" ? part1 > 12 : part2 > 12;
-  const day = isDMY ? part1 : part2;
-  const month = isDMY ? part2 - 1 : part1 - 1;
-  const year = part3;
+  let day: number, month: number, year: number;
 
+  if (format === "DD/MM/YYYY") {
+    [day, month, year] = dateParts;
+  } else if (format === "MM/DD/YYYY") {
+    [month, day, year] = dateParts;
+  } else {
+    return null;
+  }
+
+  month -= 1; // JS month
   const date = new Date(year, month, day);
-  return isNaN(date.getTime()) ? null : date;
+
+  // validasi agar tidak auto rolling
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+
+  return date;
+
+  // @deprecated
+  // const dateParts = dateString.split(/[-/]/).map(Number);
+  // if (dateParts.length !== 3) return null;
+
+  // const [part1, part2, part3] = dateParts;
+  // const isDMY = format === "DD/MM/YYYY" ? part1 > 12 : part2 > 12;
+  // const day = isDMY ? part1 : part2;
+  // const month = isDMY ? part2 - 1 : part1 - 1;
+  // const year = part3;
+
+  // const date = new Date(year, month, day);
+  // return isNaN(date.getTime()) ? null : date;
 };
 
-/**
- * --------------------------------------------------
+/** --------------------------------------------------
  * * ***Safely parses JSON while handling errors and applying transformations.***
  * --------------------------------------------------
  *
@@ -241,10 +278,10 @@ export const safeJsonParse = <T = unknown>(
   value: string | null | undefined,
   options: CleanParsedDataOptions = {}
 ): T | undefined | null => {
-  if (value === null) return null;
-  if (typeof value !== "string") return undefined;
+  if (isNull(value)) return null;
+  if (!isString(value)) return undefined;
 
-  if (typeof options !== "object") {
+  if (!isObject(options)) {
     throw new TypeError(
       `props 'options' must be \`object\` or empty as \`undefined\` type!`
     );

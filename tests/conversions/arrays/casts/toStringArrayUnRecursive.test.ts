@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { toStringArrayUnRecursive } from "@/conversions/arrays/casts";
+import { toStringArrayUnRecursive } from "@/index";
 
 describe("toStringArrayUnRecursive", () => {
   it("should convert numbers and strings to strings", () => {

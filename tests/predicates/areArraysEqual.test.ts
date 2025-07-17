@@ -1,4 +1,4 @@
-import { areArraysEqual } from "@/predicates";
+import { areArraysEqual } from "@/index";
 import { describe, it, expect } from "vitest";
 
 describe("areArraysEqual", () => {

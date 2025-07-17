@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { extractURLs } from "@/predicates";
+import { extractURLs } from "@/index";
 
 describe("extractURLs", () => {
   it("should return an array with a single URL when input is a standalone URL", () => {

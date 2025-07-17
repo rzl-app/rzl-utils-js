@@ -1,4 +1,6 @@
-import type { ScrollToTopOptions } from "@/types/events/types";
+import { isServer } from "@/node-env";
+import { isObject, isString } from "@/predicates";
+import type { ScrollToTopOptions } from "@/types/private";
 
 /** ----------------------------------------------------------
  * * ***Disables user interaction by adding a CSS class to the `<html>` element.***
@@ -19,9 +21,9 @@ export const disableUserInteraction = (
   className: string = "on_processing"
 ): void => {
   // Ensure function runs only in the browser
-  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (isServer()) return;
 
-  if (!(typeof className === "string")) {
+  if (!isString(className)) {
     throw new TypeError("Expected 'className' to be a 'string' type");
   }
 
@@ -51,9 +53,9 @@ export const enableUserInteraction = (
   className: string = "on_processing"
 ): void => {
   // Ensure function runs only in the browser
-  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (isServer()) return;
 
-  if (!(typeof className === "string")) {
+  if (!isString(className)) {
     throw new TypeError("Expected 'className' to be a 'string' type");
   }
 
@@ -79,7 +81,7 @@ export const enableUserInteraction = (
  */
 export const removeElementFocus = (): void => {
   // Ensure function runs only in the browser
-  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (isServer()) return;
 
   const activeElement = document.activeElement;
 
@@ -112,10 +114,10 @@ export const removeElementFocus = (): void => {
  */
 export const scrollToTop = (options?: ScrollToTopOptions): void => {
   // Ensure function runs only in the browser
-  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (isServer()) return;
 
   // Ensure options is an object and Defensive options check
-  if (typeof options !== "object" || options === null) {
+  if (!isObject(options)) {
     options = {};
   }
 
@@ -129,6 +131,6 @@ export const scrollToTop = (options?: ScrollToTopOptions): void => {
         behavior: behavior,
       });
     },
-    timeout < 0 ? 1 : timeout
+    timeout < 1 ? 1 : timeout
   );
 };

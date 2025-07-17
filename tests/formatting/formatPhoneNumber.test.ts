@@ -88,6 +88,23 @@ describe("formatPhoneNumber", () => {
     );
   });
 
+  it("should return throws", () => {
+    expect(() =>
+      formatPhoneNumber("invalid@@@", {
+        checkValidOnly: 1,
+        // @ts-expect-error
+        takeNumberOnly: "",
+      })
+    ).toThrow(TypeError);
+
+    expect(() =>
+      formatPhoneNumber("invalid@@@", {
+        // @ts-expect-error
+        separator: 1,
+      })
+    ).toThrow(TypeError);
+  });
+
   it("should allow customization of separator and country format", () => {
     expect(
       formatPhoneNumber("081234567890", {

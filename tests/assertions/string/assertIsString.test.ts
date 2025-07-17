@@ -1,4 +1,4 @@
-import { assertIsString } from "@/assertions/string";
+import { assertIsString } from "@/index";
 import { describe, it, expect } from "vitest";
 import { performance } from "perf_hooks";
 

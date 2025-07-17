@@ -1,4 +1,12 @@
-import { parseCurrencyString } from "../conversions/currency/parsing";
+import {
+  isBoolean,
+  isFunction,
+  isNumber,
+  isObject,
+  isString,
+  isUndefined,
+  parseCurrencyString,
+} from "@/index";
 import { FormatCurrencyOptions } from "../conversions/currency/types";
 
 /** -------------------------------------------------------
@@ -123,11 +131,11 @@ export const formatCurrency = (
   value: string | number,
   options: FormatCurrencyOptions = {}
 ): string => {
-  if (!(typeof value === "string" || typeof value === "number")) {
+  if (!isString(value) && !isNumber(value)) {
     throw new TypeError(`props 'value' must be \`string\` or \`number\` type!`);
   }
 
-  if (typeof options !== "object" || Array.isArray(options)) {
+  if (!isObject(options)) {
     throw new TypeError(`props 'options' must be \`object\` type!`);
   }
 
@@ -146,10 +154,10 @@ export const formatCurrency = (
 
   // validations
   if (
-    typeof separator !== "string" ||
-    typeof separatorDecimals !== "string" ||
-    typeof suffixCurrency !== "string" ||
-    typeof suffixDecimal !== "string"
+    !isString(separator) ||
+    !isString(separatorDecimals) ||
+    !isString(suffixCurrency) ||
+    !isString(suffixDecimal)
   ) {
     throw new TypeError(
       `props 'separator', 'separatorDecimals', 'suffixCurrency' and 'suffixDecimal' must be \`string\` type!`
@@ -157,16 +165,16 @@ export const formatCurrency = (
   }
 
   if (
-    typeof decimal !== "boolean" ||
-    typeof endDecimal !== "boolean" ||
-    typeof indianFormat !== "boolean"
+    !isBoolean(decimal) ||
+    !isBoolean(endDecimal) ||
+    !isBoolean(indianFormat)
   ) {
     throw new TypeError(
       `props 'decimal', 'endDecimal' and 'indianFormat' must be \`boolean\` type!`
     );
   }
 
-  if (typeof totalDecimal !== "number") {
+  if (!isNumber(totalDecimal)) {
     throw new TypeError(`props 'totalDecimal' must be \`number\` type!`);
   }
 
@@ -188,7 +196,7 @@ export const formatCurrency = (
       negativeFormat === "abs" ||
       negativeFormat === "brackets" ||
       negativeFormat === "dash" ||
-      typeof negativeFormat === "object"
+      isObject(negativeFormat)
     )
   ) {
     throw new TypeError(
@@ -197,7 +205,7 @@ export const formatCurrency = (
   }
 
   // parse number
-  const rawNum = typeof value === "string" ? parseCurrencyString(value) : value;
+  const rawNum = isString(value) ? parseCurrencyString(value) : value;
   if (isNaN(rawNum)) {
     throw new TypeError(`'value' could not be parsed into a valid number`);
   }
@@ -272,7 +280,7 @@ export const formatCurrency = (
       integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
   }
 
-  if (decimal && decimalPartRaw !== undefined && totalDecimal > 0) {
+  if (decimal && !isUndefined(decimalPartRaw) && totalDecimal > 0) {
     let formattedDecimal = separatorDecimals + decimalPartRaw;
     if (endDecimal) formattedDecimal += suffixDecimal;
     formattedInteger += formattedDecimal;
@@ -286,11 +294,11 @@ export const formatCurrency = (
       formattedInteger = "(" + formattedInteger + ")";
     } else if (negativeFormat === "abs") {
       // no sign
-    } else if (typeof negativeFormat === "object") {
+    } else if (isObject(negativeFormat)) {
       if ("custom" in negativeFormat) {
         const formatCustomNegative = negativeFormat.custom;
 
-        if (typeof formatCustomNegative !== "function") {
+        if (!isFunction(formatCustomNegative)) {
           throw new TypeError(
             `props 'negativeFormat.custom' must be a function: '(formatted: string) => string'`
           );
@@ -298,7 +306,7 @@ export const formatCurrency = (
 
         const result = formatCustomNegative(formattedInteger);
 
-        if (typeof result !== "string") {
+        if (!isString(result)) {
           throw new TypeError(
             `props 'negativeFormat.custom' must return a string`
           );
@@ -307,12 +315,11 @@ export const formatCurrency = (
         formattedInteger = result;
       } else {
         const formatStyleNegative = negativeFormat.style || "dash";
-        const formatSpaceNegative =
-          typeof negativeFormat.space === "boolean"
-            ? negativeFormat.space
-            : false;
+        const formatSpaceNegative = isBoolean(negativeFormat.space)
+          ? negativeFormat.space
+          : false;
 
-        if (!(typeof formatSpaceNegative === "boolean")) {
+        if (!isBoolean(formatSpaceNegative)) {
           throw new TypeError(`props 'negativeFormat.space' must be boolean`);
         }
         if (

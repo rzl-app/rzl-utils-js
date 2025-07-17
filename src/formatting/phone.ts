@@ -1,10 +1,19 @@
+import {
+  isBoolean,
+  isNull,
+  isNumber,
+  isObject,
+  isString,
+  isUndefined,
+} from "@/predicates";
+
 import type {
   FormatPhoneNumberProps,
   FormatPhoneNumberPropsString,
   FormatPhoneNumberPropsBoolean,
   FormatPhoneNumberPropsTransform,
   ValueFormatPhoneNumber,
-} from "@/types/converts/number";
+} from "@/types/private";
 
 /** -------------------------------------------------------
  * * ***Formats a phone number into a customizable local or international style.***
@@ -131,17 +140,17 @@ export function formatPhoneNumber(
   value?: ValueFormatPhoneNumber,
   options: FormatPhoneNumberProps = {}
 ) {
-  if (!value) {
+  if (isUndefined(value) || isNull(value)) {
     return "";
   }
 
-  if (!(typeof value === "string" || typeof value === "number")) {
+  if (!isString(value) && !isNumber(value)) {
     throw new TypeError(
       `props 'value' must be \`string\`, \`number\`, \`null\` or \`undefined\` type!`
     );
   }
 
-  if (typeof options !== "object") {
+  if (!isObject(options)) {
     throw new TypeError(`props 'options' must be \`object\` or unset type!`);
   }
 
@@ -154,27 +163,24 @@ export function formatPhoneNumber(
     closingNumberCountry = "",
   } = options;
 
-  if (
-    typeof takeNumberOnly !== "boolean" ||
-    typeof checkValidOnly !== "boolean"
-  ) {
+  if (!isBoolean(takeNumberOnly) || !isBoolean(checkValidOnly)) {
     throw new TypeError(
       `props 'takeNumberOnly' and 'checkValidOnly' must be \`boolean\` or unset as \`undefined\` type!`
     );
   }
 
   if (
-    typeof separator !== "string" ||
-    typeof plusNumberCountry !== "string" ||
-    typeof openingNumberCountry !== "string" ||
-    typeof closingNumberCountry !== "string"
+    !isString(separator) ||
+    !isString(plusNumberCountry) ||
+    !isString(openingNumberCountry) ||
+    !isString(closingNumberCountry)
   ) {
     throw new TypeError(
       `props 'separator', 'plusNumberCountry', 'openingNumberCountry' and 'closingNumberCountry' must be \`string\` or unset type!`
     );
   }
 
-  if (typeof value !== "string") {
+  if (!isString(value)) {
     value = String(value);
   }
 

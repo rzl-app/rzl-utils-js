@@ -1,5 +1,6 @@
-/**
- * ----------------------------------------------------------
+import { isNumber, isString } from "@/predicates";
+
+/** * ----------------------------------------------------------
  * * ***Extracts digits from a string or number input.***
  * ----------------------------------------------------------
  *
@@ -28,9 +29,8 @@
  * extractDigits(12345);       // ➔ 12345
  * extractDigits("   00a  ");  // ➔ 0
  */
-
 export const extractDigits = (value?: string | number | null): number => {
-  if (typeof value !== "string" && typeof value !== "number") return 0;
+  if (!isString(value) && !isNumber(value)) return 0;
 
   const cleaned = String(value)
     .trim()

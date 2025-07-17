@@ -1,5 +1,5 @@
 {
-  "baseUrl": "./../",
+  "baseUrl": "../",
   "delete": true,
   "directory": "src/",
   "exclude": [
@@ -12,6 +12,7 @@
     "types"
   ],
   "extension": "ts",
-  "single": true,
+  "location": "all",
+  "single": false,
   "verbose": false
 }

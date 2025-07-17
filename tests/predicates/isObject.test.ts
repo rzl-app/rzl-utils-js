@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isObject } from "@/predicates";
+import { isObject } from "@/index";
 
 describe("isObject", () => {
   it("should return true for plain objects", () => {

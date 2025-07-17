@@ -1,7 +1,9 @@
 import { id, enUS, type Locale } from "date-fns/locale";
 import { format as formatDns, type FormatOptions, parse } from "date-fns";
-import type { OmitStrict } from "../types";
-import { SupportedLocales } from "./intlLocal.types";
+
+import type { OmitStrict } from "@/types";
+import type { SupportedLocales } from "./intlLocal.types";
+import { isDate, isEmptyString, isObject, isString } from "@/predicates";
 
 /** ----------------------------------------------------------
  * * ***Formats a date and time into a custom string format.***
@@ -61,10 +63,10 @@ export const formatDateTime = (
   /** @default "YYYY-MM-DD hh:mm:ss" */
   format: string = "YYYY-MM-DD hh:mm:ss"
 ): string | null => {
-  if (typeof format !== "string") return null;
+  if (!isString(format)) return null;
 
   // Handle missing or invalid date input type
-  if (!date || !(date instanceof Date || typeof date === "string")) {
+  if (!date || !(isDate(date) || isString(date))) {
     return null;
   }
 
@@ -133,13 +135,13 @@ export const formatDateIntl = (
     locale?: SupportedLocales | SupportedLocales[];
   }
 ): string | null => {
-  if (!date || !(date instanceof Date || typeof date === "string")) return null;
+  if (!date || !(isDate(date) || isString(date))) return null;
 
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) return null; // Handle invalid dates
 
   // Ensure options is an object and Defensive options check
-  if (typeof options !== "object" || options === null) {
+  if (!isObject(options)) {
     options = {};
   }
 
@@ -279,10 +281,10 @@ export const formatDateFns = (
     inputFormat?: string;
   }
 ): string | null => {
-  if (!date || !(date instanceof Date || typeof date === "string")) return null;
+  if (!date || !(isDate(date) || isString(date))) return null;
 
   // Ensure options is an object and Defensive options check
-  if (typeof options !== "object" || options === null) {
+  if (!isObject(options)) {
     options = {};
   }
 
@@ -296,13 +298,12 @@ export const formatDateFns = (
 
   let parsedDate: Date;
 
-  if (typeof date === "string" && inputFormat && inputLocale) {
-    const valueOfInputLocale =
-      typeof inputLocale === "string"
-        ? inputLocale === "id"
-          ? id
-          : enUS
-        : inputLocale;
+  if (isString(date) && inputFormat && inputLocale) {
+    const valueOfInputLocale = isString(inputLocale)
+      ? inputLocale === "id"
+        ? id
+        : enUS
+      : inputLocale;
 
     try {
       parsedDate = parse(date, inputFormat, new Date(), {
@@ -317,8 +318,11 @@ export const formatDateFns = (
 
   if (isNaN(parsedDate.getTime())) return null;
 
-  const valueOfLocale =
-    typeof locale === "string" ? (locale === "id" ? id : enUS) : locale;
+  const valueOfLocale = isString(locale)
+    ? locale === "id"
+      ? id
+      : enUS
+    : locale;
 
   return formatDns(parsedDate, format, {
     ...restOptions,
@@ -363,9 +367,9 @@ export const formatDateFns = (
  */
 export const getGMTOffset = (date?: string | Date | null): string => {
   try {
-    if (!date || (typeof date === "string" && !date.trim())) {
+    if (!date || (isString(date) && isEmptyString(date))) {
       date = new Date(); // Default to current date
-    } else if (!(date instanceof Date || typeof date === "string")) {
+    } else if (!(isDate(date) || isString(date))) {
       return "0"; // Invalid type
     }
 

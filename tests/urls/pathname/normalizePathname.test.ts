@@ -67,11 +67,9 @@ describe("normalizePathname", () => {
   });
 
   it("should throw NormalizePathnameError for internal unexpected errors", () => {
-    const spy = vi
-      .spyOn(Utils, "removeAllSpaceString")
-      .mockImplementation(() => {
-        throw new Error("fake error");
-      });
+    const spy = vi.spyOn(Utils, "removeSpaces").mockImplementation(() => {
+      throw new Error("fake error");
+    });
 
     expect(() => normalizePathname("test")).toThrow(NormalizePathnameError);
     expect(() => normalizePathname("test")).toThrow(/fake error/);

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isCurrencyLike } from "@/predicates";
+import { isCurrencyLike } from "@/index";
 
 describe("isCurrencyLike", () => {
   it("should return true for European format strings", () => {

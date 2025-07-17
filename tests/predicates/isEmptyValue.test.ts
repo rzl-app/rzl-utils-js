@@ -1,4 +1,4 @@
-import { isEmptyValue } from "@/predicates";
+import { isEmptyValue } from "@/index";
 import { describe, it, expect } from "vitest";
 
 describe("isEmptyValue", () => {

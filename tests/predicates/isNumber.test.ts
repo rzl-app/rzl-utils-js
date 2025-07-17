@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isNumber } from "@/predicates";
+import { isNumber } from "@/index";
 
 describe("isNumber", () => {
   it("should return true for valid numbers", () => {

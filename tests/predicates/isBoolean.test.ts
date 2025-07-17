@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isBoolean } from "@/predicates";
+import { isBoolean } from "@/index";
 
 describe("isBoolean", () => {
   it("should return true for true", () => {

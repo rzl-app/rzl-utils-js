@@ -1,6 +1,17 @@
-import { isDeepEqual, isObject } from "@/predicates";
+import {
+  isArray,
+  isBoolean,
+  isDeepEqual,
+  isEmptyArray,
+  isNull,
+  isNumber,
+  isObject,
+  isString,
+  isUndefined,
+  toStringDeepForce,
+} from "@/index";
+
 import type { DedupeResult } from "./transforms.types";
-import { convertForceToStringDeep } from "../strings/convertForceToStringDeep";
 
 /** ----------------------------------------------------------
  * * ***Removes `null` and `undefined` values from an array, including nested arrays.***
@@ -36,14 +47,16 @@ import { convertForceToStringDeep } from "../strings/convertForceToStringDeep";
  * // => [1, [2, [3]]]
  */
 export const filterNullArray = <T>(input?: T[] | null): T[] | undefined => {
-  if (input === undefined || input === null) return undefined; // explicit undefined input
-  if (!Array.isArray(input)) return [];
+  // explicit undefined|null input
+  if (isUndefined(input) || isNull(input)) return undefined;
+
+  if (!isArray(input)) return [];
 
   const filtered = input.reduce<T[]>((output, element) => {
-    if (element !== null && element !== undefined) {
-      if (Array.isArray(element)) {
+    if (!isNull(element) && !isUndefined(element)) {
+      if (isArray(element)) {
         const cleanedNested = filterNullArray(element);
-        if (cleanedNested && cleanedNested.length > 0) {
+        if (cleanedNested && !isEmptyArray(cleanedNested)) {
           output.push(cleanedNested as unknown as T);
         }
       } else {
@@ -53,7 +66,6 @@ export const filterNullArray = <T>(input?: T[] | null): T[] | undefined => {
     return output;
   }, []);
 
-  // return filtered.length > 0 ? filtered : undefined;
   return filtered;
 };
 
@@ -160,7 +172,7 @@ export const dedupeArray = <
   inputArray: unknown[],
   options?: { forceToString?: F }
 ): DedupeResult<F> => {
-  if (!Array.isArray(inputArray)) {
+  if (!isArray(inputArray)) {
     throw new TypeError(`'inputArray' must be an array`);
   }
   if (!isObject(options)) {
@@ -184,9 +196,9 @@ export const dedupeArray = <
   const process = (arr: unknown[]): unknown[] => {
     const seen: unknown[] = [];
     return arr.reduce<unknown[]>((acc, item) => {
-      const value = Array.isArray(item)
+      const value = isArray(item)
         ? process(item)
-        : convertForceToStringDeep(item, forceToString);
+        : toStringDeepForce(item, forceToString);
 
       if (!seen.some((s) => isDeepEqual(s, value))) {
         seen.push(value);
@@ -206,20 +218,20 @@ export const dedupeArrayDeprecated = <T extends boolean>(
   inputArray: unknown[],
   forceToString: T = false as T
 ): T extends true ? string[] : Array<string | number> => {
-  if (!Array.isArray(inputArray)) {
+  if (!isArray(inputArray)) {
     throw new TypeError(`props 'inputArray' must be \`array\` type!`);
   }
 
-  if (!(typeof forceToString === "boolean")) {
+  if (!isBoolean(forceToString)) {
     throw new TypeError(`props 'forceToString' must be \`boolean\` type!`);
   }
 
   // Recursive function to flatten nested arrays
   const flattenArray = (input: unknown[]): Array<string | number> => {
     return input.reduce<Array<string | number>>((acc, item) => {
-      if (Array.isArray(item)) {
+      if (isArray(item)) {
         acc.push(...flattenArray(item));
-      } else if (typeof item === "string" || typeof item === "number") {
+      } else if (isString(item) || isNumber(item)) {
         acc.push(forceToString ? String(item) : item);
       } else {
         throw new TypeError(
@@ -232,6 +244,7 @@ export const dedupeArrayDeprecated = <T extends boolean>(
 
   // Flatten the input array and remove duplicates while preserving order
   const flatArray = flattenArray(inputArray);
+
   return [
     ...new Map(flatArray.map((item) => [item, item])).values(),
   ] as T extends true ? string[] : Array<string | number>;

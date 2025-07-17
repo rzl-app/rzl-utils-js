@@ -1,5 +1,6 @@
-/**
- * ----------------------------------------------------------
+import { isNumber, isString } from "@/predicates";
+
+/** ----------------------------------------------------------
  * * ***Formats a number or numeric string by adding a custom separator
  * every three digits (thousands separator), and intelligently
  * flips the decimal separator according to the chosen separator.***
@@ -67,16 +68,16 @@ export const formatNumber = (
   value: string | number,
   separator: string = ","
 ): string => {
-  if (!value || !(typeof value === "string" || typeof value === "number")) {
+  if (!isString(value) && !isNumber(value)) {
     throw new TypeError("props 'value' must be 'string' or 'number' type!");
   }
-  if (!separator || !(typeof separator === "string")) {
+  if (!isString(separator)) {
     throw new TypeError(
       "props 'separator' must be 'string' or empty as 'undefined' type!"
     );
   }
 
-  separator = typeof separator === "string" ? separator : ",";
+  separator = isString(separator) ? separator : ",";
   const decimalSeparator = separator === "." ? "," : ".";
 
   // Convert value to string

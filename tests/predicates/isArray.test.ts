@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isArray } from "@/predicates";
+import { isArray } from "@/index";
 
 describe("isArray", () => {
   it("should return true for regular arrays of numbers", () => {

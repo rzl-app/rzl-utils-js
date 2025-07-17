@@ -1,3 +1,5 @@
+import { isArray, isNull, isObject } from "@/predicates";
+
 type AllKeys<T> = T extends object
   ? T extends Array<infer U>
     ? keyof T | AllKeys<U>
@@ -12,7 +14,7 @@ type DeleteKeyConfig<T> =
  * * ***Dynamically deletes multiple keys from an object with optional deep deletion and cloning.***
  * ----------------------------------------------------------
  *
- * @deprecated Use `deleteObjMultipleDynamic` instead
+ * @deprecated Use `removeObjectPaths` instead
  *
  * - Supports both shallow and deep deletion in the same call.
  * - Works recursively with nested objects and arrays.
@@ -84,20 +86,16 @@ type DeleteKeyConfig<T> =
  * //   items: [ { id: 1, price: 100 }, { id: 2, price: 200 } ]
  * // }
  */
-
-export const deleteObjMultipleDynamicDeprecated = <
-  T extends Record<string, unknown>
->(
+export const removeObjectPathsDeprecated = <T extends Record<string, unknown>>(
   object: T,
   keysToDelete: DeleteKeyConfig<T>[],
   deepClone: boolean = false
 ): Partial<T> => {
   if (typeof object !== "object" || object === null) return {} as Partial<T>;
+
   if (
-    !Array.isArray(keysToDelete) ||
-    !keysToDelete.every(
-      (k) => typeof k === "object" && k !== null && "key" in k
-    )
+    !isArray(keysToDelete) ||
+    !keysToDelete.every((k) => isObject(k) && "key" in k)
   ) {
     throw new TypeError(
       "Expected keysToDelete to be an array of { key, deep? } objects"
@@ -113,17 +111,17 @@ export const deleteObjMultipleDynamicDeprecated = <
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const process = (obj: any): any => {
-    if (Array.isArray(obj)) {
+    if (isArray(obj)) {
       return obj.map((item) =>
-        typeof item === "object" && item !== null ? process(item) : item
+        typeof item === "object" && !isNull(item) ? process(item) : item
       );
-    } else if (typeof obj === "object" && obj !== null) {
+    } else if (typeof obj === "object" && !isNull(obj)) {
       for (const key of Object.keys(obj)) {
         if (shallowKeys.has(key)) {
           delete obj[key];
         } else if (deepKeys.has(key)) {
           delete obj[key];
-        } else if (typeof obj[key] === "object" && obj[key] !== null) {
+        } else if (typeof obj[key] === "object" && !isNull(obj[key])) {
           process(obj[key]);
         }
       }

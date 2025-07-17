@@ -1,4 +1,4 @@
-import { areURLsIdentical } from "@/predicates";
+import { areURLsIdentical } from "@/index";
 import { describe, it, expect } from "vitest";
 
 describe("areURLsIdentical", () => {

@@ -1,3 +1,10 @@
+import {
+  isBoolean,
+  isNonEmptyString,
+  isObject,
+  isUndefined,
+} from "@/predicates";
+
 /** -----------------------------------------------
  * * ***Retrieves and formats an environment port variable.***
  * -----------------------------------------------
@@ -18,20 +25,16 @@
  * formatEnvPort("port:8080", { prefixColon: true }); // ":8080"
  */
 export const formatEnvPort = (
-  envVar?: string,
+  envVar?: string | null,
   options?: { prefixColon?: boolean }
 ): string => {
-  if (typeof envVar !== "string" || !envVar.trim()) return "";
+  if (!isNonEmptyString(envVar)) return ""; // Handle empty string case
 
-  if (options !== undefined) {
-    if (
-      typeof options !== "object" ||
-      options === null ||
-      Array.isArray(options)
-    ) {
+  if (!isUndefined(options)) {
+    if (!isObject(options)) {
       throw new TypeError("Options must be an object.");
     }
-    if ("prefixColon" in options && typeof options.prefixColon !== "boolean") {
+    if ("prefixColon" in options && !isBoolean(options.prefixColon)) {
       throw new TypeError("Option `prefixColon` must be a boolean.");
     }
   }
