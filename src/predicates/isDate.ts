@@ -1,3 +1,5 @@
+import { isDate as _isDate } from "lodash";
+
 /** ----------------------------------------------------------
  * * ***Type guard: Checks if a value is a valid `Date` object.***
  * ----------------------------------------------------------
@@ -15,5 +17,5 @@
  * isDate("2024-01-01"); // false
  */
 export const isDate = (value: unknown): value is Date => {
-  return value instanceof Date && !isNaN(value.getTime());
+  return _isDate(value) && !isNaN(value.getTime());
 };

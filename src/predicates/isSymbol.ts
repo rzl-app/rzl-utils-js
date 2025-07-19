@@ -1,3 +1,5 @@
+import { isSymbol as _isSymbol } from "lodash";
+
 /** ----------------------------------------------------------
  * * ***Checks whether a value is a symbol.***
  * ----------------------------------------------------------
@@ -12,5 +14,5 @@
  * isSymbol(undefined);            // false
  */
 export const isSymbol = (value?: unknown): value is symbol => {
-  return typeof value === "symbol";
+  return _isSymbol(value);
 };

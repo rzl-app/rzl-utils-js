@@ -6,7 +6,8 @@ import {
   isString,
   isUndefined,
 } from "@/index";
-import type { SafeJsonParseResult } from "./safeJsonParse.types";
+import type { SafeJsonParseResult, UnknownValue } from "./safeJsonParse.types";
+import { IsAny } from "type-samurai";
 
 /** --------------------------------------------------
  * * ***Options for cleaning and transforming parsed JSON data.***
@@ -329,6 +330,14 @@ export const parseCustomDate = (
  *   nullable, or unioned: `safeJsonParse<TData, typeof value>(value)`.
  * - This makes the returned type exactly match your expectation: `TData | null | undefined`.
  */
+
+export function safeJsonParse<
+  TData extends Record<string, unknown>,
+  TInput extends UnknownValue = UnknownValue
+>(
+  value: TInput,
+  options?: CleanParsedDataOptions
+): IsAny<TInput> extends true ? TData | null | undefined : undefined;
 export function safeJsonParse<
   TData extends Record<string, unknown>,
   TInput extends string | null | undefined | unknown = undefined

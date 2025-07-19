@@ -1,3 +1,5 @@
+import { isString as _isString } from "lodash";
+
 /** ---------------------------------------------------------
  * * ***Type guard: Checks if a value is of type `string`.***
  * ---------------------------------------------------------
@@ -20,5 +22,5 @@
  * }
  */
 export const isString = (val: unknown): val is string => {
-  return typeof val === "string";
+  return _isString(val);
 };

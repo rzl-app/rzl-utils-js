@@ -34,3 +34,4 @@ export * from "src/predicates/isURL";
 export * from "src/predicates/isValidURL";
 export * from "src/predicates/textContainsAll";
 export * from "src/predicates/textContainsAny";
+export * from "src/predicates/new/index";

@@ -1,3 +1,5 @@
+import { isRegExp as _isRegExp } from "lodash";
+
 /** ----------------------------------------------------------
  * * ***Type guard: Checks if a value is a RegExp instance.***
  * ----------------------------------------------------------
@@ -11,5 +13,5 @@
  * isRegExp("abc"); // false
  */
 export const isRegExp = (value: unknown): value is RegExp => {
-  return value instanceof RegExp;
+  return _isRegExp(value);
 };

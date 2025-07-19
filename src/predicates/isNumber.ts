@@ -1,3 +1,6 @@
+import { isNumber as _isNumber } from "lodash";
+import { isNaN } from "./new";
+
 /** ---------------------------------------------------------
  * * ***Type guard: Checks if a value is of type `number`.***
  * ---------------------------------------------------------
@@ -13,5 +16,5 @@
  * isNumber("42");  // false
  */
 export const isNumber = (val: unknown): val is number => {
-  return typeof val === "number" && !isNaN(val);
+  return _isNumber(val) && !isNaN(val);
 };

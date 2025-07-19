@@ -17,6 +17,7 @@ export default defineConfig([
     },
     rules: {
       semi: "error",
+      "prefer-const": "warn",
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/no-empty-interface": "off",
       "@typescript-eslint/no-explicit-any": "warn",

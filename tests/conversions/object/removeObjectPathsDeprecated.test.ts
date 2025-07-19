@@ -1,4 +1,4 @@
-import { removeObjectPathsDeprecated } from "@/index";
+import { removeObjectPathsDeprecated } from "@/conversions/object/deprecated";
 import { describe, expect, it } from "vitest";
 
 describe("removeObjectPathsDeprecated - exhaustive tests", () => {

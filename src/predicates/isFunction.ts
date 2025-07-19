@@ -1,3 +1,4 @@
+import { isFunction as _isFunction } from "lodash";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * ----------------------------------------------------------
@@ -20,5 +21,5 @@
 export const isFunction = (
   value: unknown
 ): value is (...args: any[]) => any => {
-  return typeof value === "function";
+  return _isFunction(value) || typeof value === "function";
 };

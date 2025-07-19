@@ -1,3 +1,5 @@
+import { isError as _isError } from "lodash";
+
 /** ----------------------------------------------------------
  * * ***Checks if a given value is an instance of the `Error` object.***
  * ----------------------------------------------------------
@@ -14,5 +16,5 @@
  * isError(null); // false
  */
 export const isError = (error: unknown): error is Error => {
-  return error instanceof Error;
+  return _isError(error);
 };

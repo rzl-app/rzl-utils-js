@@ -17,6 +17,8 @@ describe("safeJsonParse", () => {
   });
 
   it("should return undefined if input is undefined or not a string", () => {
+    // @ts-expect-error force unset props as undefined value.
+    expect(safeJsonParse()).toBeUndefined();
     // expect(() => safeJsonParse(undefined)).toThrow(TypeError);
     expect(safeJsonParse(undefined)).toBeUndefined();
     expect(safeJsonParse(123 as any)).toBeUndefined();
@@ -152,7 +154,7 @@ describe("safeJsonParse seconds", () => {
 
   it("removes empty arrays and objects", () => {
     const data = '{"emptyArr": [], "emptyObj": {}, "full": {"a": 1}}';
-    const result = safeJsonParse(data, {
+    const result = safeJsonParse<{ full: { a: 1 } }, typeof data>(data, {
       removeEmptyArrays: true,
       removeEmptyObjects: true,
     });

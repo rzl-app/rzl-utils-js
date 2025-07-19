@@ -1,3 +1,5 @@
+import { isBoolean as _isBoolean } from "lodash";
+
 /** ---------------------------------------------------------
  * * ***Type guard: Checks if a value is of type `boolean`.***
  * ---------------------------------------------------------
@@ -11,5 +13,5 @@
  * isBoolean("true"); // false
  */
 export const isBoolean = (value: unknown): value is boolean => {
-  return typeof value === "boolean";
+  return _isBoolean(value);
 };
