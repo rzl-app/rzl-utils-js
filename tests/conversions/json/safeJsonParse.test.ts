@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { safeJsonParse } from "@/index";
+import { safeJsonParse } from "@/conversions";
 
 describe("safeJsonParse", () => {
   it("should parse valid JSON strings", () => {
@@ -12,8 +12,12 @@ describe("safeJsonParse", () => {
   it("should return null if input is null", () => {
     expect(safeJsonParse(null)).toBeNull();
   });
+  it("should return error", () => {
+    expect(safeJsonParse(new Error("s"))).toBeUndefined();
+  });
 
   it("should return undefined if input is undefined or not a string", () => {
+    // expect(() => safeJsonParse(undefined)).toThrow(TypeError);
     expect(safeJsonParse(undefined)).toBeUndefined();
     expect(safeJsonParse(123 as any)).toBeUndefined();
     expect(safeJsonParse({} as any)).toBeUndefined();
@@ -66,8 +70,12 @@ describe("safeJsonParse seconds", () => {
   });
 
   it("returns undefined for non-string input", () => {
-    expect(safeJsonParse(123 as any)).toBeUndefined();
-    expect(safeJsonParse({} as any)).toBeUndefined();
+    expect(safeJsonParse(123)).toBeUndefined();
+    expect(safeJsonParse({})).toBeUndefined();
+    expect(safeJsonParse([])).toBeUndefined();
+    expect(safeJsonParse(() => {})).toBeUndefined();
+    expect(safeJsonParse(Symbol)).toBeUndefined();
+    expect(safeJsonParse(new Error())).toBeUndefined();
   });
 
   it("handles JSON parsing errors gracefully", () => {
@@ -104,7 +112,8 @@ describe("safeJsonParse seconds", () => {
   });
 
   it("converts ISO date strings to Date objects when convertDates is enabled", () => {
-    const result = safeJsonParse<{ createdAt: Date }>(
+    type Result = { createdAt: Date };
+    const result = safeJsonParse<Result, string>(
       '{"createdAt": "2023-07-12T08:00:00.000Z"}',
       {
         convertDates: true,
@@ -117,7 +126,7 @@ describe("safeJsonParse seconds", () => {
   });
 
   it("parses custom date formats when provided", () => {
-    const result = safeJsonParse<{ birthday: Date }>(
+    const result = safeJsonParse<{ birthday: Date }, string>(
       '{"birthday": "25/12/2000"}',
       {
         convertDates: true,

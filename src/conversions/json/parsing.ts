@@ -5,7 +5,8 @@ import {
   isObject,
   isString,
   isUndefined,
-} from "@/predicates";
+} from "@/index";
+import type { SafeJsonParseResult } from "./safeJsonParse.types";
 
 /** --------------------------------------------------
  * * ***Options for cleaning and transforming parsed JSON data.***
@@ -203,10 +204,9 @@ export const parseCustomDate = (
     return null;
   }
 
-  month -= 1; // JS month
+  month -= 1;
   const date = new Date(year, month, day);
 
-  // validasi agar tidak auto rolling
   if (
     date.getFullYear() !== year ||
     date.getMonth() !== month ||
@@ -216,68 +216,131 @@ export const parseCustomDate = (
   }
 
   return date;
-
-  // @deprecated
-  // const dateParts = dateString.split(/[-/]/).map(Number);
-  // if (dateParts.length !== 3) return null;
-
-  // const [part1, part2, part3] = dateParts;
-  // const isDMY = format === "DD/MM/YYYY" ? part1 > 12 : part2 > 12;
-  // const day = isDMY ? part1 : part2;
-  // const month = isDMY ? part2 - 1 : part1 - 1;
-  // const year = part3;
-
-  // const date = new Date(year, month, day);
-  // return isNaN(date.getTime()) ? null : date;
 };
 
 /** --------------------------------------------------
  * * ***Safely parses JSON while handling errors and applying transformations.***
  * --------------------------------------------------
  *
- * - Automatically converts valid JSON strings to objects, arrays, numbers, etc.
- * - Can clean and transform data (e.g. convert strings to numbers, booleans, or dates)
- *   based on the provided options.
- * - Returns `undefined` if parsing fails, `null` if input is `null`.
+ * - ✅ **Supports generics** to ensure accurate return type inference.
+ *    - Always provide both `<TData, TInput>` for best results.
+ *    - ***Scroll down for full generic behavior explanation.***
+ * - ✅ Automatically parses valid JSON strings into objects, arrays, numbers, etc.
+ * - ✅ Supports data transformation via options (e.g., convert strings to numbers, booleans, or dates).
+ * - ✅ Returns:
+ *    1. `null` → if input is explicitly `null`.
+ *    2. `undefined` → if input is `undefined`, not a string, or if parsing fails.
+ *    3. Parsed and cleaned result (`TData`) → if input is a valid JSON string.
  *
- * @template T - Expected output type after parsing and cleaning.
- * @param {string | null | undefined} value - The JSON string to parse.
- * @param {CleanParsedDataOptions} [options] - Options for cleaning, converting values,
- *   logging on failure, strict mode, custom date parsing, and error callbacks.
- * @returns {T | undefined | null} The parsed and cleaned data.
+ * @template TData - The expected output type after parsing and cleaning.
+ * @template TInput - The input value type, used for advanced type inference and return typing.
  *
- * @throws {TypeError} If `options` is not an object.
+ * @param {TInput} value - The JSON string or value to parse.
+ * @param {CleanParsedDataOptions} [options] - Options to clean, convert types, enable strict mode,
+ *   support custom date formats, enable logging, or handle errors via callback.
  *
- * @example
- * // Parse and clean JSON with number & boolean conversion
- * const result = safeJsonParse('{"age": "30", "isActive": "true"}', { convertNumbers: true, convertBooleans: true });
- * console.log(result);
- * // → { age: 30, isActive: true }
+ * @returns {SafeJsonParseResult<TData, TInput>} Parsed and optionally cleaned result, or `null`/`undefined`.
  *
- * @example
- * // Parse with strict mode (removes invalid values)
- * const result = safeJsonParse('{"name": "   ", "score": "99abc"}', { convertNumbers: true, strictMode: true });
- * console.log(result);
- * // → {} (empty object because all values are invalid)
+ * @throws {TypeError} If `options` is provided but not a valid object.
  *
  * @example
- * // Parse JSON with custom date format
- * const result = safeJsonParse('{"birthday": "25/12/2000"}', { convertDates: true, customDateFormats: ["DD/MM/YYYY"] });
- * console.log(result);
- * // → { birthday: new Date("2000-12-25T00:00:00.000Z") }
+ * 1. ***Basic parse with number & boolean conversion:***
+ *  ```ts
+ *    const result = safeJsonParse('{"age": "30", "isActive": "true"}', {
+ *      convertNumbers: true,
+ *      convertBooleans: true
+ *    });
+ *    // result → { age: 30, isActive: true }
+ *  ```
  *
- * @example
- * // Handle parsing error with onError callback
- * safeJsonParse("{not-valid-json}", {
- *   loggingOnFail: true,
- *   onError: (err) => console.log("Custom handler:", err.message)
- * });
- * // → Logs parsing error and calls custom handler
+ * 2. ***Strict mode (removes invalid values):***
+ *  ```ts
+ *    const result = safeJsonParse('{"name": "   ", "score": "99abc"}', {
+ *      convertNumbers: true,
+ *      strictMode: true
+ *    });
+ *    // result → {}
+ *  ```
+ *
+ * 3. ***Custom date format parsing:***
+ *  ```ts
+ *    const result = safeJsonParse('{"birthday": "25/12/2000"}', {
+ *      convertDates: true,
+ *      customDateFormats: ["DD/MM/YYYY"]
+ *    });
+ *    // result → { birthday: new Date("2000-12-25T00:00:00.000Z") }
+ *  ```
+ *
+ * 4. ***Invalid JSON with custom error handling:***
+ *  ```ts
+ *    safeJsonParse("{invalid}", {
+ *      loggingOnFail: true,
+ *      onError: (err) => console.log("Custom handler:", err.message)
+ *    });
+ *    // → Logs parsing error and invokes handler
+ *  ```
+ *
+ * 5. ***Null or non-string input returns null/undefined:***
+ *  ```ts
+ *    safeJsonParse(null); // → null
+ *    safeJsonParse(undefined); // → undefined
+ *    safeJsonParse(123); // → undefined
+ *  ```
+ *
+ * 6. ***Generic usage: Provide both output and input type to ensure correct return typing:***
+ *  ```ts
+ *    type UserType = { name: string };
+ *
+ *    const obj = JSON.stringify({
+ *      name: "John"
+ *    });
+ *
+ *    const toParse = isAuth() ? obj : null;
+ *    const toParse2 = isAuth() ? obj : undefined;
+ *
+ *    // * `Without Generic`:
+ *      const parsed = safeJsonParse(toParse);
+ *      //- runtime: { name: "John" } | undefined | null
+ *      //- type: Record<string, unknown> | undefined | null
+ *      const parsed2 = safeJsonParse(toParse);
+ *      //- runtime: { name: "John" } | undefined
+ *      //- type: Record<string, unknown> | undefined
+ *
+ *    // * `With Generic`:
+ *      const parsed = safeJsonParse<UserType>(toParse);
+ *      //- runtime: { name: "John" } | undefined | null
+ *      //- type: undefined  ← (⚠ unexpected!)
+ *      const parsed2 = safeJsonParse<UserType>(toParse);
+ *      //- runtime: { name: "John" } | undefined
+ *      //- type: undefined  ← (⚠ unexpected!)
+ *      const parsed = safeJsonParse<UserType, typeof toParse>(toParse);
+ *      //- runtime: { name: "John" } | null | undefined
+ *      //- type: UserType | null | undefined
+ *      const parsed2 = safeJsonParse<UserType, typeof toParse>(toParse);
+ *      //- runtime: { name: "John" } | undefined
+ *      //- type: UserType | undefined
+ *  ```
+ * @note
+ * ⚠ **Generic Behavior:**
+ * - This function supports advanced generic inference for clean, type-safe return values.
+ * - If only the first generic (`TData`) is provided and the second (`TInput`) is omitted,
+ *   then `TInput` defaults to `undefined`, resulting in a return type of `undefined`.
+ * - To ensure correct return typing, **always pass both generics** when `value` is dynamic,
+ *   nullable, or unioned: `safeJsonParse<TData, typeof value>(value)`.
+ * - This makes the returned type exactly match your expectation: `TData | null | undefined`.
  */
-export const safeJsonParse = <T = unknown>(
-  value: string | null | undefined,
+export function safeJsonParse<
+  TData extends Record<string, unknown>,
+  TInput extends string | null | undefined | unknown = undefined
+>(
+  value: TInput,
+  options?: CleanParsedDataOptions
+): SafeJsonParseResult<TData, TInput>;
+//! implement main function
+export function safeJsonParse<TData extends Record<string, unknown>>(
+  value?: unknown,
   options: CleanParsedDataOptions = {}
-): T | undefined | null => {
+) {
   if (isNull(value)) return null;
   if (!isString(value)) return undefined;
 
@@ -289,7 +352,7 @@ export const safeJsonParse = <T = unknown>(
 
   try {
     const parsed = JSON.parse(value);
-    return cleanParsedData<T>(parsed, options);
+    return cleanParsedData<TData>(parsed, options);
   } catch (error) {
     if (options.loggingOnFail) {
       console.error("JSON parsing failed from `safeJsonParse`:", error);
@@ -299,4 +362,4 @@ export const safeJsonParse = <T = unknown>(
     }
     return undefined;
   }
-};
+}
