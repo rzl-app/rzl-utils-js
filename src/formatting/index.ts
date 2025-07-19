@@ -5,5 +5,5 @@
 export * from "src/formatting/currency";
 export * from "src/formatting/number";
 export * from "src/formatting/phone";
-export * from "src/formatting/string";
 export * from "src/formatting/time";
+export * from "src/formatting/string/index";
