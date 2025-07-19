@@ -4,7 +4,7 @@
 
 <p align="center">
 🚀 <strong>Rzl Utility JavaScript</strong> 🚀<br/>
-A lightweight, modern TypeScript utility library for Node.js & browser.<br/>
+A lightweight, modern TypeScript utility library for Node.js & browser (via bundlers like Webpack / Vite).<br/>
 Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/>
 <strong>Built with ❤️ by <a href="https://github.com/rzl-app">@rzl-app</a>.</strong>
 </p>
@@ -152,7 +152,7 @@ This package also provides utilities specially built for Next.js environments, n
 ```ts
 import { isServer } from "rzl-utils-js";
 
-console.log(isServer);
+console.log(isServer());
 // true if running on Node.js, false if browser
 ```
 
