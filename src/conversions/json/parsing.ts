@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   isArray,
   isEmptyArray,
@@ -332,14 +333,14 @@ export const parseCustomDate = (
  */
 
 export function safeJsonParse<
-  TData extends Record<string, unknown>,
+  TData extends Record<string, any>,
   TInput extends UnknownValue = UnknownValue
 >(
   value: TInput,
   options?: CleanParsedDataOptions
 ): IsAny<TInput> extends true ? TData | null | undefined : undefined;
 export function safeJsonParse<
-  TData extends Record<string, unknown>,
+  TData extends Record<string, any>,
   TInput extends string | null | undefined | unknown = undefined
 >(
   value: TInput,
