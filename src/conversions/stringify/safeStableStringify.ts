@@ -4,6 +4,7 @@ import {
   isBoolean,
   isDate,
   isFunction,
+  isNaN,
   isNull,
   isSymbol,
   isUndefined,
@@ -136,12 +137,7 @@ export const safeStableStringify = (
   const deepProcess = (val: any): any => {
     if (isFunction(val) || isSymbol(val)) return undefined;
     if (isBigInt(val)) return val.toString();
-    if (
-      isUndefined(val) ||
-      Number.isNaN(val) ||
-      val === Infinity ||
-      val === -Infinity
-    )
+    if (isUndefined(val) || isNaN(val) || val === Infinity || val === -Infinity)
       return null;
 
     if (typeof val === "object" && !isNull(val)) {
