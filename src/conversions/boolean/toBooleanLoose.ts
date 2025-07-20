@@ -2,10 +2,9 @@ import {
   isArray,
   isBoolean,
   isEmptyString,
-  isNull,
+  isNil,
   isNumber,
   isString,
-  isUndefined,
 } from "@/index";
 
 /** ---------------------------------
@@ -35,7 +34,7 @@ import {
  * toBooleanLoose({ a: 1 });  // true
  */
 export const toBooleanLoose = (value?: unknown): boolean => {
-  if (isNull(value) || isUndefined(value)) return false;
+  if (isNil(value)) return false;
   if (isString(value)) return !isEmptyString(value);
   if (isBoolean(value)) return value;
   if (isNumber(value)) return value !== 0;

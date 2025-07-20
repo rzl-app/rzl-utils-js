@@ -1,4 +1,4 @@
-import { isBoolean, isNull, isNumber, isString, isUndefined } from "@/index";
+import { isBoolean, isNil, isNumber, isString } from "@/index";
 
 /** ---------------------------------
  * * ***Converts a value into a strict boolean.***
@@ -30,7 +30,7 @@ export const toBooleanExplicit = (
   value?: unknown,
   options?: { caseInsensitive?: boolean; trimString?: boolean }
 ): boolean => {
-  if (isNull(value) || isUndefined(value)) return false;
+  if (isNil(value)) return false;
 
   const ci =
     options && "caseInsensitive" in options ? options.caseInsensitive : true;

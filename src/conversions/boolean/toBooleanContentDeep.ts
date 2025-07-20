@@ -2,11 +2,10 @@ import {
   isArray,
   isBoolean,
   isEmptyString,
-  isNull,
+  isNil,
   isNumber,
   isObject,
   isString,
-  isUndefined,
 } from "@/index";
 
 /** -------------------------------------------------
@@ -46,7 +45,7 @@ import {
  * toBooleanContentDeep({ a: { b: "x" }}); // true
  */
 export const toBooleanContentDeep = (value?: unknown): boolean => {
-  if (isNull(value) || isUndefined(value)) return false;
+  if (isNil(value)) return false;
   if (isString(value)) return !isEmptyString(value);
   if (isBoolean(value)) return value;
   if (isNumber(value)) return value !== 0;

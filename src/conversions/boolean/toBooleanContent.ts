@@ -3,11 +3,10 @@ import {
   isBoolean,
   isEmptyString,
   isEmptyValue,
-  isNull,
+  isNil,
   isNumber,
   isObject,
   isString,
-  isUndefined,
 } from "@/index";
 
 /** ---------------------------------
@@ -39,7 +38,7 @@ import {
  * toBooleanContent({ a: 1 });  // true
  */
 export const toBooleanContent = (value?: unknown): boolean => {
-  if (isNull(value) || isUndefined(value)) return false;
+  if (isNil(value)) return false;
   if (isString(value)) return !isEmptyString(value); // or value.trim().length > 0;
   if (isBoolean(value)) return value;
   if (isNumber(value)) return value !== 0;
