@@ -9,7 +9,7 @@ import { findDuplicates, isArray } from "@/index";
  *
  * It also validates that `keysToOmit` does not contain duplicate keys.
  *
- * Internally, it uses `lodash.isEqual` to check for duplicates in the `keysToOmit` array.
+ * Internally, it uses `isEqual` to check for duplicates in the `keysToOmit` array.
  *
  * @template I The type of the input object.
  * @template K The keys to omit from the object.

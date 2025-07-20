@@ -4,7 +4,7 @@ import { isArray, isEqual } from "@/index";
  * * ***Finds duplicate values in an array by deep equality comparison.***
  * ----------------------------------------------------------------------
  *
- * - ✔ Uses `lodash.isEqual` to compare elements (handles objects, arrays, dates, NaN, etc.)
+ * - ✔ Uses `isEqual` to compare elements (handles objects, arrays, dates, NaN, etc.)
  * - ✔ Returns a new array containing only the *first occurrences* of duplicated values.
  * - ✔ Does **not mutate** the original array.
  * - ✔ Throws `TypeError` if input is not an array.
