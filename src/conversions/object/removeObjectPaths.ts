@@ -3,6 +3,7 @@ import {
   isEmptyArray,
   isFunction,
   isNull,
+  isObjectOrArray,
   isUndefined,
 } from "@/predicates";
 import type { ConfigRemoveObjectPaths } from "./removeObjectPaths.types";
@@ -21,7 +22,7 @@ const deleteShallowKey = <T extends Record<string, unknown>>(
   obj: T,
   key: string
 ) => {
-  if (typeof obj === "object" && !isNull(obj) && key in obj) {
+  if (isObjectOrArray(obj) && !isNull(obj) && key in obj) {
     delete obj[key];
   }
   return obj;
@@ -37,7 +38,7 @@ const deleteNestedKey = <T extends Record<string, unknown>>(
 
   if (Array.isArray(obj)) {
     for (const item of obj) {
-      if (typeof item === "object" && !isNull(item)) {
+      if (isObjectOrArray(item) && !isNull(item)) {
         deleteNestedKey(item, path); // 💥 recursive pass same path
       }
     }
@@ -45,7 +46,7 @@ const deleteNestedKey = <T extends Record<string, unknown>>(
     delete obj[currentKey];
   } else if (
     !isUndefined(obj[currentKey]) &&
-    typeof obj[currentKey] === "object"
+    isObjectOrArray(obj[currentKey])
   ) {
     deleteNestedKey(obj[currentKey] as T, rest);
   }
@@ -135,10 +136,10 @@ export const removeObjectPaths = <T extends Record<string, unknown>>(
   keysToDelete: ConfigRemoveObjectPaths<T>[],
   deepClone: boolean = true
 ): Partial<T> => {
-  if (typeof object !== "object" || isNull(object)) return {} as Partial<T>;
+  if (!isObjectOrArray(object) || isNull(object)) return {} as Partial<T>;
   if (
     !isArray(keysToDelete) ||
-    !keysToDelete.every((k) => typeof k === "object" && "key" in k)
+    !keysToDelete.every((k) => isObjectOrArray(k) && "key" in k)
   ) {
     throw new TypeError(
       "Expected keysToDelete to be an array of { key, deep? } objects"

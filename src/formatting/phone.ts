@@ -1,11 +1,4 @@
-import {
-  isBoolean,
-  isNull,
-  isNumber,
-  isObject,
-  isString,
-  isUndefined,
-} from "@/predicates";
+import { isBoolean, isNil, isNumber, isObject, isString } from "@/predicates";
 
 import type {
   FormatPhoneNumberProps,
@@ -140,7 +133,7 @@ export function formatPhoneNumber(
   value?: ValueFormatPhoneNumber,
   options: FormatPhoneNumberProps = {}
 ) {
-  if (isUndefined(value) || isNull(value)) {
+  if (isNil(value)) {
     return "";
   }
 

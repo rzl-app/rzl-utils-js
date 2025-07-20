@@ -1,4 +1,4 @@
-import { safeStableStringify, isArray, isBoolean } from "@/index";
+import { safeStableStringify, isArray, isBoolean, isEqual } from "@/index";
 
 /** ----------------------------------------------------------
  * * ***Compares two arrays deeply to check if they are equal.***
@@ -67,7 +67,7 @@ export const areArraysEqual = (
     throw new TypeError(`props 'ignoreOrder' must be \`boolean\` type!`);
   }
 
-  if (arr1.length !== arr2.length) return false;
+  if (!isEqual(arr1.length, arr2.length)) return false;
 
   /**
    * Recursively sorts an array (and nested arrays) so that
@@ -98,7 +98,7 @@ export const areArraysEqual = (
   const normalizedArr1 = ignoreOrder ? deepIgnoreOrder(arr1) : arr1;
   const normalizedArr2 = ignoreOrder ? deepIgnoreOrder(arr2) : arr2;
 
-  if (normalizedArr1.length !== normalizedArr2.length) return false;
+  if (!isEqual(normalizedArr1.length, normalizedArr2.length)) return false;
 
   return normalizedArr1.every(
     (item, index) =>

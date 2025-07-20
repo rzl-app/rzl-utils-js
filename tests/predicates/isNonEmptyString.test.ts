@@ -1,5 +1,5 @@
 // tests/isNonEmptyString.test.ts
-import { isNonEmptyString } from "@/predicates";
+import { isNonEmptyString } from "@/index";
 import { describe, expect, it } from "vitest";
 
 describe("isNonEmptyString", () => {

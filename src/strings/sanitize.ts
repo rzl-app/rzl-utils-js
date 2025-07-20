@@ -96,7 +96,7 @@ export const normalizeSpaces = (
  * // → ""
  */
 export const normalizeString = (input?: string | null): string => {
-  return typeof input === "string" && input.trim().length ? input.trim() : "";
+  return isNonEmptyString(input) ? input.trim() : "";
 };
 
 /** ----------------------------------------------------------

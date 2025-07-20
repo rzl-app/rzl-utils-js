@@ -90,7 +90,8 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 This package also provides utilities specially built for Next.js environments, neatly separated into their own entry points:
 
 - <h3 id="nextjs-support--globals">`rzl-utils-js/next`</h3>  
-  Helpers for building URLs, generating dynamic routes, reading environment variables, etc.  
+  Helpers for building URLs, generating dynamic routes, reading environment variables, etc.   
+
   ✅ Safe to use in both Next.js pages & API routes.
 
   [Read More Docs](/docs/next-js/global.md#docs-sub-main--title)
@@ -99,6 +100,7 @@ This package also provides utilities specially built for Next.js environments, n
 
 - <h3 id="nextjs-support--server-only">`rzl-utils-js/next/server`</h3>   
   Utilities meant to run in Next.js server-only contexts (like middleware or server actions) for tasks such as extracting real client IPs.  
+  
   ⚠️ Will throw if used outside a Next.js server environment.
 
   [Read More Docs](/docs/next-js/server-only.md#docs-sub-main--title)

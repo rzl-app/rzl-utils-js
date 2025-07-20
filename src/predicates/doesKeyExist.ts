@@ -1,3 +1,4 @@
+import { isObjectOrArray } from "..";
 import { isArray } from "./isArray";
 import { isNumber } from "./isNumber";
 import { isString } from "./isString";
@@ -46,7 +47,7 @@ export const doesKeyExist = <T>(
   object: T | Record<string, unknown> | unknown[],
   key: PropertyKey
 ): boolean => {
-  if (!object || typeof object !== "object") return false; // Handle null, undefined, and non-objects
+  if (!object || !isObjectOrArray(object)) return false; // Handle null, undefined, and non-objects
 
   if (!(isString(key) || isNumber(key) || isSymbol(key))) {
     throw new TypeError(

@@ -2,7 +2,7 @@ import {
   isArray,
   isBoolean,
   isEmptyArray,
-  isNull,
+  isNil,
   isNumber,
   isObject,
   isString,
@@ -17,7 +17,7 @@ import {
  * - Removes `null` and `undefined` values from objects and arrays.
  * - Keeps array/objects structure unless `removeEmptyObjects` or `removeEmptyArrays` is enabled.
  */
-type ConvertedDeepStrings<
+type ConvertedDeepString<
   T,
   RemoveEmptyObjects extends boolean,
   RemoveEmptyArrays extends boolean
@@ -27,10 +27,10 @@ type ConvertedDeepStrings<
   ? string // Convert number & string to string
   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends any[]
-  ? ConvertedDeepStrings<T[number], RemoveEmptyObjects, RemoveEmptyArrays>[] // Maintain array structure
+  ? ConvertedDeepString<T[number], RemoveEmptyObjects, RemoveEmptyArrays>[] // Maintain array structure
   : T extends Record<string, unknown>
   ? {
-      [K in keyof T]: ConvertedDeepStrings<
+      [K in keyof T]: ConvertedDeepString<
         T[K],
         RemoveEmptyObjects,
         RemoveEmptyArrays
@@ -64,7 +64,7 @@ type ConvertedDeepStrings<
  * @param {boolean} [removeEmptyObjects=false] - Whether to remove empty objects `{}`.
  * @param {boolean} [removeEmptyArrays=false] - Whether to remove empty arrays `[]`.
  *
- * @returns {ConvertedDeepStrings<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined}
+ * @returns {ConvertedDeepString<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined}
  *          The converted data structure with all values as string, or `undefined` if completely empty.
  *
  * @example
@@ -112,7 +112,7 @@ export const toStringDeep = <
   removeEmptyObjects: RemoveEmptyObjects = false as RemoveEmptyObjects,
   removeEmptyArrays: RemoveEmptyArrays = false as RemoveEmptyArrays
 ):
-  | ConvertedDeepStrings<T, RemoveEmptyObjects, RemoveEmptyArrays>
+  | ConvertedDeepString<T, RemoveEmptyObjects, RemoveEmptyArrays>
   | undefined => {
   function _toStringDeepInternal<
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
@@ -124,10 +124,8 @@ export const toStringDeep = <
     removeEmptyObjects: RemoveEmptyObjects,
     removeEmptyArrays: RemoveEmptyArrays,
     isRoot: boolean
-  ):
-    | ConvertedDeepStrings<T, RemoveEmptyObjects, RemoveEmptyArrays>
-    | undefined {
-    if (isUndefined(input) || isNull(input)) return undefined;
+  ): ConvertedDeepString<T, RemoveEmptyObjects, RemoveEmptyArrays> | undefined {
+    if (isNil(input)) return undefined;
 
     if (!isBoolean(removeEmptyObjects) || !isBoolean(removeEmptyArrays)) {
       throw new TypeError(
@@ -136,7 +134,7 @@ export const toStringDeep = <
     }
 
     if (isNumber(input) || isString(input)) {
-      return String(input) as ConvertedDeepStrings<
+      return String(input) as ConvertedDeepString<
         T,
         RemoveEmptyObjects,
         RemoveEmptyArrays
@@ -157,7 +155,7 @@ export const toStringDeep = <
 
       if (removeEmptyArrays && isEmptyArray(newArray)) return undefined;
 
-      return newArray as ConvertedDeepStrings<
+      return newArray as ConvertedDeepString<
         T,
         RemoveEmptyObjects,
         RemoveEmptyArrays
@@ -185,7 +183,7 @@ export const toStringDeep = <
 
       if (removeEmptyObjects && Object.keys(newObject).length === 0) {
         return isRoot
-          ? ({} as ConvertedDeepStrings<
+          ? ({} as ConvertedDeepString<
               T,
               RemoveEmptyObjects,
               RemoveEmptyArrays
@@ -193,7 +191,7 @@ export const toStringDeep = <
           : undefined;
       }
 
-      return newObject as ConvertedDeepStrings<
+      return newObject as ConvertedDeepString<
         T,
         RemoveEmptyObjects,
         RemoveEmptyArrays

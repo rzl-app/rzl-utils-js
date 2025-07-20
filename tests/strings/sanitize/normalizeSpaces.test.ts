@@ -1,4 +1,4 @@
-import { normalizeSpaces } from "@/strings";
+import { normalizeSpaces } from "@/strings/sanitize";
 import { describe, expect, it } from "vitest";
 
 describe("normalizeSpaces", () => {

@@ -1,3 +1,5 @@
+import { isInteger } from "@/index";
+
 /** ----------------------------
  * * ***Generates a random integer within a specified range (inclusive).***
  * ----------------------------
@@ -32,7 +34,7 @@
  * // → still safely capped at MAX_SAFE_INTEGER
  */
 export const randomInt = (min: number, max: number): number => {
-  if (!Number.isInteger(min) || !Number.isInteger(max)) {
+  if (!isInteger(min) || !isInteger(max)) {
     throw new Error(
       "Error function of `getRandomIntInRange` both parameter `min` and `max` must be integers."
     );

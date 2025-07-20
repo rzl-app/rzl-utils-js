@@ -19,19 +19,25 @@ describe("delay", () => {
   });
 
   it("should throw if milliSeconds is not a number or invalid", () => {
+    expect(() => delay(NaN)).toThrow(
+      "`milliSeconds` must be a number, non-zero, non-NaN, non-negative, and non finite number."
+    );
+    expect(() => delay(0)).toThrow(
+      "`milliSeconds` must be a number, non-zero, non-NaN, non-negative, and non finite number."
+    );
     expect(() => delay(-1)).toThrow(
-      "`milliSeconds` must be a number, non-negative, and non finite number."
+      "`milliSeconds` must be a number, non-zero, non-NaN, non-negative, and non finite number."
     );
     expect(() => delay(Number.POSITIVE_INFINITY)).toThrow(
-      "`milliSeconds` must be a number, non-negative, and non finite number."
+      "`milliSeconds` must be a number, non-zero, non-NaN, non-negative, and non finite number."
     );
     // @ts-expect-error
     expect(() => delay("2000")).toThrow(
-      "`milliSeconds` must be a number, non-negative, and non finite number."
+      "`milliSeconds` must be a number, non-zero, non-NaN, non-negative, and non finite number."
     );
     // @ts-expect-error
     expect(() => delay(null)).toThrow(
-      "`milliSeconds` must be a number, non-negative, and non finite number."
+      "`milliSeconds` must be a number, non-zero, non-NaN, non-negative, and non finite number."
     );
   });
 

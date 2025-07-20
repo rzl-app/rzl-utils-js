@@ -2,6 +2,7 @@ import {
   isArray,
   isDeepEqual,
   isEmptyArray,
+  isNil,
   isNull,
   isObject,
   isUndefined,
@@ -45,7 +46,7 @@ import type { DedupeResult } from "./transforms.types";
  */
 export const filterNullArray = <T>(input?: T[] | null): T[] | undefined => {
   // explicit undefined|null input
-  if (isUndefined(input) || isNull(input)) return undefined;
+  if (isNil(input)) return undefined;
 
   if (!isArray(input)) return [];
 

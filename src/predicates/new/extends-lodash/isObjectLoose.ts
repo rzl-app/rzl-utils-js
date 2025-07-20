@@ -13,16 +13,16 @@ import { isObject as _isObject } from "lodash";
  * @returns {boolean} Returns `true` if `value` is an object, else `false`.
  * @example
  *
- * isObject({});
+ * isObjectLoose({});
  * // => true
  *
- * isObject([1, 2, 3]);
+ * isObjectLoose([1, 2, 3]);
  * // => true
  *
- * isObject(noop);
+ * isObjectLoose(noop);
  * // => true
  *
- * isObject(null);
+ * isObjectLoose(null);
  * // => false
  */
 export function isObjectLoose(value: unknown): value is object {

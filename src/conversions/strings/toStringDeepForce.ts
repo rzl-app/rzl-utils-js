@@ -96,7 +96,6 @@ export const toStringDeepForce = (
   }
 
   // function: only convert on "all"
-  // if (typeof value === "function") {
   if (isFunction(value)) {
     return forceToString === "all" ? value.toString() : value;
   }

@@ -1,11 +1,4 @@
-import {
-  isArray,
-  isEmptyString,
-  isNull,
-  isObject,
-  isString,
-  isUndefined,
-} from "./";
+import { isArray, isEmptyString, isNil, isObject, isString } from "./";
 
 /** ----------------------------------------------------------
  * * ***Determines if a value is an empty object (`{}`), empty array (`[]`), or generally falsy.***
@@ -33,7 +26,7 @@ import {
  * isEmptyValue(() => {}); // false
  */
 export const isEmptyValue = (value: unknown): boolean => {
-  if (isNull(value) || isUndefined(value) || value === false) return true;
+  if (isNil(value) || value === false) return true;
   if (typeof value === "number" && Number.isNaN(value)) return true;
   if (isString(value)) return isEmptyString(value);
   if (isArray(value)) return value.length === 0;

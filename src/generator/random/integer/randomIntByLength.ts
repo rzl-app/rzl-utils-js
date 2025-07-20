@@ -1,4 +1,5 @@
-import { isObject } from "@/predicates";
+import { isInteger, isObject } from "@/predicates";
+import { randomInt } from "./randomInt";
 
 /** ----------------------------------------------------------
  * * ***Generates a random integer within a specified range of digit lengths.***
@@ -56,8 +57,8 @@ export const randomIntByLength = (options?: {
 
   // Validate minLength and maxLength
   if (
-    !Number.isInteger(minLength) ||
-    !Number.isInteger(maxLength) ||
+    !isInteger(minLength) ||
+    !isInteger(maxLength) ||
     minLength < 1 ||
     maxLength > 16 ||
     minLength > maxLength
@@ -69,16 +70,14 @@ export const randomIntByLength = (options?: {
 
   // Generate a random length between minLength and maxLength
   const randomLength =
-    minLength === maxLength
-      ? minLength
-      : Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+    minLength === maxLength ? minLength : randomInt(minLength, maxLength);
 
   // Define min and max value based on the selected length
   const minValue = 10 ** (randomLength - 1); // Example: minLength=3 → minValue=100
   const maxValue = 10 ** randomLength - 1; // Example: maxLength=4 → maxValue=9999
 
   // Generate a random number within the valid range
-  let result = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+  let result = randomInt(minValue, maxValue);
 
   // Ensure the number is not zero if `avoidZero` is true
   if (avoidZero && result === 0) {

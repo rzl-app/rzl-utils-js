@@ -43,12 +43,12 @@ export const extractURLs = (url: string): string[] | null => {
     return null;
   }
 
-  // Core regex dengan lookahead
+  // Core regex with lookahead
   const urlPattern = /https?:\/\/.*?(?=https?:\/\/|\s|$)/g;
   const matches = decoded.match(urlPattern);
   if (!matches) return null;
 
-  // Cleanup trailing punctuation dan validasi protokol
+  // Cleanup trailing punctuation and validation protocol
   const cleaned = matches
     .map((url) => url.replace(/[.,;:!?)]*$/, ""))
     .filter((url) => {
@@ -61,25 +61,4 @@ export const extractURLs = (url: string): string[] | null => {
     });
 
   return cleaned.length ? cleaned : null;
-
-  // if (typeof url !== "string" || !isValidURL(url)) {
-  //   return null;
-  // }
-
-  // const urlPattern =
-  //   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)/g;
-
-  // // Attempt to decode the entire URL, including domain and query parameters
-  // let decodedUrl: string;
-
-  // try {
-  //   // Decode the URL (to handle cases like https%3A%2F%2F becoming https://)
-  //   decodedUrl = decodeURIComponent(url);
-  // } catch {
-  //   // If decoding fails, return false as it indicates an invalid encoded URL
-  //   return null;
-  // }
-
-  // const matches = decodedUrl.match(urlPattern);
-  // return matches && matches.length > 0 ? matches : null;
 };

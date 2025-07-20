@@ -2,6 +2,7 @@
 import {
   isArray,
   isEmptyArray,
+  isNil,
   isNull,
   isObject,
   isString,
@@ -133,7 +134,7 @@ export const cleanParsedData = <T = unknown>(
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
         const cleanedValue = cleanParsedData(obj[key], options);
-        if (!isUndefined(cleanedValue) && !isNull(cleanedValue)) {
+        if (!isNil(cleanedValue)) {
           cleanedObject[key] = cleanedValue;
         }
       }

@@ -1,6 +1,4 @@
-import { isArray } from "./isArray";
-import { isNull } from "./isNull";
-import { isUndefined } from "./isUndefined";
+import { isArray, isNil } from "@/predicates";
 
 /** ---------------------------------------------------------
  * * ***Type guard: Checks if a value is a plain object.***
@@ -18,10 +16,5 @@ import { isUndefined } from "./isUndefined";
  * isObject(undefined);         // false
  */
 export const isObject = <T>(val: T): val is NonNullable<T> => {
-  return (
-    typeof val === "object" &&
-    !isNull(val) &&
-    !isUndefined(val) &&
-    !isArray(val)
-  );
+  return typeof val === "object" && !isNil(val) && !isArray(val);
 };

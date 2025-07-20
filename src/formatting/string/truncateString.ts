@@ -1,4 +1,10 @@
-import { isBoolean, isEmptyString, isNumber, isString } from "@/index";
+import {
+  isBoolean,
+  isEmptyString,
+  isNonEmptyString,
+  isNumber,
+  isString,
+} from "@/index";
 
 /** ----------------------------------------------------------
  * * ***Truncates a string to a specified length and optionally appends an ending.***
@@ -39,7 +45,7 @@ export const truncateString = (
   ending: string = "...",
   trim: boolean = true
 ): string => {
-  if (!isString(text) || isEmptyString(text)) return "";
+  if (!isNonEmptyString(text)) return "";
   // if (!text || typeof text !== "string" || text.trim().length < 1) return "";
 
   if (length < 1) return "";

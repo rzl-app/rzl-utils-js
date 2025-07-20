@@ -1,5 +1,6 @@
-import { isBoolean, isObject } from "@/predicates";
+import { isBoolean, isInteger, isObject } from "@/predicates";
 import type { RandomStringOptions } from "@/types/private";
+import { randomInt } from "../integer";
 
 /** ---------------------------------------------------------------------------------
  * * ***Generates a random alphanumeric string or number with a specified length range.***
@@ -49,8 +50,8 @@ export const randomStr = (options?: RandomStringOptions): string => {
 
   // Validate `minLength` & `maxLength`
   if (
-    !Number.isInteger(minLength) ||
-    !Number.isInteger(maxLength) ||
+    !isInteger(minLength) ||
+    !isInteger(maxLength) ||
     minLength < 1 ||
     maxLength > 5000 ||
     minLength > maxLength
@@ -68,8 +69,7 @@ export const randomStr = (options?: RandomStringOptions): string => {
   }
 
   // Generate a random length within the range
-  const length =
-    Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+  const length = randomInt(minLength, maxLength);
 
   // Function to clean characters based on `avoidWhiteSpace`
   const cleanCharacters = (charSet: string) => {

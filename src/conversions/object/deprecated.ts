@@ -1,4 +1,4 @@
-import { isArray, isNull, isObject } from "@/predicates";
+import { isArray, isNull, isObject, isObjectOrArray } from "@/index";
 
 type AllKeys<T> = T extends object
   ? T extends Array<infer U>
@@ -91,7 +91,7 @@ export const removeObjectPathsDeprecated = <T extends Record<string, unknown>>(
   keysToDelete: DeleteKeyConfig<T>[],
   deepClone: boolean = false
 ): Partial<T> => {
-  if (typeof object !== "object" || object === null) return {} as Partial<T>;
+  if (!isObjectOrArray(object) || isNull(object)) return {} as Partial<T>;
 
   if (
     !isArray(keysToDelete) ||
@@ -113,15 +113,15 @@ export const removeObjectPathsDeprecated = <T extends Record<string, unknown>>(
   const process = (obj: any): any => {
     if (isArray(obj)) {
       return obj.map((item) =>
-        typeof item === "object" && !isNull(item) ? process(item) : item
+        isObjectOrArray(item) && !isNull(item) ? process(item) : item
       );
-    } else if (typeof obj === "object" && !isNull(obj)) {
+    } else if (isObject(obj) && !isNull(obj)) {
       for (const key of Object.keys(obj)) {
         if (shallowKeys.has(key)) {
           delete obj[key];
         } else if (deepKeys.has(key)) {
           delete obj[key];
-        } else if (typeof obj[key] === "object" && !isNull(obj[key])) {
+        } else if (isObjectOrArray(obj[key]) && !isNull(obj[key])) {
           process(obj[key]);
         }
       }

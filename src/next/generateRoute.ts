@@ -7,7 +7,7 @@ import {
   isObject,
   isString,
   isUndefined,
-} from "@/predicates";
+} from "@/index";
 
 /** Extracts dynamic route parameters from a given route string.
  *

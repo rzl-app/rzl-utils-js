@@ -18,7 +18,7 @@ import {
  * * 🚫 Note: This function does NOT support recursive or nested arrays.
  *   It only processes a flat array of values.
  *
- * * Use `deepStrings` if you want to recursive.
+ * * Use `toStringDeep` if you want to recursive.
  * ---------------------------------------------
  *
  * @param {Array<string | number | null | undefined>} [array] - The array to be transformed.
@@ -130,7 +130,7 @@ export function toStringArrayUnRecursive<T extends string | number>(
  * * 🚫 Note: This function does NOT support recursive or nested arrays.
  *   It only processes a flat array of values.
  *
- * * Use `deepNumbers` if you want to recursive.
+ * * Use `toNumbersDeep` if you want to recursive.
  * ---------------------------------
  *
  * @param {Array<string | null | undefined>} [array] - The array of string values (or values convertible to strings) to be transformed into numbers.

@@ -1,4 +1,4 @@
-import { isUndefined } from "@/predicates";
+import { isNumber, isNull } from "@/predicates";
 
 /** ----------------------------------------
  * * ***Creates a delay for a specified duration.***
@@ -25,16 +25,16 @@ export const delay = (
   signal?: AbortSignal
 ): Promise<void> => {
   if (
-    typeof milliSeconds !== "number" ||
+    !isNumber(milliSeconds) ||
     !Number.isFinite(milliSeconds) ||
-    milliSeconds < 0
+    milliSeconds <= 0
   ) {
     throw new TypeError(
-      "`milliSeconds` must be a number, non-negative, and non finite number."
+      "`milliSeconds` must be a number, non-zero, non-NaN, non-negative, and non finite number."
     );
   }
 
-  if (!isUndefined(signal) && !(signal instanceof AbortSignal)) {
+  if (isNull(signal) || (signal && !(signal instanceof AbortSignal))) {
     throw new TypeError(
       "`signal` must be an instance of AbortSignal if provided."
     );

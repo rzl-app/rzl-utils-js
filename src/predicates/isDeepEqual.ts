@@ -1,3 +1,4 @@
+import { isObjectOrArray } from "..";
 import { isArray } from "./isArray";
 import { isDate } from "./isDate";
 import { isRegExp } from "./isRegExp";
@@ -81,12 +82,12 @@ export const isDeepEqual = (a: unknown, b: unknown): boolean => {
     return a.every((v, i) => isDeepEqual(v, b[i]));
   }
 
-  if (typeof a === "object" && typeof b === "object" && a && b) {
+  if (isObjectOrArray(a) && isObjectOrArray(b) && a && b) {
     if (isArray(a) !== isArray(b)) {
       return false;
     }
-    const aKeys = Object.keys(a as object);
-    const bKeys = Object.keys(b as object);
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
     if (aKeys.length !== bKeys.length) return false;
     return aKeys.every((key) =>
       isDeepEqual(

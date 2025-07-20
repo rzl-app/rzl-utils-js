@@ -1,4 +1,11 @@
-import { isArray, isEmptyArray, isEmptyString, isNumber, isString } from "./";
+import {
+  isArray,
+  isEmptyArray,
+  isEmptyString,
+  isNumber,
+  isObjectOrArray,
+  isString,
+} from "./";
 
 /** ----------------------------------------------------------
  * * ***Recursively checks if a value is "deeply empty".***
@@ -39,7 +46,7 @@ export const isEmptyDeep = (value: unknown): boolean => {
     return isEmptyArray(value) || value.every(isEmptyDeep);
   }
 
-  if (typeof value === "object") {
+  if (isObjectOrArray(value)) {
     const keys = Object.keys(value);
     const symbols = Object.getOwnPropertySymbols(value);
     return (
