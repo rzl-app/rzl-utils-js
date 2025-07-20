@@ -1,5 +1,6 @@
-/**
- * A union type of all valid named CSS colors including `transparent`.
+/** --------------------------------------------------
+ * * ***A union type of all valid named CSS colors including `transparent`.***
+ * --------------------------------------------------
  *
  * This type includes standard color names as defined in the CSS Color Module Specification,
  * and can be used for validating CSS color inputs in strongly typed UI libraries, themes, or design systems.

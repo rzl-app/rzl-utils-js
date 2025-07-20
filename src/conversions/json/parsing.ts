@@ -7,7 +7,7 @@ import {
   isUndefined,
 } from "@/index";
 import type { SafeJsonParseResult, UnknownValue } from "./safeJsonParse.types";
-import { IsAny } from "type-samurai";
+import type { IsAny } from "@/types";
 
 /** --------------------------------------------------
  * * ***Options for cleaning and transforming parsed JSON data.***

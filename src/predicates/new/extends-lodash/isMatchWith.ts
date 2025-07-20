@@ -1,4 +1,7 @@
-import { isMatchWith as _isMatchWith, isMatchWithCustomizer } from "lodash";
+import {
+  isMatchWith as _isMatchWith,
+  type isMatchWithCustomizer,
+} from "lodash";
 
 /** ----------------------------------------------------
  * * ***This method is like `isMatch` except that it accepts `customizer` which

@@ -13,7 +13,8 @@ import {
 /** ---------------------------------------------
  * * ***Converts all values in an array from numbers or other types to strings.***
  * * ***The function can also remove invalid values (null, undefined) based on the options provided.***
- * *
+ * ---------------------------------
+ *
  * * 🚫 Note: This function does NOT support recursive or nested arrays.
  *   It only processes a flat array of values.
  *
@@ -124,7 +125,8 @@ export function toStringArrayUnRecursive<T extends string | number>(
 /** ---------------------------------
  * * ***Converts an array of string values (or values that can be cast to string) to an array of numbers.***
  * * ***Optionally removes invalid values (non-numeric values) based on the provided options.***
- * *
+ * ---------------------------------
+ *
  * * 🚫 Note: This function does NOT support recursive or nested arrays.
  *   It only processes a flat array of values.
  *

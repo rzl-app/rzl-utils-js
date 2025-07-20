@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 type Enumerate<
   N extends number,
   Acc extends number[] = []
@@ -6,9 +5,8 @@ type Enumerate<
   ? Acc[number]
   : Enumerate<N, [...Acc, Acc["length"]]>;
 
-/**
- * --------------------------------------------------
- * * Generate a union type of numbers within a specific range from `1` to `999`.
+/** --------------------------------------------------
+ * * ***Generate a union type of numbers within a specific range from `1` to `999`.***
  * --------------------------------------------------
  *
  * @template From Starting number of the range (inclusive).

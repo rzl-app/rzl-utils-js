@@ -7,7 +7,7 @@ import {
   isUndefined,
   parseCurrencyString,
 } from "@/index";
-import { FormatCurrencyOptions } from "../conversions/currency/types";
+import { FormatCurrencyOptions } from "@/conversions/currency/types";
 
 /** -------------------------------------------------------
  * * Formats a number or messy currency string into a

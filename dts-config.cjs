@@ -32,7 +32,7 @@ module.exports = {
       },
       libraries: {
         // inlinedLibraries: ["type-samurai", "date-fns/locale", "date-fns"],
-        inlinedLibraries: ["type-samurai"],
+        inlinedLibraries: ["type-samurai", "lodash"],
         importedLibraries: ["date-fns/locale", "date-fns"],
       },
     },

@@ -1,4 +1,4 @@
-import { isEqual } from "lodash";
+import { isEqual } from "@/index";
 
 /** ---------------------------------
  * * ***Compares two objects for deep equality.***

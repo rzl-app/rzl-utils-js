@@ -1,4 +1,4 @@
-import type { IfExtends, IfNotExtends, IsAny } from "type-samurai";
+import type { IfExtends, IfNotExtends, IsAny } from "@/types";
 
 type NonJsonParsableType = Omit<
   Exclude<unknown, string | null | undefined>,

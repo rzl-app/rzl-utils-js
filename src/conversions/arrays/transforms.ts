@@ -1,12 +1,9 @@
 import {
   isArray,
-  isBoolean,
   isDeepEqual,
   isEmptyArray,
   isNull,
-  isNumber,
   isObject,
-  isString,
   isUndefined,
   toStringDeepForce,
 } from "@/index";

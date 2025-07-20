@@ -1,8 +1,7 @@
 import type { Sum, IsGreaterThan } from "@/types";
 
-/**
- * --------------------------------------------------
- * * Generate a union type of numbers within a specified range.
+/** --------------------------------------------------
+ * * ***Generate a union type of numbers within a specified range.***
  * --------------------------------------------------
  *
  * @template From Starting number of the range (inclusive).

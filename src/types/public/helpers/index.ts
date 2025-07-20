@@ -1,1 +1,1 @@
-export * from "./customize";
+export type * from "./customize";

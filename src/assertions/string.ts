@@ -1,5 +1,5 @@
 import { isFunction } from "@/predicates";
-import { isString } from "lodash";
+import { isString } from "@/index";
 
 /** -------------------------------------------------------
  * * ***Asserts that a value is of type `string`.***

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isEmpty as _isEmpty, EmptyObjectOf, List } from "lodash";
+import { isEmpty as _isEmpty, type EmptyObjectOf, type List } from "lodash";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is an empty object, collection, map, or set.***

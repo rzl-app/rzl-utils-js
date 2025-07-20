@@ -1,1 +1,1 @@
-export * from "./ColorCssValidBase";
+export type * from "./ColorCssValidBase";

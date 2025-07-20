@@ -7,6 +7,7 @@ export default defineConfig([
     external: [],
     format: ["cjs", "esm"],
     dts: true,
+    treeshake: true,
     splitting: false,
     minify: true,
     sourcemap: false,
@@ -16,13 +17,16 @@ export default defineConfig([
       options.legalComments = "none";
     },
   },
+
   //todo: bundle umd/global for browser
   {
     entry: { "rzl-utils": "src/index.ts" },
     format: ["iife"],
     globalName: "RzlUtilsJs",
     minify: true,
-    clean: false,
+    treeshake: true,
+    splitting: false,
+    clean: true,
     bundle: true,
     // outExtension({ format }) {
     //   return {
@@ -39,6 +43,7 @@ export default defineConfig([
     entry: ["src/next/index.ts"],
     format: ["cjs", "esm"],
     dts: true,
+    treeshake: true,
     outDir: "dist/next",
     external: ["next", "next/*", "react", "react/*"],
     splitting: false,
@@ -56,6 +61,7 @@ export default defineConfig([
     outDir: "dist/next/server",
     format: ["cjs", "esm"],
     dts: true,
+    treeshake: true,
     external: ["next", "next/server", "next/*", "react", "react-dom"],
     bundle: true,
     clean: true,
