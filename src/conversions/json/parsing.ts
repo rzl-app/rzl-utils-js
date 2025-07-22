@@ -2,7 +2,6 @@
 import {
   isArray,
   isEmptyArray,
-  isNil,
   isNull,
   isObject,
   isString,
@@ -46,9 +45,11 @@ interface CleanParsedDataOptions {
    */
   removeNulls?: boolean;
 
-  /** Remove `undefined` values from objects and arrays.
+  /**
+   * Remove `undefined` values from objects and arrays.
    *
-   * @default false
+   * - `false` (default): replaces `undefined` with `null`
+   * - `true`: removes keys with `undefined` values
    */
   removeUndefined?: boolean;
 
@@ -134,7 +135,7 @@ export const cleanParsedData = <T = unknown>(
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
         const cleanedValue = cleanParsedData(obj[key], options);
-        if (!isNil(cleanedValue)) {
+        if (!isUndefined(cleanedValue)) {
           cleanedObject[key] = cleanedValue;
         }
       }
@@ -235,6 +236,17 @@ export const parseCustomDate = (
  *    2. `undefined` → if input is `undefined`, not a string, or if parsing fails.
  *    3. Parsed and cleaned result (`TData`) → if input is a valid JSON string.
  *
+ * ⚠ **JSON.stringify note**: If the input JSON string was created using `JSON.stringify()`, any properties with
+ *    `undefined` values would have been automatically removed or converted to `null` depending on the serializer.
+ *    Example:
+ *    ```ts
+ *    JSON.stringify({ a: undefined, b: 1 }); // → '{"b":1}'
+ *    JSON.parse('{"a": undefined, "b": 1}')  // ❌ invalid JSON
+ *
+ *    safeJsonParse('{"name": "John", "score": undefined}');
+ *    // result → { name:"John", score:null } ← because `undefined` is not valid JSON, gets replaced
+ *    ```
+ *    Therefore, if you see `undefined` in raw input, it will likely throw unless pre-cleaned or replaced with `null`.
  * @template TData - The expected output type after parsing and cleaning.
  * @template TInput - The input value type, used for advanced type inference and return typing.
  *
@@ -255,17 +267,25 @@ export const parseCustomDate = (
  *    });
  *    // result → { age: 30, isActive: true }
  *  ```
+ * 2. ***Handling `undefined` in input string (manually written, not JSON.stringify):***
+ *  ```ts
+ *    const result = safeJsonParse('{"score": undefined}');
+ *    // result → { score: null } ← because `undefined` is not valid JSON, gets replaced
+ *  ```
  *
- * 2. ***Strict mode (removes invalid values):***
+ * 3. ***Strict mode (removes invalid values):***
  *  ```ts
  *    const result = safeJsonParse('{"name": "   ", "score": "99abc"}', {
  *      convertNumbers: true,
  *      strictMode: true
  *    });
  *    // result → {}
+ *
+ *    const result2 = safeJsonParse('{"name": "   ", "score": undefined}');
+ *    // result2 → { name:"",score: null }
  *  ```
  *
- * 3. ***Custom date format parsing:***
+ * 4. ***Custom date format parsing:***
  *  ```ts
  *    const result = safeJsonParse('{"birthday": "25/12/2000"}', {
  *      convertDates: true,
@@ -274,7 +294,7 @@ export const parseCustomDate = (
  *    // result → { birthday: new Date("2000-12-25T00:00:00.000Z") }
  *  ```
  *
- * 4. ***Invalid JSON with custom error handling:***
+ * 5. ***Invalid JSON with custom error handling:***
  *  ```ts
  *    safeJsonParse("{invalid}", {
  *      loggingOnFail: true,
@@ -283,14 +303,14 @@ export const parseCustomDate = (
  *    // → Logs parsing error and invokes handler
  *  ```
  *
- * 5. ***Null or non-string input returns null/undefined:***
+ * 6. ***Null or non-string input returns null/undefined:***
  *  ```ts
  *    safeJsonParse(null); // → null
  *    safeJsonParse(undefined); // → undefined
  *    safeJsonParse(123); // → undefined
  *  ```
  *
- * 6. ***Generic usage: Provide both output and input type to ensure correct return typing:***
+ * 7. ***Generic usage: Provide both output and input type to ensure correct return typing:***
  *  ```ts
  *    type UserType = { name: string };
  *
@@ -332,7 +352,6 @@ export const parseCustomDate = (
  *   nullable, or unioned: `safeJsonParse<TData, typeof value>(value)`.
  * - This makes the returned type exactly match your expectation: `TData | null | undefined`.
  */
-
 export function safeJsonParse<
   TData extends Record<string, any>,
   TInput extends UnknownValue = UnknownValue
@@ -362,7 +381,14 @@ export function safeJsonParse<TData extends Record<string, unknown>>(
   }
 
   try {
-    const parsed = JSON.parse(value);
+    const normalized = options.removeUndefined
+      ? value
+          .replace(/,\s*"[^"]*"\s*:\s*undefined(?=\s*[},])/g, "") // remove , "key": undefined
+          .replace(/"[^"]*"\s*:\s*undefined\s*(,)?/g, "") // remove "key": undefined
+          .replace(/,(\s*[}\]])/g, "$1") // <- remove trailing comma before } or ]
+      : value.replace(/:\s*undefined(?=\s*[,}])/g, ":null");
+
+    const parsed = JSON.parse(normalized);
     return cleanParsedData<TData>(parsed, options);
   } catch (error) {
     if (options.loggingOnFail) {

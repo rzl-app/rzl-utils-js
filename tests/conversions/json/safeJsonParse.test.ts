@@ -7,6 +7,113 @@ describe("safeJsonParse", () => {
     expect(safeJsonParse('["x","y","z"]')).toEqual(["x", "y", "z"]);
     expect(safeJsonParse('"string"')).toBe("string");
     expect(safeJsonParse("123")).toBe(123);
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com","port":undefined,"defaults":{ "test":undefined }}',
+        { removeUndefined: false }
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+      port: null,
+      defaults: {
+        test: null,
+      },
+    });
+
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com","port":undefined,"defaults":{ "valid-first":"y", "test":undefined,"valid-end":"y", }}',
+        { removeUndefined: true }
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+      defaults: {
+        "valid-end": "y",
+        "valid-first": "y",
+      },
+    });
+
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com","port":undefined,"defaults":[{ "valid-first":"y", "test":undefined,"valid-end":"y" }]}',
+        { removeUndefined: true }
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+      defaults: [
+        {
+          "valid-end": "y",
+          "valid-first": "y",
+        },
+      ],
+    });
+
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com","port":undefined,"defaults":[{ "valid-first":"y", "test":undefined,"valid-end":"y" }]}',
+        {}
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+      port: null,
+      defaults: [
+        {
+          "valid-end": "y",
+          test: null,
+          "valid-first": "y",
+        },
+      ],
+    });
+
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com","port":undefined,"defaults":[{ "valid-first":"y", "test":undefined,"valid-end":"y" }]}',
+        {}
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+      port: null,
+      defaults: [
+        {
+          "valid-end": "y",
+          test: null,
+          "valid-first": "y",
+        },
+      ],
+    });
+
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com","port":undefined,"defaults":[{  "test":undefined }]}',
+        { removeNulls: true, removeEmptyObjects: true }
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+      defaults: [],
+    });
+
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com",  "port":undefined , "defaults":[{  "test":undefined }]}',
+        { removeNulls: true, removeEmptyObjects: true, removeEmptyArrays: true }
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+    });
+
+    expect(
+      safeJsonParse(
+        '{"url":"https://localhost.com","port":undefined,"defaults":[{  "test":undefined }]}',
+        {
+          removeNulls: true,
+          removeUndefined: true,
+          removeEmptyObjects: true,
+          removeEmptyArrays: true,
+        }
+      )
+    ).toEqual({
+      url: "https://localhost.com",
+    });
   });
 
   it("should return null if input is null", () => {
