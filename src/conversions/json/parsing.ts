@@ -353,14 +353,14 @@ export const parseCustomDate = (
  * - This makes the returned type exactly match your expectation: `TData | null | undefined`.
  */
 export function safeJsonParse<
-  TData extends Record<string, any>,
+  TData extends Record<string, any> = Record<string, unknown>,
   TInput extends UnknownValue = UnknownValue
 >(
   value: TInput,
   options?: CleanParsedDataOptions
 ): IsAny<TInput> extends true ? TData | null | undefined : undefined;
 export function safeJsonParse<
-  TData extends Record<string, any>,
+  TData extends Record<string, any> = Record<string, unknown>,
   TInput extends string | null | undefined | unknown = undefined
 >(
   value: TInput,

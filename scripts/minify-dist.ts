@@ -1,12 +1,12 @@
-import Console from "console";
-import fs, { globSync } from "fs";
+import { globSync } from "glob";
+import { readFileSync, writeFileSync } from "fs";
 
 const files = globSync("dist/**/*.{d.ts,cjs,js}");
 
-Console.log(`Minify Starting`);
+console.log(`Minify Starting`);
 
 files.forEach((filePath) => {
-  const content = fs.readFileSync(filePath, "utf-8");
+  const content = readFileSync(filePath, "utf-8");
 
   const parts: Record<string, string>[] = [];
   let lastIndex = 0;
@@ -57,8 +57,8 @@ files.forEach((filePath) => {
     .filter(Boolean)
     .join("");
 
-  fs.writeFileSync(filePath, result, "utf-8");
-  Console.log(`✔️  Minified: ${filePath}`);
+  writeFileSync(filePath, result, "utf-8");
+  console.log(`✔️  Minified: ${filePath}`);
 });
 
-Console.log(`✔️ ✔️ ✔️  Minify Finish`);
+console.log(`✔️ ✔️ ✔️  Minify Finish`);
