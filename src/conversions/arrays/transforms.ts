@@ -1,14 +1,14 @@
 import {
   isArray,
-  isDeepEqual,
+  isBoolean,
   isEmptyArray,
+  isEqual,
   isNil,
   isNull,
   isObject,
   isUndefined,
   toStringDeepForce,
 } from "@/index";
-
 import type { DedupeResult } from "./transforms.types";
 
 /** ----------------------------------------------------------
@@ -41,6 +41,10 @@ import type { DedupeResult } from "./transforms.types";
  * // => undefined
  *
  * @example
+ * filterNullArray([]);
+ * // => []
+ *
+ * @example
  * filterNullArray([1, [null, 2, [undefined, 3]]]);
  * // => [1, [2, [3]]]
  */
@@ -68,24 +72,40 @@ export const filterNullArray = <T>(input?: T[] | null): T[] | undefined => {
 };
 
 /** ----------------------------------------------------------
- * * ***Flattens a nested array and removes duplicate values while maintaining the original order.***
+ * * ***Deduplicates values in an array (with optional flattening and deep stringification).***
  * ----------------------------------------------------------
  *
- * Supports options to force values into string representation at various levels:
- * - `"stringOrNumber"`: Converts all numbers and strings to strings.
- * - `"primitives"`: Converts all primitive types (number, string, boolean, bigint, undefined, NaN) to strings.
- * - `"all"`: Converts everything (including functions, Dates, RegExp, Symbols, Maps, Sets, Errors, Promises) to strings,
- *   and deeply converts object property values to strings.
+ * Supports various modes for converting values to strings before deduplication:
+ * - `"stringOrNumber"`: Converts strings and numbers to strings.
+ * - `"primitives"`: Converts all primitives (string, number, boolean, bigint, null, undefined, NaN) to strings.
+ * - `"all"`: Converts all values (primitives, objects, Maps, Sets, Symbols, RegExp, Dates, Errors, Promises, functions)
+ *   to strings, including nested object properties.
+ * - `false` (default): No conversion applied.
+ *
+ * Options:
+ * - `forceToString`: Enables string conversion for comparison, default is `false`.
+ * - `flatten`: If true, deeply flattens arrays, Maps, and Sets before deduplication, default is `false`.
+ *
+ * @template FTS - `forceToString` mode.
+ * @template FTN - `flatten` mode.
  *
  * @param {unknown[]} inputArray - The array to deduplicate. Can be deeply nested and contain any mix of types.
  * @param {{ forceToString?: false | "stringOrNumber" | "primitives" | "all" }} [options] - Options to control string conversion.
- * @returns {unknown[]} A new deduplicated array with the structure preserved, and values possibly stringified depending on `forceToString`.
+ * @returns {DedupeResult<FTS, FTN>} Deduplicated array with optional transformations.
  *
  * @throws {TypeError} If the input is not an array, or options is not an object, or if `forceToString` is invalid.
  *
  * @example
  * dedupeArray(["apple", "banana", "apple"]);
  * // => ["apple", "banana"]
+ *
+ * @example
+ * dedupeArray([[1, 2], [1, 2]], { flatten: true });
+ * // => [1, 2]
+ *
+ * @example
+ * dedupeArray([new Set([1, 2]), new Set([2, 3])], { flatten: true });
+ * // => [1, 2, 3]
  *
  * @example
  * dedupeArray([1, "1", 2, "2"], { forceToString: "stringOrNumber" });
@@ -165,11 +185,12 @@ export const filterNullArray = <T>(input?: T[] | null): T[] | undefined => {
  * // Throws TypeError
  */
 export const dedupeArray = <
-  F extends false | "stringOrNumber" | "primitives" | "all" = false
+  FTS extends false | "stringOrNumber" | "primitives" | "all" = false,
+  FTN extends boolean = false
 >(
   inputArray: unknown[],
-  options?: { forceToString?: F }
-): DedupeResult<F> => {
+  options?: { forceToString?: FTS; flatten?: FTN }
+): DedupeResult<FTS, FTN> => {
   if (!isArray(inputArray)) {
     throw new TypeError(`'inputArray' must be an array`);
   }
@@ -177,7 +198,7 @@ export const dedupeArray = <
     throw new TypeError(`'options' must be an object`);
   }
 
-  const { forceToString = false } = options ?? {};
+  const { forceToString = false, flatten = false } = options ?? {};
   if (
     !(
       forceToString === false ||
@@ -191,6 +212,10 @@ export const dedupeArray = <
     );
   }
 
+  if (!isBoolean(flatten)) {
+    throw new TypeError(`'flatten' must be boolean`);
+  }
+
   const process = (arr: unknown[]): unknown[] => {
     const seen: unknown[] = [];
     return arr.reduce<unknown[]>((acc, item) => {
@@ -198,7 +223,7 @@ export const dedupeArray = <
         ? process(item)
         : toStringDeepForce(item, forceToString);
 
-      if (!seen.some((s) => isDeepEqual(s, value))) {
+      if (!seen.some((s) => isEqual(s, value))) {
         seen.push(value);
         acc.push(value);
       }
@@ -206,5 +231,23 @@ export const dedupeArray = <
     }, []);
   };
 
-  return process(inputArray) as DedupeResult<F>;
+  const deepFlatten = (value: unknown): unknown[] => {
+    if (Array.isArray(value)) {
+      return value.flatMap(deepFlatten);
+    }
+
+    if (value instanceof Set) {
+      return [...value].flatMap(deepFlatten);
+    }
+
+    if (value instanceof Map) {
+      return [...value.values()].flatMap(deepFlatten);
+    }
+
+    return [value];
+  };
+
+  return (
+    flatten ? process(deepFlatten(inputArray)) : process(inputArray)
+  ) as DedupeResult<FTS, FTN>;
 };

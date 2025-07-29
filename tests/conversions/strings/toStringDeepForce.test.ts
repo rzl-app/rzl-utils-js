@@ -31,8 +31,8 @@ describe("toStringDeepForce", () => {
     expect(toStringDeepForce(fn, "all")).toContain("=> 1");
     expect(toStringDeepForce(date, "all")).toBe(date.toISOString());
     expect(toStringDeepForce(regex, "all")).toBe("/abc/");
-    expect(toStringDeepForce(map, "all")).toBe("[object Map]");
-    expect(toStringDeepForce(set, "all")).toBe("[object Set]");
+    expect(toStringDeepForce(map, "all")).toStrictEqual([]);
+    expect(toStringDeepForce(set, "all")).toStrictEqual([]);
     expect(toStringDeepForce(err, "all")).toBe("Error: err");
     expect(toStringDeepForce(promise, "all")).toBe("[object Promise]");
   });

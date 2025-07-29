@@ -1,4 +1,4 @@
-import { isDeepEqual } from "@/index";
+import { isDeepEqual } from "../../src/predicates/isDeepEqual";
 import { describe, it, expect } from "vitest";
 
 describe("isDeepEqual", () => {
@@ -62,5 +62,53 @@ describe("isDeepEqual", () => {
     expect(isDeepEqual(null, undefined)).toBe(false);
     expect(isDeepEqual(null, null)).toBe(true);
     expect(isDeepEqual(undefined, undefined)).toBe(true);
+  });
+});
+
+describe("isDeepEqual 2", () => {
+  it("should deeply compare Sets", () => {
+    expect(isDeepEqual(new Set([1, 2, 3]), new Set([3, 2, 1]))).toBe(true);
+    expect(isDeepEqual(new Set([1, 2]), new Set([1, 2, 3]))).toBe(false);
+    expect(isDeepEqual(new Set([{ a: 1 }]), new Set([{ a: 1 }]))).toBe(true);
+    expect(isDeepEqual(new Set([{ a: 1 }]), new Set([{ a: 2 }]))).toBe(false);
+  });
+
+  it("should deeply compare Maps", () => {
+    expect(
+      isDeepEqual(
+        new Set([
+          ["a", 1],
+          ["b", 2],
+          new Map([
+            ["a", 1],
+            ["b", 2],
+          ]),
+        ]),
+        new Set([
+          ["b", 2],
+          ["a", 1],
+          new Map([
+            ["a", 1],
+            ["b", 2],
+          ]),
+        ])
+      )
+    ).toBe(true);
+
+    expect(
+      isDeepEqual(new Map([["a", { x: 10 }]]), new Map([["a", { x: 10 }]]))
+    ).toBe(true);
+
+    expect(isDeepEqual(new Map([["a", 1]]), new Map([["a", 2]]))).toBe(false);
+
+    expect(
+      isDeepEqual(
+        new Map([
+          ["a", 1],
+          ["b", 2],
+        ]),
+        new Map([["a", 1]])
+      )
+    ).toBe(false);
   });
 });

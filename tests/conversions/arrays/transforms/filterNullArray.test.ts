@@ -1,4 +1,4 @@
-import { filterNullArray } from "@/index";
+import { filterNullArray } from "@/conversions/arrays/index";
 import { describe, it, expect } from "vitest";
 
 describe("filterNullArray", () => {
