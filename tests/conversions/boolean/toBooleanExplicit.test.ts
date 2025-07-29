@@ -10,10 +10,10 @@ describe("toBooleanExplicit", () => {
     expect(toBooleanExplicit("indeterminate")).toBe(true);
   });
 
-  it("should be case insensitive by default", () => {
-    expect(toBooleanExplicit("TRUE")).toBe(true);
-    expect(toBooleanExplicit("On")).toBe(true);
-    expect(toBooleanExplicit("YeS")).toBe(true);
+  it("should be case un-insensitive by default", () => {
+    expect(toBooleanExplicit("TRUE")).toBe(false);
+    expect(toBooleanExplicit("On")).toBe(false);
+    expect(toBooleanExplicit("YeS")).toBe(false);
   });
 
   it("should trim string by default", () => {
@@ -25,6 +25,7 @@ describe("toBooleanExplicit", () => {
   it("should respect caseInsensitive option", () => {
     expect(toBooleanExplicit("TRUE", { caseInsensitive: false })).toBe(false);
     expect(toBooleanExplicit("yes", { caseInsensitive: false })).toBe(true);
+    expect(toBooleanExplicit("YES", { caseInsensitive: true })).toBe(true);
   });
 
   it("should respect trimString option", () => {

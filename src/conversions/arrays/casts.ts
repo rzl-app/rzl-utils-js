@@ -45,42 +45,54 @@ import {
 export function toStringArrayUnRecursive(
   array?: undefined | null,
   options?: {
-    /** @default true */
+    /** If true, removes invalid values (null, undefined) from the result. Default is true.
+     * @default true
+     */
     removeInvalidValue: boolean;
   }
 ): undefined;
 export function toStringArrayUnRecursive(
   array?: Array<never>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid values (null, undefined) from the result. Default is true.
+     * @default true
+     */
     removeInvalidValue: boolean;
   }
 ): Array<never>;
 export function toStringArrayUnRecursive(
   array?: Array<undefined | null> | Array<null | undefined>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid values (null, undefined) from the result. Default is true.
+     * @default true
+     */
     removeInvalidValue: boolean;
   }
 ): Array<undefined>;
 export function toStringArrayUnRecursive<T>(
   array?: Array<T>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid values (null, undefined) from the result. Default is true.
+     * @default true
+     */
     removeInvalidValue: true;
   }
 ): Array<string> | undefined;
 export function toStringArrayUnRecursive<T>(
   array?: Array<T>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid values (null, undefined) from the result. Default is true.
+     * @default true
+     */
     removeInvalidValue: false;
   }
 ): Array<string | null | undefined> | undefined;
 export function toStringArrayUnRecursive<T extends string | number>(
   array?: Array<T> | null,
   options: {
-    /** @default true */
+    /** If true, removes invalid values (null, undefined) from the result. Default is true.
+     * @default true
+     */
     removeInvalidValue?: boolean;
   } = {
     removeInvalidValue: true,
@@ -141,42 +153,60 @@ export function toStringArrayUnRecursive<T extends string | number>(
 export function toNumberArrayUnRecursive(
   array?: undefined | null,
   options?: {
-    /** @default true */
+    /** If true, removes invalid number values (e.g., NaN, undefined) from the result. Default is true.
+     *
+     * @default true
+     */
     removeInvalidValueNumber?: boolean;
   }
 ): undefined;
 export function toNumberArrayUnRecursive(
   array?: Array<never>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid number values (e.g., NaN, undefined) from the result. Default is true.
+     *
+     * @default true
+     */
     removeInvalidValueNumber?: boolean;
   }
 ): Array<never>;
 export function toNumberArrayUnRecursive(
   array?: Array<undefined | null> | Array<null | undefined>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid number values (e.g., NaN, undefined) from the result. Default is true.
+     *
+     * @default true
+     */
     removeInvalidValueNumber?: boolean;
   }
 ): Array<undefined>;
 export function toNumberArrayUnRecursive<T>(
   array?: Array<T>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid number values (e.g., NaN, undefined) from the result. Default is true.
+     *
+     * @default true
+     */
     removeInvalidValueNumber?: true;
   }
 ): Array<number> | undefined;
 export function toNumberArrayUnRecursive<T>(
   array?: Array<T>,
   options?: {
-    /** @default true */
+    /** If true, removes invalid number values (e.g., NaN, undefined) from the result. Default is true.
+     *
+     * @default true
+     */
     removeInvalidValueNumber: false;
   }
 ): Array<number | undefined> | undefined;
 export function toNumberArrayUnRecursive<T>(
   array?: Array<T> | null,
   options: {
-    /** @default true */
+    /** If true, removes invalid number values (e.g., NaN, undefined) from the result. Default is true.
+     *
+     * @default true
+     */
     removeInvalidValueNumber?: boolean;
   } = {
     removeInvalidValueNumber: true,
@@ -199,11 +229,6 @@ export function toNumberArrayUnRecursive<T>(
 
   if (isArray(array)) {
     // Convert each item in the array to a number, or undefined if it's not a valid number
-    // const result = Array.from(array, (x) => {
-    //   const numberValue = parseInt(String(x)); // Try converting value to a number
-    //   return isNaN(numberValue) ? undefined : numberValue; // Return undefined if NaN
-    // });
-
     const result = Array.from(array, (x) => {
       const str = String(x).trim();
       const match = str.match(/-?\d+(\.\d+)?/);

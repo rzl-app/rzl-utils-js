@@ -189,7 +189,18 @@ export const dedupeArray = <
   FTN extends boolean = false
 >(
   inputArray: unknown[],
-  options?: { forceToString?: FTS; flatten?: FTN }
+  options?: {
+    /** Enables string conversion for comparison, default is `false`.
+     *
+     * @default false
+     */
+    forceToString?: FTS;
+    /** If true, deeply flattens arrays, Maps, and Sets before deduplication, default is `false`.
+     *
+     * @default false
+     */
+    flatten?: FTN;
+  }
 ): DedupeResult<FTS, FTN> => {
   if (!isArray(inputArray)) {
     throw new TypeError(`'inputArray' must be an array`);

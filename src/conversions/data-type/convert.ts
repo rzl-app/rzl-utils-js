@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { isString } from "@/predicates";
 
 /** ----------------------------------------------------------
@@ -30,8 +28,8 @@ import { isString } from "@/predicates";
  * @param {any} value - The value to convert (usually string or unknown type).
  * @returns {any} The converted JavaScript type (boolean, number, null, undefined, or original).
  */
-export const convertType = (value: any): any => {
-  const predefinedValues: Record<string, any> = {
+export const convertType = (value: unknown): unknown => {
+  const predefinedValues: Record<string, unknown> = {
     undefined: undefined,
     null: null,
     true: true,
