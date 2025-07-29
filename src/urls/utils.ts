@@ -26,7 +26,13 @@ import {
  */
 export const formatEnvPort = (
   envVar?: string | null,
-  options?: { prefixColon?: boolean }
+  options?: {
+    /** Add prefix with a colon.
+     *
+     * @default false
+     */
+    prefixColon?: boolean;
+  }
 ): string => {
   if (!isNonEmptyString(envVar)) return ""; // Handle empty string case
 

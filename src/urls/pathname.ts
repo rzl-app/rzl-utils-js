@@ -388,7 +388,7 @@ export const getFirstPrefixPathname = (
  * - Ensures the returned string always starts with exactly one `/`.
  *
  * @param {string | null | undefined} pathname - The pathname to normalize.
- * @param {string} [defaultPath="/"] - A fallback value returned if `pathname` is empty or invalid. Must be a non-empty string.
+ * @param {string} [defaultPath="/"] - A fallback value returned if `pathname` is empty or invalid. Must be a non-empty string, default `"/"`.
  *
  * @returns {string} A properly normalized pathname starting with a single `/`,
  * or the `defaultPath` if the input is invalid or empty.

@@ -32,7 +32,9 @@ export const textContainsAny = <T extends string>(
   text: T,
   searchWords: T[] | string[],
   options?: {
+    /** If `true`, matches whole words only, defaultValue is `false`. */
     exactMatch?: boolean;
+    /** Optional regex flags (default: `"i"` for case-insensitive). */
     flags?: string;
   }
 ): boolean => {
