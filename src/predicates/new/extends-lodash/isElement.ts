@@ -1,4 +1,4 @@
-import { isElement as _isElement } from "lodash";
+import _isElement from "lodash/isElement";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is likely a DOM element.***

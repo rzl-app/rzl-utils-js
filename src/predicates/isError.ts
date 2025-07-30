@@ -1,4 +1,4 @@
-import { isError as _isError } from "lodash";
+import _isError from "lodash/isError";
 
 /** ----------------------------------------------------------
  * * ***Checks if a given value is an instance of the `Error` object.***

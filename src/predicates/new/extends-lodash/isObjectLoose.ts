@@ -1,4 +1,4 @@
-import { isObject as _isObject } from "lodash";
+import _isObject from "lodash/isObject";
 
 /** --------------------------------------------------
  * * ***Checks if `value` is the

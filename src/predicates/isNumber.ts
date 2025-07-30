@@ -1,4 +1,4 @@
-import { isNumber as _isNumber } from "lodash";
+import _isNumber from "lodash/isNumber";
 import { isNaN } from "./new";
 
 /** ---------------------------------------------------------

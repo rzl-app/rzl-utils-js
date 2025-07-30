@@ -1,4 +1,4 @@
-import { isArrayBuffer as _isArrayBuffer } from "lodash";
+import _isArrayBuffer from "lodash/isArrayBuffer";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is classified as an `ArrayBuffer` object.***

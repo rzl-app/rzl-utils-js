@@ -1,4 +1,4 @@
-import { isWeakMap as _isWeakMap } from "lodash";
+import _isWeakMap from "lodash/isWeakMap";
 
 /** --------------------------------------------------
  * * ***Checks if `value` is classified as a `WeakMap` object.***

@@ -1,4 +1,4 @@
-import { isEqual as _isEqual } from "lodash";
+import _isEqual from "lodash/isEqual";
 
 /** ----------------------------------------------------
  * * ***Performs a deep comparison between two values to determine if they are equivalent.***

@@ -1,4 +1,4 @@
-import { isString as _isString } from "lodash";
+import _isString from "lodash/isString";
 
 /** ---------------------------------------------------------
  * * ***Type guard: Checks if a value is of type `string`.***

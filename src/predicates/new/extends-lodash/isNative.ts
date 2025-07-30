@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isNative as _isNative } from "lodash";
+import _isNative from "lodash/isNative";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is a pristine native function.***

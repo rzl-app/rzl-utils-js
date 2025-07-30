@@ -1,4 +1,4 @@
-import { isDate as _isDate } from "lodash";
+import _isDate from "lodash/isDate";
 
 /** ----------------------------------------------------------
  * * ***Type guard: Checks if a value is a valid `Date` object.***

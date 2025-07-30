@@ -1,4 +1,4 @@
-import { isFinite as _isFinite } from "lodash";
+import _isFinite from "lodash/isFinite";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is a finite primitive number.***

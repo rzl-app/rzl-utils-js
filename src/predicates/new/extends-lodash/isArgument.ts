@@ -1,4 +1,4 @@
-import { isArguments as _isArguments } from "lodash";
+import _isArguments from "lodash/isArguments";
 
 /** -------------------
  * * ***Checks if `value` is likely an `arguments` object.***

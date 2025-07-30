@@ -1,4 +1,4 @@
-import { isTypedArray as _isTypedArray } from "lodash";
+import _isTypedArray from "lodash/isTypedArray";
 
 type TypedArray =
   | Int8Array

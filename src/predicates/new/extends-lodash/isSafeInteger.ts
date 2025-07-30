@@ -1,4 +1,4 @@
-import { isSafeInteger as _isSafeInteger } from "lodash";
+import _isSafeInteger from "lodash/isSafeInteger";
 
 /** --------------------------------------------------
  * * ***Checks if `value` is a safe integer. An integer is safe if it's an IEEE-754 double precision number which isn't the result of a rounded unsafe integer.***

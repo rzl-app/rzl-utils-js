@@ -1,4 +1,4 @@
-import { isBoolean as _isBoolean } from "lodash";
+import _isBoolean from "lodash/isBoolean";
 
 /** ---------------------------------------------------------
  * * ***Type guard: Checks if a value is of type `boolean`.***

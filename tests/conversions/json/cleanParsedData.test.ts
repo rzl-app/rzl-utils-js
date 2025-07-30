@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { cleanParsedData, isUndefined } from "@/index";
-import { isNull } from "lodash";
+import { isNull } from "@/predicates";
 
 describe("cleanParsedData", () => {
   it("should remove null values if removeNulls is true", () => {

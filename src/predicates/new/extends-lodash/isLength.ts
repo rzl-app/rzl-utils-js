@@ -1,4 +1,4 @@
-import { isLength as _isLength } from "lodash";
+import _isLength from "lodash/isLength";
 
 /** ----------------------------------------
  * * ***Checks if `value` is a valid array-like length.***

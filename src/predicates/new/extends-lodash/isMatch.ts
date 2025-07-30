@@ -1,4 +1,4 @@
-import { isMatch as _isMatch } from "lodash";
+import _isMatch from "lodash/isMatch";
 
 /** ----------------------------------------------------
  * * ***Performs a partial deep comparison between `object` and `source` to determine if `object` contains equivalent property values.***

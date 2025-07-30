@@ -1,4 +1,4 @@
-import { isFunction as _isFunction } from "lodash";
+import _isFunction from "lodash/isFunction";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * ----------------------------------------------------------

@@ -1,4 +1,4 @@
-import { isNaN as _isNaN } from "lodash";
+import _isNaN from "lodash/isNaN";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is `NaN`.***

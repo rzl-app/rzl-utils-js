@@ -1,4 +1,4 @@
-import { isRegExp as _isRegExp } from "lodash";
+import _isRegExp from "lodash/isRegExp";
 
 /** ----------------------------------------------------------
  * * ***Type guard: Checks if a value is a RegExp instance.***

@@ -1,4 +1,4 @@
-import { isSymbol as _isSymbol } from "lodash";
+import _isSymbol from "lodash/isSymbol";
 
 /** ----------------------------------------------------------
  * * ***Checks whether a value is a symbol.***

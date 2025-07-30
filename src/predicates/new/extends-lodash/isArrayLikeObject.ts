@@ -1,4 +1,5 @@
-import { isArrayLikeObject as _isArrayLikeObject, FunctionBase } from "lodash";
+import type { AnyFunction } from "@/types";
+import _isArrayLikeObject from "lodash/isArrayLikeObject";
 
 /** ----------------------------------------------------
  * * ***This method is like `isArrayLike` except that it also checks if `value` is an object.***
@@ -27,7 +28,7 @@ export function isArrayLikeObject<T extends { __anyHack: unknown }>(
 export function isArrayLikeObject(
   value: // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | ((...args: any[]) => any)
-    | FunctionBase
+    | AnyFunction
     | string
     | boolean
     | number

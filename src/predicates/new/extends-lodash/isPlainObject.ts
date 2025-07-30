@@ -1,4 +1,4 @@
-import { isPlainObject as _isPlainObject } from "lodash";
+import _isPlainObject from "lodash/isPlainObject";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is a plain object, that is, an object created by the `Object` constructor or one with a `[[Prototype]]` of `null`..***

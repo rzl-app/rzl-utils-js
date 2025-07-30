@@ -1,4 +1,4 @@
-import { isBuffer as _isBuffer } from "lodash";
+import _isBuffer from "lodash/isBuffer";
 
 /** ----------------------------------------------------
  * * ***Checks if value is a buffer.***

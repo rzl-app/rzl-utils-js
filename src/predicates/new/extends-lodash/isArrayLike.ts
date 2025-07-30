@@ -1,4 +1,4 @@
-import { isArrayLike as _isArrayLike } from "lodash";
+import _isArrayLike from "lodash/isArrayLike";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is array-like. A value is considered array-like if it's

@@ -1,4 +1,5 @@
-import { isEqualWith as _isEqualWith, IsEqualCustomizer } from "lodash";
+import _isEqualWith from "lodash/isEqualWith";
+import type { IsEqualCustomizer } from "lodash";
 
 /** ----------------------------------------------------
  * * ***This method is like `isEqual` except that it accepts `customizer` which

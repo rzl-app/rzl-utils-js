@@ -1,4 +1,4 @@
-import { isSet as _isSet } from "lodash";
+import _isSet from "lodash/isSet";
 
 /** --------------------------------------------------
  * * ***Checks if `value` is classified as a `Set` object.***

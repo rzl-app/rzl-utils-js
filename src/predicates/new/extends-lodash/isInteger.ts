@@ -1,4 +1,4 @@
-import { isInteger as _isInteger } from "lodash";
+import _isInteger from "lodash/isInteger";
 
 /** ----------------------------------------------------
  * * ***Checks if `value` is a integer.***
