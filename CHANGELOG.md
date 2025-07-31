@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/rzl-app/rzl-utils-js/compare/v0.3.0...v0.3.1) (2025-07-31)
+
+
+### Bug Fixes
+
+* release.yml ([b7cddb2](https://github.com/rzl-app/rzl-utils-js/commit/b7cddb2c13800ab42844d68e370c606eb2620020))
+
 ## [0.3.0](https://github.com/rzl-app/rzl-utils-js/compare/v0.2.9...v0.3.0) (2025-07-31)
 
 
