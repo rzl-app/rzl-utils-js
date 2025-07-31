@@ -4,7 +4,7 @@
 
 <p align="center">
 🚀 <strong>Rzl Utility JavaScript</strong> 🚀<br/>
-A lightweight, modern TypeScript utility library for Node.js & browser (via bundlers like Webpack / Vite).<br/>
+A lightweight, modern TypeScript utility library for Node.js & browser (via bundlers like Webpack/Vite).<br/>
 Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/>
 <strong>Built with ❤️ by <a href="https://github.com/rzl-app">@rzl-app</a>.</strong>
 </p>
@@ -13,7 +13,7 @@ Provides reusable helpers to simplify your JavaScript / TypeScript projects.<br/
 
 [![Latest Version on NPM](https://img.shields.io/npm/v/rzl-utils-js?color=blue&style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
 [![downloads](https://img.shields.io/npm/dt/rzl-utils-js?style=flat-rounded)](https://npmjs.com/package/rzl-utils-js)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0%20%7C%20%3E%3D18.17.0-blue.svg?logo=node.js&style=flat-square)](https://nodejs.org/en/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0%20%7C%20%3E%3D18.17.0-blue.svg?logo=node.js&style=flat-rounded)](https://nodejs.org/en/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/CONTRIBUTING.md)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rzl-app/rzl-utils-js/blob/main/LICENSE.md)
 [![GitHub](https://img.shields.io/badge/GitHub-rzl--app%2Frzl--utils--js-181717?logo=github)](https://github.com/rzl-app/rzl-utils-js)
@@ -109,8 +109,9 @@ This package also provides utilities specially built for Next.js environments, n
 
 <h2 id="detailed-features">💎 Detailed Features</h2>
 
-  ### Docs is coming soon.
-  #### For the time being, you can use the feature manually: 
+  ### Full documentation coming soon.  
+  #### For now, explore the examples or dive into the source — all utilities are documented via **JSDoc** and typed properly.
+  
   ```ts
   import { | } from "rzl-utils-js";
   import { | } from "rzl-utils-js\types";
