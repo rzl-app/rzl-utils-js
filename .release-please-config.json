@@ -1,4 +1,5 @@
 {
+  "auto-merge": true,
   "bump-minor-pre-major": true,
   "changelog-path": "CHANGELOG.md",
   "include-v-in-tag": true,
@@ -8,5 +9,7 @@
       "release-type": "node"
     }
   },
-  "release-type": "node"
+  "pull-request-title-pattern": "chore${component ? `(${component})` : ''}: release ${version}",
+  "release-type": "node",
+  "skip-github-release": false
 }
