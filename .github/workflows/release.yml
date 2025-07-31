@@ -1,10 +1,9 @@
-name: Release Package
+name: Release and Publish
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   release-please:
@@ -12,8 +11,10 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      id-token: write
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
 
     steps:
       - id: release
@@ -21,7 +22,6 @@ jobs:
         with:
           release-type: node
           token: ${{ secrets.RELEASE_PAT }}
-
 
   publish:
     needs: release-please
@@ -41,6 +41,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: npm ci
+
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
