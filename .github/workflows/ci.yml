@@ -25,7 +25,3 @@ jobs:
 
       - name: Run lint
         run: npm run lint
-
-      # Optional: lint
-      # - name: Run lint
-      #   run: npm run lint
