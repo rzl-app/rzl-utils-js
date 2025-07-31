@@ -1,6 +1,8 @@
 {
   "bump-minor-pre-major": true,
   "changelog-path": "CHANGELOG.md",
+  "include-v-in-tag": true,
+  "package-name": "rzl-utils-js",
   "packages": {
     ".": {
       "release-type": "node"
