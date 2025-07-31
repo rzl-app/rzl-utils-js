@@ -20,6 +20,8 @@ jobs:
         uses: googleapis/release-please-action@v4
         with:
           release-type: node
+          token: ${{ secrets.RELEASE_PAT }}
+
 
   publish:
     needs: release-please
